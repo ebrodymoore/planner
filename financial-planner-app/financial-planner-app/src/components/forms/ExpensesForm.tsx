@@ -38,10 +38,10 @@ export default function ExpensesForm({ data, onUpdate, onFieldUpdate }: Expenses
 
   const getTotalMonthlyExpenses = () => {
     return (expensesData.housingPayment || 0) + 
-           (expensesData.food || 0) + 
+           (expensesData.foodGroceries || 0) + 
            (expensesData.utilities || 0) + 
-           (expensesData.transportation || 0) + 
-           (expensesData.entertainment || 0);
+           (expensesData.gasoline || 0) + 
+           (expensesData.diningEntertainment || 0);
   };
 
   const getAnnualExpenses = () => {
