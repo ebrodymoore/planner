@@ -71,6 +71,10 @@ export interface Expenses {
   lifeInsurancePremiums: number;
   taxPreparation: number;
   
+  // Summary categories (for form calculations)
+  transportation: number;
+  entertainment: number;
+  
   // Analysis
   fixedVsVariableRatio: string;
   seasonalVariations: string;

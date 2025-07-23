@@ -113,8 +113,8 @@ export default function ExpensesForm({ data, onUpdate, onFieldUpdate }: Expenses
                   id="food"
                   type="number"
                   placeholder="600"
-                  value={expensesData.food || ''}
-                  onChange={(e) => handleFieldChange('food', e.target.value)}
+                  value={expensesData.foodGroceries || ''}
+                  onChange={(e) => handleFieldChange('foodGroceries', e.target.value)}
                   className="pl-8"
                 />
               </div>
@@ -194,7 +194,7 @@ export default function ExpensesForm({ data, onUpdate, onFieldUpdate }: Expenses
             </div>
             <div>
               <p className="text-orange-700 font-medium">Food</p>
-              <p className="text-orange-900 font-bold">{formatCurrency(expensesData.food || 0)}</p>
+              <p className="text-orange-900 font-bold">{formatCurrency(expensesData.foodGroceries || 0)}</p>
             </div>
             <div>
               <p className="text-orange-700 font-medium">Utilities</p>
