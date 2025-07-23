@@ -40,6 +40,13 @@ export interface ActionItem {
   category: string;
 }
 
+export interface RiskFactor {
+  category: string;
+  description: string;
+  severity: 'low' | 'medium' | 'high';
+  likelihood: string;
+}
+
 export interface RiskAssessment {
   overall_risk_level: 'low' | 'moderate' | 'high' | 'very_high';
   risk_factors: RiskFactor[];
