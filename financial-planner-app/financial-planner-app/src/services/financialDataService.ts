@@ -415,16 +415,16 @@ export class FinancialDataService {
   }
 
   // Additional helper methods for data processing...
-  private static calculateTotalExpenses(expenses?: any): number { return 0; }
-  private static extractGoalsAndPriorities(goals?: any, preferences?: any): any { return {}; }
-  private static extractBehavioralInsights(behavioral?: any): any { return {}; }
-  private static extractTaxSituation(taxSituation?: any): any { return {}; }
-  private static extractInsuranceCoverage(insurance?: any): any { return {}; }
-  private static extractCareerPlanning(lifeCareer?: any): any { return {}; }
-  private static extractCashFlowMetrics(cashFlow?: any): any { return {}; }
-  private static identifyPrimaryConcerns(formData: FormData): string[] { return []; }
-  private static assessFinancialComplexity(formData: FormData): any { return {}; }
-  private static determineFocusAreas(formData: FormData): string[] { return []; }
+  private static calculateTotalExpenses(_expenses?: any): number { return 0; }
+  private static extractGoalsAndPriorities(_goals?: any, _preferences?: any): any { return {}; }
+  private static extractBehavioralInsights(_behavioral?: any): any { return {}; }
+  private static extractTaxSituation(_taxSituation?: any): any { return {}; }
+  private static extractInsuranceCoverage(_insurance?: any): any { return {}; }
+  private static extractCareerPlanning(_lifeCareer?: any): any { return {}; }
+  private static extractCashFlowMetrics(_cashFlow?: any): any { return {}; }
+  private static identifyPrimaryConcerns(_formData: FormData): string[] { return []; }
+  private static assessFinancialComplexity(_formData: FormData): any { return {}; }
+  private static determineFocusAreas(_formData: FormData): string[] { return []; }
   private static extractRiskAssessment(claudeResponse: any): any { return {}; }
   private static calculateLiquidAssets(assets?: any): number { return 0; }
   private static calculateMonthlyIncome(income?: any): number { return 0; }

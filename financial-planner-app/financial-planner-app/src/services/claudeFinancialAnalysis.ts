@@ -417,9 +417,9 @@ Focus on providing specific, actionable advice based on the client's unique situ
    * Generate follow-up analysis based on previous results
    */
   static async generateFollowUpAnalysis(
-    userId: string,
-    specificQuestions: string[],
-    previousAnalysisId: string
+    _userId: string,
+    _specificQuestions: string[],
+    _previousAnalysisId: string
   ): Promise<AnalysisResponse | null> {
     // Implementation for follow-up analysis
     // This would be a lighter analysis focusing on specific questions
@@ -428,17 +428,17 @@ Focus on providing specific, actionable advice based on the client's unique situ
   }
 
   // Helper methods for analysis
-  private static calculateSavingsRate(formData: FormData): number {
+  private static calculateSavingsRate(_formData: FormData): number {
     // Calculate savings rate from form data
     return 0.15; // Placeholder
   }
 
-  private static assessDebtLevel(formData: FormData): 'low' | 'moderate' | 'high' {
+  private static assessDebtLevel(_formData: FormData): 'low' | 'moderate' | 'high' {
     // Assess debt level
     return 'moderate'; // Placeholder
   }
 
-  private static assessEmergencyFund(formData: FormData): 'adequate' | 'insufficient' | 'excessive' {
+  private static assessEmergencyFund(_formData: FormData): 'adequate' | 'insufficient' | 'excessive' {
     // Assess emergency fund adequacy
     return 'insufficient'; // Placeholder
   }
