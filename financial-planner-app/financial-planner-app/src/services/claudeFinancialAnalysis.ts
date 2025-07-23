@@ -41,10 +41,12 @@ export interface ActionItem {
 }
 
 export interface RiskFactor {
+  type: string;
   category: string;
   description: string;
-  severity: 'low' | 'medium' | 'high';
-  likelihood: string;
+  severity: 'low' | 'moderate' | 'high' | 'critical';
+  likelihood: 'low' | 'moderate' | 'high';
+  potential_impact: string;
 }
 
 export interface RiskAssessment {
@@ -53,14 +55,6 @@ export interface RiskAssessment {
   mitigation_strategies: string[];
   insurance_gaps: string[];
   emergency_fund_adequacy: 'adequate' | 'insufficient' | 'excessive';
-}
-
-export interface RiskFactor {
-  type: string;
-  severity: 'low' | 'moderate' | 'high' | 'critical';
-  description: string;
-  likelihood: 'low' | 'moderate' | 'high';
-  potential_impact: string;
 }
 
 export class ClaudeFinancialAnalysis {
