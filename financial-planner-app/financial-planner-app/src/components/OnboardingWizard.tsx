@@ -61,7 +61,7 @@ export default function OnboardingWizard({
       key: 'expenses',
       icon: '🏠',
       description: 'Comprehensive monthly and annual expenses',
-      completed: !!formData.expenses?.housingPayment
+      completed: !!formData.expenses?.housing
     },
     {
       title: 'Assets',
