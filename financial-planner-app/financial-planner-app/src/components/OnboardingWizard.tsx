@@ -75,9 +75,9 @@ export default function OnboardingWizard({
       key: 'liabilities',
       icon: '💳',
       description: 'All debts and credit obligations',
-      completed: !!formData.liabilities?.mortgageBalance || 
+      completed: Boolean(formData.liabilities?.mortgageBalance || 
                   (formData.liabilities?.autoLoans && formData.liabilities.autoLoans.length > 0) ||
-                  (formData.liabilities?.creditCards && formData.liabilities.creditCards.length > 0)
+                  (formData.liabilities?.creditCards && formData.liabilities.creditCards.length > 0))
     },
     {
       title: 'Financial Goals',
