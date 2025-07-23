@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useUser } from '@supabase/auth-helpers-react';
+import { supabase } from '@/lib/supabase';
 import { FinancialDataService, QuestionnaireResponse } from '@/services/financialDataService';
 import { ClaudeFinancialAnalysis, AnalysisResponse } from '@/services/claudeFinancialAnalysis';
 import { FormData } from '@/types/financial';
@@ -28,7 +28,7 @@ export interface UseFinancialDataReturn {
 }
 
 export const useFinancialData = (): UseFinancialDataReturn => {
-  const user = useUser();
+  const [user, setUser] = useState<any>(null);
   
   // State management
   const [formData, setFormData] = useState<FormData>({});
@@ -190,8 +190,22 @@ export const useFinancialData = (): UseFinancialDataReturn => {
   }, [formData, user?.id, isSaving, completionStatus, saveFormData]);
 
   /**
-   * Load data on component mount
+   * Get current user and load data on component mount
    */
+  useEffect(() => {
+    // Get current user
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   useEffect(() => {
     if (user?.id) {
       loadFormData();
