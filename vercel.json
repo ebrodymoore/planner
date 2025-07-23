@@ -1,7 +1,6 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next",
-  "installCommand": "npm install",
-  "framework": "nextjs",
-  "rootDirectory": "financial-planner-app/financial-planner-app"
+  "buildCommand": "cd financial-planner-app/financial-planner-app && npm run build",
+  "outputDirectory": "financial-planner-app/financial-planner-app/.next",
+  "installCommand": "cd financial-planner-app/financial-planner-app && npm install",
+  "framework": "nextjs"
 }
