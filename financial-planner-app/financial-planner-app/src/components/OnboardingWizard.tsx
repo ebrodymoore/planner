@@ -215,8 +215,8 @@ export default function OnboardingWizard({
 
   const getCompletedSectionsCount = () => {
     return sections.filter(section => {
-      const sectionData = formData[section.key];
-      return sectionData && Object.keys(sectionData).some(key => sectionData[key] != null && sectionData[key] !== '');
+      const sectionData = formData[section.key as keyof FormData];
+      return sectionData && Object.keys(sectionData).some(key => (sectionData as any)[key] != null && (sectionData as any)[key] !== '');
     }).length;
   };
 
@@ -259,43 +259,43 @@ export default function OnboardingWizard({
 
   const renderCurrentForm = () => {
     const currentSectionKey = sections[currentSection].key;
-    const sectionData = formData[currentSectionKey];
+    const sectionData = formData[currentSectionKey as keyof FormData];
     const onUpdate = (data: any) => updateSectionData(currentSectionKey, data);
     const onFieldUpdate = (field: string, value: any) => updateFormData(currentSectionKey, field, value);
 
     switch (currentSectionKey) {
       case 'personal':
-        return <PersonalInfoForm data={sectionData} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
+        return <PersonalInfoForm data={sectionData as any} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
       case 'income':
-        return <IncomeForm data={sectionData} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
+        return <IncomeForm data={sectionData as any} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
       case 'expenses':
-        return <ExpensesForm data={sectionData} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
+        return <ExpensesForm data={sectionData as any} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
       case 'assets':
-        return <AssetsForm data={sectionData} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
+        return <AssetsForm data={sectionData as any} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
       case 'liabilities':
-        return <LiabilitiesForm data={sectionData} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
+        return <LiabilitiesForm data={sectionData as any} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
       case 'goals':
-        return <GoalsForm data={sectionData} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
+        return <GoalsForm data={sectionData as any} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
       case 'preferences':
-        return <PreferencesForm data={sectionData} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
+        return <PreferencesForm data={sectionData as any} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
       case 'employerBenefits':
-        return <EmployerBenefitsForm data={sectionData} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
+        return <EmployerBenefitsForm data={sectionData as any} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
       case 'risk':
-        return <RiskAssessmentForm data={sectionData} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
+        return <RiskAssessmentForm data={sectionData as any} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
       case 'investmentPhilosophy':
-        return <InvestmentPhilosophyForm data={sectionData} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
+        return <InvestmentPhilosophyForm data={sectionData as any} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
       case 'insurance':
-        return <InsuranceForm data={sectionData} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
+        return <InsuranceForm data={sectionData as any} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
       case 'taxSituation':
-        return <TaxSituationForm data={sectionData} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
+        return <TaxSituationForm data={sectionData as any} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
       case 'estatePlanning':
-        return <EstatePlanningForm data={sectionData} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
+        return <EstatePlanningForm data={sectionData as any} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
       case 'behavioral':
-        return <BehavioralAssessmentForm data={sectionData} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
+        return <BehavioralAssessmentForm data={sectionData as any} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
       case 'cashFlow':
-        return <CashFlowAnalysisForm data={sectionData} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
+        return <CashFlowAnalysisForm data={sectionData as any} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
       case 'lifeCareer':
-        return <LifeCareerPlanningForm data={sectionData} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
+        return <LifeCareerPlanningForm data={sectionData as any} onUpdate={onUpdate} onFieldUpdate={onFieldUpdate} />;
       default:
         return <div>Form not implemented</div>;
     }
