@@ -30,6 +30,7 @@ export interface Income {
 export interface Expenses {
   // Housing
   housingPayment: number;
+  housingType: string;
   propertyTaxes: number;
   hoaFees: number;
   homeInsurance: number;
