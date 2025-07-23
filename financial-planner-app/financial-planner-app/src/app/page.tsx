@@ -1,3 +1,5 @@
+'use client';
+
 import OnboardingWizard from '@/components/OnboardingWizard';
 import { FormData } from '@/types/financial';
 
