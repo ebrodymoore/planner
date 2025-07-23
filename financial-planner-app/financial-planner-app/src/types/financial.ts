@@ -28,52 +28,20 @@ export interface Income {
 }
 
 export interface Expenses {
-  // Housing
-  housingPayment: number;
+  // Housing Type
   housingType: string;
-  propertyTaxes: number;
-  hoaFees: number;
-  homeInsurance: number;
-  utilities: number;
-  internetCablePhone: number;
   
-  // Transportation
-  autoInsurance: number;
-  gasoline: number;
-  vehicleMaintenance: number;
-  vehicleRegistration: number;
-  parkingTolls: number;
-  publicTransportation: number;
-  
-  // Healthcare
-  healthInsurance: number;
-  dentalInsurance: number;
-  visionInsurance: number;
-  medicalCopays: number;
-  outOfPocketHealthcare: number;
-  
-  // Personal & Living
-  foodGroceries: number;
-  diningEntertainment: number;
-  clothing: number;
-  personalCare: number;
-  subscriptionsMemberships: number;
-  cellPhone: number;
-  petExpenses: number;
-  childCareSchool: number;
-  
-  // Irregular/Annual
-  annualVacation: number;
-  holidayGifts: number;
-  professionalExpenses: number;
-  homeMaintenance: number;
-  charitableDonations: number;
-  lifeInsurancePremiums: number;
-  taxPreparation: number;
-  
-  // Summary categories (for form calculations)
-  transportation: number;
-  entertainment: number;
+  // Main Expense Categories
+  housing: number;          // Mortgage + utilities + home
+  transportation: number;   // Auto finance + gas + service + rideshare
+  travel: number;          // Flights and lodging
+  recreation: number;      // All recreation expenses
+  food: number;            // Groceries + dining
+  healthcare: number;      // Medical + pet care + insurance
+  shopping: number;        // Online + clothing
+  technology: number;      // Apps and subscriptions
+  personalCare: number;    // Haircuts, personal items
+  entertainment: number;   // Streaming services
   
   // Analysis
   fixedVsVariableRatio: string;

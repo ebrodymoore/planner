@@ -10,19 +10,19 @@ import { Expenses } from '@/types/financial';
 interface ExpensesFormProps {
   data?: Expenses;
   onUpdate: (data: Expenses) => void;
-  onFieldUpdate: (field: keyof Expenses, value: any) => void;
+  onFieldUpdate?: (field: string, value: any) => void;
 }
 
-export default function ExpensesForm({ data, onUpdate, onFieldUpdate }: ExpensesFormProps) {
+export default function ExpensesForm({ data, onUpdate }: ExpensesFormProps) {
   const expensesData = data || {} as Expenses;
 
   const handleFieldChange = (field: keyof Expenses, value: string | number) => {
+    const stringFields = ['housingType', 'fixedVsVariableRatio', 'seasonalVariations', 'recentExpenseChanges', 'potentialReductions'];
     const updatedData = {
       ...expensesData,
-      [field]: field !== 'fixedVsVariableRatio' && field !== 'seasonalVariations' && 
-                field !== 'recentExpenseChanges' && field !== 'potentialReductions'
-        ? (typeof value === 'string' ? parseFloat(value) || 0 : value)
-        : value
+      [field]: stringFields.includes(field as string)
+        ? value
+        : (typeof value === 'string' ? parseFloat(value) || 0 : value)
     };
     onUpdate(updatedData);
   };
@@ -37,11 +37,16 @@ export default function ExpensesForm({ data, onUpdate, onFieldUpdate }: Expenses
   };
 
   const getTotalMonthlyExpenses = () => {
-    return (expensesData.housingPayment || 0) + 
-           (expensesData.foodGroceries || 0) + 
-           (expensesData.utilities || 0) + 
-           (expensesData.gasoline || 0) + 
-           (expensesData.diningEntertainment || 0);
+    return (expensesData.housing || 0) + 
+           (expensesData.transportation || 0) + 
+           (expensesData.travel || 0) + 
+           (expensesData.recreation || 0) + 
+           (expensesData.food || 0) + 
+           (expensesData.healthcare || 0) + 
+           (expensesData.shopping || 0) + 
+           (expensesData.technology || 0) + 
+           (expensesData.personalCare || 0) + 
+           (expensesData.entertainment || 0);
   };
 
   const getAnnualExpenses = () => {
@@ -50,95 +55,54 @@ export default function ExpensesForm({ data, onUpdate, onFieldUpdate }: Expenses
 
   return (
     <div className="space-y-6">
-      {/* Housing Expenses */}
+      {/* Housing Type */}
       <Card>
         <CardContent className="pt-6 space-y-4">
-          <h3 className="text-lg font-semibold">Housing Expenses</h3>
+          <h3 className="text-lg font-semibold">Housing Information</h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Housing Payment */}
-            <div className="space-y-2">
-              <Label htmlFor="housingPayment">Monthly Housing Payment *</Label>
-              <div className="relative">
-                <span className="absolute left-3 top-2.5 text-gray-500">$</span>
-                <Input
-                  id="housingPayment"
-                  type="number"
-                  placeholder="2500"
-                  value={expensesData.housingPayment || ''}
-                  onChange={(e) => handleFieldChange('housingPayment', e.target.value)}
-                  className="pl-8"
-                />
-              </div>
-              <p className="text-xs text-gray-500">
-                Mortgage/rent, insurance, HOA, property taxes
-              </p>
-            </div>
-
-            {/* Housing Type */}
-            <div className="space-y-2">
-              <Label htmlFor="housingType">Housing Type</Label>
-              <Select
-                value={expensesData.housingType || ''}
-                onValueChange={(value) => handleFieldChange('housingType', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select housing situation" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="own_with_mortgage">Own with Mortgage</SelectItem>
-                  <SelectItem value="own_outright">Own Outright (No Mortgage)</SelectItem>
-                  <SelectItem value="rent">Rent</SelectItem>
-                  <SelectItem value="live_with_family">Live with Family/Friends</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="housingType">Housing Type</Label>
+            <Select
+              value={expensesData.housingType || ''}
+              onValueChange={(value) => handleFieldChange('housingType', value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select housing situation" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="own_with_mortgage">Own with Mortgage</SelectItem>
+                <SelectItem value="own_outright">Own Outright (No Mortgage)</SelectItem>
+                <SelectItem value="rent">Rent</SelectItem>
+                <SelectItem value="live_with_family">Live with Family/Friends</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>
 
-      {/* Living Expenses */}
+      {/* Monthly Expenses */}
       <Card>
         <CardContent className="pt-6 space-y-4">
-          <h3 className="text-lg font-semibold">Monthly Living Expenses</h3>
+          <h3 className="text-lg font-semibold">Monthly Expense Categories</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Food & Groceries */}
+            {/* Housing */}
             <div className="space-y-2">
-              <Label htmlFor="food">Food & Groceries</Label>
+              <Label htmlFor="housing">Housing</Label>
               <div className="relative">
                 <span className="absolute left-3 top-2.5 text-gray-500">$</span>
                 <Input
-                  id="food"
+                  id="housing"
                   type="number"
-                  placeholder="600"
-                  value={expensesData.foodGroceries || ''}
-                  onChange={(e) => handleFieldChange('foodGroceries', e.target.value)}
+                  placeholder="1491"
+                  value={expensesData.housing || ''}
+                  onChange={(e) => handleFieldChange('housing', e.target.value)}
                   className="pl-8"
                 />
               </div>
               <p className="text-xs text-gray-500">
-                Groceries, dining out, food delivery
-              </p>
-            </div>
-
-            {/* Utilities */}
-            <div className="space-y-2">
-              <Label htmlFor="utilities">Utilities</Label>
-              <div className="relative">
-                <span className="absolute left-3 top-2.5 text-gray-500">$</span>
-                <Input
-                  id="utilities"
-                  type="number"
-                  placeholder="200"
-                  value={expensesData.utilities || ''}
-                  onChange={(e) => handleFieldChange('utilities', e.target.value)}
-                  className="pl-8"
-                />
-              </div>
-              <p className="text-xs text-gray-500">
-                Electricity, gas, water, internet, phone
+                Mortgage + utilities + home expenses
               </p>
             </div>
 
@@ -150,33 +114,166 @@ export default function ExpensesForm({ data, onUpdate, onFieldUpdate }: Expenses
                 <Input
                   id="transportation"
                   type="number"
-                  placeholder="400"
+                  placeholder="830"
                   value={expensesData.transportation || ''}
                   onChange={(e) => handleFieldChange('transportation', e.target.value)}
                   className="pl-8"
                 />
               </div>
               <p className="text-xs text-gray-500">
-                Gas, car maintenance, public transit, parking
+                Auto finance + gas + service + rideshare
               </p>
             </div>
 
-            {/* Entertainment & Discretionary */}
+            {/* Travel */}
             <div className="space-y-2">
-              <Label htmlFor="entertainment">Entertainment & Discretionary</Label>
+              <Label htmlFor="travel">Travel</Label>
+              <div className="relative">
+                <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                <Input
+                  id="travel"
+                  type="number"
+                  placeholder="521"
+                  value={expensesData.travel || ''}
+                  onChange={(e) => handleFieldChange('travel', e.target.value)}
+                  className="pl-8"
+                />
+              </div>
+              <p className="text-xs text-gray-500">
+                Flights and lodging
+              </p>
+            </div>
+
+            {/* Recreation */}
+            <div className="space-y-2">
+              <Label htmlFor="recreation">Recreation</Label>
+              <div className="relative">
+                <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                <Input
+                  id="recreation"
+                  type="number"
+                  placeholder="660"
+                  value={expensesData.recreation || ''}
+                  onChange={(e) => handleFieldChange('recreation', e.target.value)}
+                  className="pl-8"
+                />
+              </div>
+              <p className="text-xs text-gray-500">
+                All recreation expenses
+              </p>
+            </div>
+
+            {/* Food */}
+            <div className="space-y-2">
+              <Label htmlFor="food">Food</Label>
+              <div className="relative">
+                <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                <Input
+                  id="food"
+                  type="number"
+                  placeholder="275"
+                  value={expensesData.food || ''}
+                  onChange={(e) => handleFieldChange('food', e.target.value)}
+                  className="pl-8"
+                />
+              </div>
+              <p className="text-xs text-gray-500">
+                Groceries + dining
+              </p>
+            </div>
+
+            {/* Healthcare */}
+            <div className="space-y-2">
+              <Label htmlFor="healthcare">Healthcare</Label>
+              <div className="relative">
+                <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                <Input
+                  id="healthcare"
+                  type="number"
+                  placeholder="420"
+                  value={expensesData.healthcare || ''}
+                  onChange={(e) => handleFieldChange('healthcare', e.target.value)}
+                  className="pl-8"
+                />
+              </div>
+              <p className="text-xs text-gray-500">
+                Medical + pet care + insurance
+              </p>
+            </div>
+
+            {/* Shopping */}
+            <div className="space-y-2">
+              <Label htmlFor="shopping">Shopping</Label>
+              <div className="relative">
+                <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                <Input
+                  id="shopping"
+                  type="number"
+                  placeholder="340"
+                  value={expensesData.shopping || ''}
+                  onChange={(e) => handleFieldChange('shopping', e.target.value)}
+                  className="pl-8"
+                />
+              </div>
+              <p className="text-xs text-gray-500">
+                Online + clothing
+              </p>
+            </div>
+
+            {/* Technology */}
+            <div className="space-y-2">
+              <Label htmlFor="technology">Technology</Label>
+              <div className="relative">
+                <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                <Input
+                  id="technology"
+                  type="number"
+                  placeholder="20"
+                  value={expensesData.technology || ''}
+                  onChange={(e) => handleFieldChange('technology', e.target.value)}
+                  className="pl-8"
+                />
+              </div>
+              <p className="text-xs text-gray-500">
+                Apps and subscriptions
+              </p>
+            </div>
+
+            {/* Personal Care */}
+            <div className="space-y-2">
+              <Label htmlFor="personalCare">Personal Care</Label>
+              <div className="relative">
+                <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                <Input
+                  id="personalCare"
+                  type="number"
+                  placeholder="31"
+                  value={expensesData.personalCare || ''}
+                  onChange={(e) => handleFieldChange('personalCare', e.target.value)}
+                  className="pl-8"
+                />
+              </div>
+              <p className="text-xs text-gray-500">
+                Haircuts, personal items
+              </p>
+            </div>
+
+            {/* Entertainment */}
+            <div className="space-y-2">
+              <Label htmlFor="entertainment">Entertainment</Label>
               <div className="relative">
                 <span className="absolute left-3 top-2.5 text-gray-500">$</span>
                 <Input
                   id="entertainment"
                   type="number"
-                  placeholder="300"
+                  placeholder="5"
                   value={expensesData.entertainment || ''}
                   onChange={(e) => handleFieldChange('entertainment', e.target.value)}
                   className="pl-8"
                 />
               </div>
               <p className="text-xs text-gray-500">
-                Movies, subscriptions, hobbies, personal care
+                Streaming services
               </p>
             </div>
           </div>
@@ -187,67 +284,45 @@ export default function ExpensesForm({ data, onUpdate, onFieldUpdate }: Expenses
       <Card className="bg-orange-50 border-orange-200">
         <CardContent className="pt-6">
           <h4 className="font-semibold text-orange-900 mb-3">📊 Monthly Expense Summary</h4>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm mb-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
             <div>
               <p className="text-orange-700 font-medium">Housing</p>
-              <p className="text-orange-900 font-bold">{formatCurrency(expensesData.housingPayment || 0)}</p>
-            </div>
-            <div>
-              <p className="text-orange-700 font-medium">Food</p>
-              <p className="text-orange-900 font-bold">{formatCurrency(expensesData.foodGroceries || 0)}</p>
-            </div>
-            <div>
-              <p className="text-orange-700 font-medium">Utilities</p>
-              <p className="text-orange-900 font-bold">{formatCurrency(expensesData.utilities || 0)}</p>
+              <p className="text-orange-900 font-bold">{formatCurrency(expensesData.housing || 0)}</p>
             </div>
             <div>
               <p className="text-orange-700 font-medium">Transportation</p>
               <p className="text-orange-900 font-bold">{formatCurrency(expensesData.transportation || 0)}</p>
             </div>
             <div>
-              <p className="text-orange-700 font-medium">Entertainment</p>
-              <p className="text-orange-900 font-bold">{formatCurrency(expensesData.entertainment || 0)}</p>
+              <p className="text-orange-700 font-medium">Food</p>
+              <p className="text-orange-900 font-bold">{formatCurrency(expensesData.food || 0)}</p>
             </div>
-            <div className="md:col-span-1">
-              <p className="text-orange-700 font-medium">Total Monthly</p>
-              <p className="text-orange-900 font-bold text-lg">{formatCurrency(getTotalMonthlyExpenses())}</p>
+            <div>
+              <p className="text-orange-700 font-medium">Healthcare</p>
+              <p className="text-orange-900 font-bold">{formatCurrency(expensesData.healthcare || 0)}</p>
+            </div>
+            <div>
+              <p className="text-orange-700 font-medium">Other</p>
+              <p className="text-orange-900 font-bold">{formatCurrency(
+                (expensesData.travel || 0) + 
+                (expensesData.recreation || 0) + 
+                (expensesData.shopping || 0) + 
+                (expensesData.technology || 0) + 
+                (expensesData.personalCare || 0) + 
+                (expensesData.entertainment || 0)
+              )}</p>
             </div>
           </div>
-          <div className="border-t pt-3">
+          <div className="mt-4 pt-4 border-t border-orange-200">
             <div className="flex justify-between items-center">
-              <span className="text-orange-700 font-medium">Total Annual Expenses</span>
-              <span className="text-orange-900 font-bold text-xl">{formatCurrency(getAnnualExpenses())}</span>
+              <span className="text-orange-900 font-semibold">Total Monthly:</span>
+              <span className="text-orange-900 font-bold text-lg">{formatCurrency(getTotalMonthlyExpenses())}</span>
+            </div>
+            <div className="flex justify-between items-center mt-1">
+              <span className="text-orange-700">Total Annual:</span>
+              <span className="text-orange-700 font-semibold">{formatCurrency(getAnnualExpenses())}</span>
             </div>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Additional Expenses Note */}
-      <Card className="bg-yellow-50 border-yellow-200">
-        <CardContent className="pt-6">
-          <h4 className="font-semibold text-yellow-900 mb-2">📝 Not Included Here</h4>
-          <p className="text-sm text-yellow-800 mb-2">
-            The following expenses are tracked separately in other sections:
-          </p>
-          <ul className="text-sm text-yellow-800 space-y-1">
-            <li>• <strong>Debt payments:</strong> Credit cards, loans, and mortgage principal (Liabilities section)</li>
-            <li>• <strong>Insurance premiums:</strong> Health, life, disability (calculated separately)</li>
-            <li>• <strong>Savings & investments:</strong> 401k contributions, emergency fund (Assets section)</li>
-            <li>• <strong>Taxes:</strong> Income, property, and other tax withholdings</li>
-          </ul>
-        </CardContent>
-      </Card>
-
-      {/* Tips Section */}
-      <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="pt-6">
-          <h4 className="font-semibold text-blue-900 mb-2">💡 Expense Tracking Tips</h4>
-          <ul className="text-sm text-blue-800 space-y-1">
-            <li>• <strong>Be realistic:</strong> Review bank statements for accurate amounts</li>
-            <li>• <strong>Housing rule:</strong> Keep total housing costs under 28% of gross income</li>
-            <li>• <strong>Track everything:</strong> Small expenses add up over time</li>
-            <li>• <strong>Seasonal variation:</strong> Consider higher utility costs in winter/summer</li>
-          </ul>
         </CardContent>
       </Card>
     </div>
