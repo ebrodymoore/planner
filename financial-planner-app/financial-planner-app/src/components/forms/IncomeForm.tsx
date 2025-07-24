@@ -21,7 +21,7 @@ export default function IncomeForm({ data, onUpdate, onFieldUpdate }: IncomeForm
     const updatedData = {
       ...incomeData,
       [field]: field === 'annualIncome' || field === 'spouseIncome' || field === 'rentalIncome' || 
-                field === 'investmentIncome' || field === 'retirementAge'
+                field === 'investmentIncome'
         ? (typeof value === 'string' ? parseFloat(value) || 0 : value)
         : value
     };
@@ -218,23 +218,6 @@ export default function IncomeForm({ data, onUpdate, onFieldUpdate }: IncomeForm
               />
             </div>
 
-            {/* Expected Retirement Age */}
-            <div className="space-y-2">
-              <Label htmlFor="retirementAge">Expected Retirement Age</Label>
-              <Input
-                id="retirementAge"
-                type="number"
-                placeholder="65"
-                value={incomeData.retirementAge || ''}
-                onChange={(e) => handleFieldChange('retirementAge', e.target.value)}
-                min="50"
-                max="80"
-                className="w-full"
-              />
-              <p className="text-xs text-gray-500">
-                Age when you plan to retire
-              </p>
-            </div>
           </div>
 
           {/* Major Income Changes */}

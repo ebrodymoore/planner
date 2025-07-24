@@ -138,6 +138,19 @@ export default function PersonalInfoForm({ data, onUpdate, onFieldUpdate }: Pers
             className="w-full"
           />
         </div>
+
+        {/* Profession */}
+        <div className="space-y-2">
+          <Label htmlFor="profession">Job Title/Profession</Label>
+          <Input
+            id="profession"
+            type="text"
+            placeholder="e.g., Software Engineer, Marketing Manager"
+            value={personalData.profession || ''}
+            onChange={(e) => handleFieldChange('profession', e.target.value)}
+            className="w-full"
+          />
+        </div>
       </div>
 
       {/* Dependents Section */}
@@ -178,18 +191,6 @@ export default function PersonalInfoForm({ data, onUpdate, onFieldUpdate }: Pers
             </div>
           </div>
 
-          {/* Profession */}
-          <div className="space-y-2">
-            <Label htmlFor="profession">Job Title/Profession</Label>
-            <Input
-              id="profession"
-              type="text"
-              placeholder="e.g., Software Engineer, Marketing Manager"
-              value={personalData.profession || ''}
-              onChange={(e) => handleFieldChange('profession', e.target.value)}
-              className="w-full"
-            />
-          </div>
         </CardContent>
       </Card>
 

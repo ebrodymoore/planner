@@ -172,38 +172,7 @@ export default function LifeCareerPlanningForm({ data, onUpdate, onFieldUpdate }
           <h3 className="text-lg font-semibold">👨‍👩‍👧‍👦 Family Planning</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="maritalStatus">Marital Status</Label>
-              <Select
-                value={lifeCareerData.maritalStatus || ''}
-                onValueChange={(value) => handleFieldChange('maritalStatus', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Current marital status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="single">Single</SelectItem>
-                  <SelectItem value="dating">Dating/relationship</SelectItem>
-                  <SelectItem value="engaged">Engaged</SelectItem>
-                  <SelectItem value="married">Married</SelectItem>
-                  <SelectItem value="divorced">Divorced</SelectItem>
-                  <SelectItem value="widowed">Widowed</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="currentChildren">Current Children</Label>
-              <Input
-                id="currentChildren"
-                type="number"
-                placeholder="0"
-                value={lifeCareerData.currentChildren || ''}
-                onChange={(e) => handleFieldChange('currentChildren', parseInt(e.target.value) || 0)}
-                min="0"
-                max="10"
-              />
-            </div>
 
             <div className="space-y-2">
               <Label htmlFor="plannedChildren">Additional Children Planned</Label>
@@ -403,18 +372,6 @@ export default function LifeCareerPlanningForm({ data, onUpdate, onFieldUpdate }
           <h3 className="text-lg font-semibold">🏖️ Retirement Vision</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="idealRetirementAge">Ideal Retirement Age</Label>
-              <Input
-                id="idealRetirementAge"
-                type="number"
-                placeholder="65"
-                value={lifeCareerData.idealRetirementAge || ''}
-                onChange={(e) => handleFieldChange('idealRetirementAge', parseInt(e.target.value) || 0)}
-                min="50"
-                max="80"
-              />
-            </div>
 
             <div className="space-y-2">
               <Label htmlFor="retirementLocation">Retirement Location</Label>

@@ -231,24 +231,6 @@ export default function BehavioralAssessmentForm({ data, onUpdate, onFieldUpdate
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="investmentResearchHabits">Investment Research</Label>
-              <Select
-                value={behavioralData.investmentResearchHabits || ''}
-                onValueChange={(value) => handleFieldChange('investmentResearchHabits', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="How do you research investments?" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="extensive_research">Extensive research</SelectItem>
-                  <SelectItem value="basic_research">Basic research</SelectItem>
-                  <SelectItem value="rely_advisors">Rely on advisors</SelectItem>
-                  <SelectItem value="follow_trends">Follow trends/tips</SelectItem>
-                  <SelectItem value="no_research">Little to no research</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
 
             <div className="space-y-2">
               <Label htmlFor="lossVsGainSensitivity">Loss vs Gain Sensitivity</Label>

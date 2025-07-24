@@ -357,23 +357,6 @@ export default function CashFlowAnalysisForm({ data, onUpdate, onFieldUpdate }: 
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="emergencyFundMonths">Emergency Fund Target</Label>
-              <Select
-                value={cashFlowData.emergencyFundMonths || ''}
-                onValueChange={(value) => handleFieldChange('emergencyFundMonths', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Months of expenses to save" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="3">3 months</SelectItem>
-                  <SelectItem value="6">6 months</SelectItem>
-                  <SelectItem value="9">9 months</SelectItem>
-                  <SelectItem value="12">12 months</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
 
             <div className="space-y-2">
               <Label htmlFor="savingsGoalProgress">Savings Goals Progress</Label>

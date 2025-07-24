@@ -80,23 +80,6 @@ export default function InvestmentPhilosophyForm({ data, onUpdate, onFieldUpdate
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="investmentResearchInterest">Investment Research Interest</Label>
-              <Select
-                value={investmentData.investmentResearchInterest || ''}
-                onValueChange={(value) => handleFieldChange('investmentResearchInterest', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Interest in investment research" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="no_interest">No interest in research</SelectItem>
-                  <SelectItem value="basic_understanding">Basic understanding preferred</SelectItem>
-                  <SelectItem value="moderate_interest">Moderate interest</SelectItem>
-                  <SelectItem value="high_interest">High interest in research</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
 
             <div className="space-y-2">
               <Label htmlFor="currentAssetAllocationKnowledge">Asset Allocation Knowledge</Label>
