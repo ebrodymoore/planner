@@ -374,7 +374,7 @@ Provide comprehensive analysis with specific calculations, dollar amounts, and a
    */
   private static async callClaudeAPI(prompt: string): Promise<any> {
     const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
-    const API_KEY = process.env.NEXT_PUBLIC_CLAUDE_API_KEY;
+    const API_KEY = process.env.CLAUDE_API_KEY;
 
     if (!API_KEY) {
       throw new Error('Claude API key not configured');

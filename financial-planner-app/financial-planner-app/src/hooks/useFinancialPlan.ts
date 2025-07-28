@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '@supabase/auth-helpers-react';
 import { FinancialDataService, QuestionnaireResponse, FinancialAnalysis } from '@/services/financialDataService';
-import { generateFinancialAnalysis } from '@/services/claudeFinancialAnalysis';
+// Claude API calls are now handled through the API route
 import { FormData } from '@/types/financial';
 
 interface UseFinancialPlanReturn {
@@ -107,56 +107,40 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
         throw new Error('Failed to save questionnaire data');
       }
 
-      // Prepare data for Claude API
-      const claudeRequestData = FinancialDataService.prepareForClaudeAPI(questionnaireData);
-      
-      // Generate analysis using Claude
-      const startTime = Date.now();
-      const claudeResponse = await generateFinancialAnalysis(claudeRequestData);
-      const responseTime = Date.now() - startTime;
+      // Generate comprehensive analysis using Claude API
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          formData: questionnaireData
+        })
+      });
 
-      // Save analysis results to database
-      const analysisResult = await FinancialDataService.saveAnalysisResults(
-        user.id,
-        questionnaireResponse.id,
-        claudeRequestData,
-        claudeResponse,
-        'comprehensive'
-      );
-
-      if (!analysisResult) {
-        throw new Error('Failed to save analysis results');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to generate Claude analysis');
       }
 
-      // Log API usage for cost tracking
-      await FinancialDataService.logAPIUsage(
-        user.id,
-        'comprehensive_analysis',
-        claudeResponse.usage?.total_tokens || 0,
-        responseTime,
-        true
-      );
+      const { analysis } = await response.json();
+      
+      if (!analysis) {
+        throw new Error('No analysis returned from API');
+      }
 
       // Create financial snapshot for historical tracking
       await FinancialDataService.createFinancialSnapshot(user.id, questionnaireData);
 
-      setAnalysisResults(analysisResult);
+      // Set the analysis results (they're already saved by the API)
+      setAnalysisResults(analysis);
       
     } catch (err) {
       console.error('Error generating analysis:', err);
       setError(err instanceof Error ? err.message : 'Failed to generate analysis');
       
-      // Log failed API usage
-      if (user?.id) {
-        await FinancialDataService.logAPIUsage(
-          user.id,
-          'comprehensive_analysis',
-          0,
-          0,
-          false,
-          err instanceof Error ? err.message : 'Unknown error'
-        );
-      }
+      // Error is already logged by ClaudeFinancialAnalysis service
     } finally {
       setIsGeneratingAnalysis(false);
     }
