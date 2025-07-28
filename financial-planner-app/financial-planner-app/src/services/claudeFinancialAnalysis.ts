@@ -140,134 +140,233 @@ export class ClaudeFinancialAnalysis {
    * Build comprehensive financial analysis prompt for Claude
    */
   private static buildFinancialAnalysisPrompt(requestData: any): string {
-    return `You are a Certified Financial Planner (CFP) providing comprehensive financial analysis. Please analyze the following client profile and provide detailed recommendations.
+    const clientDataJson = JSON.stringify(requestData.client_profile, null, 2);
+    
+    return `You are a Certified Financial Planner (CFP) with 20+ years of experience providing comprehensive financial planning services to high-net-worth individuals. Analyze the provided client financial data and create a detailed, actionable financial plan that matches the quality and depth of plans from top-tier financial advisory firms.
 
-CLIENT PROFILE:
-${JSON.stringify(requestData.client_profile, null, 2)}
+Client Financial Data
+${clientDataJson}
 
-ANALYSIS CONTEXT:
-${JSON.stringify(requestData.analysis_context, null, 2)}
+Analysis Requirements
+Generate a comprehensive financial plan with the following sections. Use specific numbers from the client data and provide detailed calculations, projections, and recommendations.
 
-ANALYSIS REQUEST:
-${JSON.stringify(requestData.analysis_request, null, 2)}
+1. EXECUTIVE SUMMARY
+• Calculate current net worth and provide 3-year projection
+• Assign overall financial health score (1-100) with justification
+• Identify top 3 financial strengths and top 3 areas needing immediate attention
+• Summarize progress toward stated goals with specific metrics
+• Provide one-paragraph assessment of overall financial trajectory
 
-Please provide a comprehensive financial analysis with the following structure:
+2. ASSET ALLOCATION ANALYSIS
+• Calculate current asset allocation percentages across all accounts
+• Recommend target allocation based on age, risk tolerance, and timeline
+• Provide specific fund recommendations for 401k, IRA, and taxable accounts
+• Calculate projected returns for current vs. recommended allocations
+• Identify rebalancing frequency and triggers
+• Recommend tax-efficient fund placement across account types
 
-## EXECUTIVE SUMMARY
-- Overall financial health assessment (1-2 paragraphs)
-- Key strengths and areas of concern
-- Primary recommendations summary
+3. RETIREMENT PLANNING PROJECTIONS
+• Calculate retirement income need based on current expenses and lifestyle
+• Project current retirement savings trajectory to stated retirement age
+• Analyze 401k strategy including employer match optimization
+• Calculate optimal 401k contribution rate considering match and tax benefits
+• Recommend Traditional vs. Roth IRA strategy based on current/future tax brackets
+• Project Social Security benefits and optimal claiming strategy
+• Estimate healthcare costs in retirement
+• Provide Monte Carlo analysis or success probability for retirement goal
+• Calculate required monthly savings to meet retirement target
 
-## DETAILED ANALYSIS
+4. DEBT MANAGEMENT STRATEGY
+• Analyze all debts with current balances, rates, and terms
+• Calculate debt-to-income ratios and compare to optimal targets
+• Recommend debt payoff strategy (avalanche vs. snowball with calculations)
+• Analyze mortgage: extra payment benefits vs. investment opportunity cost
+• Provide specific monthly payment recommendations for optimal debt reduction
+• Calculate interest savings from recommended strategies
+• Project debt-free timeline with current vs. optimized payments
 
-### 1. CASH FLOW & BUDGETING
-- Monthly cash flow analysis
-- Savings rate assessment
-- Budget optimization opportunities
-- Emergency fund evaluation
+5. RISK ASSESSMENT & INSURANCE ANALYSIS
+• Evaluate current insurance coverage adequacy
+• Calculate life insurance needs using income replacement method
+• Assess disability insurance needs and gaps
+• Analyze property/casualty coverage limits vs. net worth
+• Recommend umbrella policy limits
+• Calculate HSA optimization strategy and tax benefits
+• Assess emergency fund adequacy and recommend optimal target
+• Evaluate investment risk alignment with stated risk tolerance
 
-### 2. DEBT MANAGEMENT
-- Debt-to-income ratio analysis
-- Debt prioritization strategy
-- Payoff timeline recommendations
-- Refinancing opportunities
+6. CASH FLOW OPTIMIZATION
+• Analyze monthly cash flow with income vs. expenses breakdown
+• Calculate current savings rate and compare to recommendations for age/goals
+• Identify expense optimization opportunities
+• Recommend automated savings and investment strategies
+• Project cash flow impact of potential income changes
+• Calculate optimal emergency fund target and funding timeline
+• Recommend budget adjustments to maximize goal achievement
 
-### 3. INVESTMENT STRATEGY
-- Current asset allocation review
-- Risk tolerance alignment
-- Diversification assessment
-- Tax-efficient investing strategies
+7. TAX OPTIMIZATION STRATEGIES
+• Estimate current effective and marginal tax rates
+• Calculate optimal 401k contribution for tax efficiency
+• Analyze HSA maximization strategy and triple tax advantage
+• Recommend Roth conversion opportunities and timing
+• Evaluate tax-loss harvesting potential in taxable accounts
+• Assess tax implications of potential side business/entrepreneurship
+• Recommend tax-advantaged account prioritization
+• Calculate tax savings from recommended strategies
 
-### 4. RETIREMENT PLANNING
-- Retirement readiness assessment
-- Savings rate requirements
-- Investment allocation recommendations
-- Social Security optimization
+8. GOAL-SPECIFIC PLANNING
+• Emergency Fund: Calculate optimal target, current gap, funding timeline
+• Real Estate Investment: Analyze readiness for rental property investment
+• Side Business: Assess capital needs and funding strategy for entrepreneurship
+• Second Home: Evaluate budget feasibility and financing options
+• Early Retirement: Calculate requirements for stated retirement goal
 
-### 5. TAX OPTIMIZATION
-- Current tax efficiency review
-- Tax reduction strategies
-- Tax-advantaged account optimization
-- Estate tax considerations
+9. PRIORITIZED ACTION PLAN
+Rank recommendations by impact and urgency:
 
-### 6. INSURANCE ANALYSIS
-- Coverage adequacy assessment
-- Gap analysis and recommendations
-- Cost optimization opportunities
-- Risk mitigation strategies
+IMMEDIATE (Next 30 Days):
+[List 3-5 highest priority actions with specific steps]
 
-### 7. ESTATE PLANNING
-- Current estate plan review
-- Document update recommendations
-- Tax minimization strategies
-- Legacy planning considerations
+SHORT-TERM (3-6 Months):
+[List 4-6 actions with timelines and expected outcomes]
 
-## RISK ASSESSMENT
-- Overall risk profile
-- Identified risk factors
-- Mitigation strategies
-- Insurance recommendations
+MEDIUM-TERM (6-12 Months):
+[List 3-5 strategic initiatives with success metrics]
 
-## PRIORITIZED ACTION PLAN
-For each recommendation, include:
-- Priority level (Urgent/High/Medium/Low)
-- Timeline for implementation
-- Estimated cost/effort
-- Potential impact
-- Resources needed
+LONG-TERM (1-3 Years):
+[List major financial milestones and strategies]
 
-## FOLLOW-UP RECOMMENDATIONS
-- Monitoring metrics
-- Review schedule
-- Adjustment triggers
-- Professional referrals if needed
+10. ANNUAL REVIEW & MONITORING
+• Establish review schedule and key performance indicators
+• Define trigger events requiring plan adjustments
+• Set specific measurable goals for next 12 months
+• Recommend tracking tools and frequency
 
-Please format the response as valid JSON with the following structure:
+Calculation Standards
+• Use current market assumptions for returns (conservative, moderate, aggressive scenarios)
+• Apply appropriate inflation rates (2.5-3% annually)
+• Use current tax brackets and regulations
+• Show all major calculations with formulas
+• Provide ranges and sensitivity analysis where appropriate
+• Include assumptions clearly stated
+
+Output Format Requirements
+• Use professional financial planning language
+• Include specific dollar amounts and percentages throughout
+• Provide clear reasoning for all recommendations
+• Use bullet points and numbered lists for actionability
+• Include relevant financial planning concepts and terminology
+• Maintain objective, advisory tone throughout
+• Cite specific data points from client information to support recommendations
+
+Please format your response as valid JSON with the following structure:
 {
-  "summary": "Executive summary text",
-  "detailed_analysis": {
-    "cash_flow": {...},
-    "debt_management": {...},
-    "investment_strategy": {...},
-    "retirement_planning": {...},
-    "tax_optimization": {...},
-    "insurance_analysis": {...},
-    "estate_planning": {...}
+  "executive_summary": {
+    "current_net_worth": 0,
+    "three_year_projection": 0,
+    "financial_health_score": 0,
+    "score_justification": "",
+    "top_strengths": ["", "", ""],
+    "areas_needing_attention": ["", "", ""],
+    "goal_progress_summary": "",
+    "overall_trajectory": ""
+  },
+  "asset_allocation": {
+    "current_allocation": {
+      "cash": 0,
+      "stocks": 0,
+      "bonds": 0,
+      "real_estate": 0,
+      "other": 0
+    },
+    "recommended_allocation": {
+      "cash": 0,
+      "stocks": 0,
+      "bonds": 0,
+      "real_estate": 0,
+      "other": 0
+    },
+    "specific_recommendations": [],
+    "rebalancing_strategy": "",
+    "tax_efficient_placement": ""
+  },
+  "retirement_planning": {
+    "retirement_income_need": 0,
+    "current_trajectory": "",
+    "savings_gap": 0,
+    "monthly_savings_required": 0,
+    "401k_strategy": "",
+    "ira_strategy": "",
+    "social_security_projection": 0,
+    "healthcare_cost_estimate": 0,
+    "success_probability": 0
+  },
+  "debt_management": {
+    "total_debt": 0,
+    "debt_to_income_ratio": 0,
+    "recommended_strategy": "",
+    "payoff_timeline": "",
+    "monthly_payment_plan": {},
+    "interest_savings": 0
   },
   "risk_assessment": {
-    "overall_risk_level": "moderate",
-    "risk_factors": [...],
-    "mitigation_strategies": [...],
-    "insurance_gaps": [...],
-    "emergency_fund_adequacy": "adequate"
+    "overall_risk_level": "",
+    "insurance_needs": {
+      "life_insurance": 0,
+      "disability_insurance": "",
+      "property_coverage": "",
+      "umbrella_policy": 0
+    },
+    "emergency_fund_target": 0,
+    "current_emergency_fund": 0,
+    "risk_factors": [],
+    "mitigation_strategies": []
   },
-  "action_items": [
-    {
-      "id": "action_1",
-      "title": "Build Emergency Fund",
-      "description": "...",
-      "priority": "high",
-      "estimated_time": "3-6 months",
-      "category": "cash_flow",
-      "potential_impact": "..."
-    }
-  ],
-  "recommendations": [
-    {
-      "category": "investment",
-      "priority": "high",
-      "title": "...",
-      "description": "...",
-      "potential_impact": "...",
-      "timeline": "...",
-      "complexity": "moderate"
-    }
-  ],
+  "cash_flow": {
+    "monthly_income": 0,
+    "monthly_expenses": 0,
+    "net_cash_flow": 0,
+    "savings_rate": 0,
+    "optimization_opportunities": [],
+    "recommended_budget": {}
+  },
+  "tax_optimization": {
+    "current_tax_rate": 0,
+    "optimization_strategies": [],
+    "annual_tax_savings": 0,
+    "account_prioritization": []
+  },
+  "goal_specific_planning": {
+    "emergency_fund": {
+      "target": 0,
+      "current": 0,
+      "timeline": ""
+    },
+    "goals": []
+  },
+  "action_items": {
+    "immediate": [],
+    "short_term": [],
+    "medium_term": [],
+    "long_term": []
+  },
+  "monitoring": {
+    "review_schedule": "",
+    "key_metrics": [],
+    "trigger_events": [],
+    "next_year_goals": []
+  },
+  "calculations_and_assumptions": {
+    "return_assumptions": {},
+    "inflation_rate": 0.025,
+    "tax_assumptions": {},
+    "key_formulas": []
+  },
   "confidence_score": 0.85,
-  "follow_up_suggestions": [...]
+  "follow_up_recommendations": []
 }
 
-Focus on providing specific, actionable advice based on the client's unique situation. Consider their risk tolerance, time horizon, and stated goals. Be thorough but practical in your recommendations.`;
+Provide comprehensive analysis with specific calculations, dollar amounts, and actionable recommendations based on the client's actual financial data.`;
   }
 
   /**
@@ -326,21 +425,26 @@ Focus on providing specific, actionable advice based on the client's unique situ
 
       const parsedData = JSON.parse(jsonMatch[0]);
 
-      // Validate and structure the response
-      return {
-        summary: parsedData.summary || 'Analysis completed',
-        recommendations: parsedData.recommendations || [],
-        risk_assessment: parsedData.risk_assessment || {
-          overall_risk_level: 'moderate',
-          risk_factors: [],
-          mitigation_strategies: [],
-          insurance_gaps: [],
-          emergency_fund_adequacy: 'adequate'
+      // Convert the new structured format to the expected AnalysisResponse format
+      const structuredResponse: AnalysisResponse = {
+        summary: parsedData.executive_summary?.overall_trajectory || 'Financial analysis completed',
+        recommendations: this.convertToRecommendations(parsedData),
+        risk_assessment: {
+          overall_risk_level: parsedData.risk_assessment?.overall_risk_level || 'moderate',
+          risk_factors: parsedData.risk_assessment?.risk_factors || [],
+          mitigation_strategies: parsedData.risk_assessment?.mitigation_strategies || [],
+          insurance_gaps: parsedData.risk_assessment?.insurance_needs ? ['Review insurance needs'] : [],
+          emergency_fund_adequacy: parsedData.cash_flow?.net_cash_flow > 0 ? 'adequate' : 'insufficient'
         },
-        action_items: parsedData.action_items || [],
+        action_items: this.convertToActionItems(parsedData),
         confidence_score: parsedData.confidence_score || 0.8,
-        follow_up_suggestions: parsedData.follow_up_suggestions || []
+        follow_up_suggestions: parsedData.follow_up_recommendations || []
       };
+
+      // Store the full structured data in the response for UI use
+      (structuredResponse as any).structured_data = parsedData;
+
+      return structuredResponse;
 
     } catch (error) {
       console.error('Error parsing Claude response:', error);
@@ -361,6 +465,111 @@ Focus on providing specific, actionable advice based on the client's unique situ
         follow_up_suggestions: ['Schedule follow-up review in 90 days']
       };
     }
+  }
+
+  /**
+   * Convert structured data to legacy recommendations format
+   */
+  private static convertToRecommendations(parsedData: any): FinancialRecommendation[] {
+    const recommendations: FinancialRecommendation[] = [];
+
+    // Asset allocation recommendations
+    if (parsedData.asset_allocation?.specific_recommendations) {
+      parsedData.asset_allocation.specific_recommendations.forEach((rec: string, index: number) => {
+        recommendations.push({
+          category: 'investment',
+          priority: 'high',
+          title: `Asset Allocation Optimization ${index + 1}`,
+          description: rec,
+          potential_impact: 'Improved portfolio performance and risk management',
+          timeline: '30-90 days',
+          complexity: 'moderate'
+        });
+      });
+    }
+
+    // Tax optimization recommendations
+    if (parsedData.tax_optimization?.optimization_strategies) {
+      parsedData.tax_optimization.optimization_strategies.forEach((strategy: string, index: number) => {
+        recommendations.push({
+          category: 'tax',
+          priority: 'medium',
+          title: `Tax Optimization ${index + 1}`,
+          description: strategy,
+          potential_impact: `Potential annual savings: $${parsedData.tax_optimization.annual_tax_savings || 0}`,
+          timeline: '3-6 months',
+          complexity: 'moderate'
+        });
+      });
+    }
+
+    // Cash flow recommendations
+    if (parsedData.cash_flow?.optimization_opportunities) {
+      parsedData.cash_flow.optimization_opportunities.forEach((opp: string, index: number) => {
+        recommendations.push({
+          category: 'cash_flow',
+          priority: 'high',
+          title: `Cash Flow Optimization ${index + 1}`,
+          description: opp,
+          potential_impact: 'Increased savings capacity and financial flexibility',
+          timeline: '30-60 days',
+          complexity: 'simple'
+        });
+      });
+    }
+
+    return recommendations;
+  }
+
+  /**
+   * Convert structured data to legacy action items format
+   */
+  private static convertToActionItems(parsedData: any): ActionItem[] {
+    const actionItems: ActionItem[] = [];
+
+    // Immediate actions
+    if (parsedData.action_items?.immediate) {
+      parsedData.action_items.immediate.forEach((action: string, index: number) => {
+        actionItems.push({
+          id: `immediate_${index + 1}`,
+          title: action,
+          description: `High-priority action requiring immediate attention`,
+          priority: 'urgent',
+          estimated_time: '1-2 weeks',
+          category: 'immediate'
+        });
+      });
+    }
+
+    // Short-term actions
+    if (parsedData.action_items?.short_term) {
+      parsedData.action_items.short_term.forEach((action: string, index: number) => {
+        actionItems.push({
+          id: `short_term_${index + 1}`,
+          title: action,
+          description: `Short-term strategic action`,
+          priority: 'high',
+          estimated_time: '1-3 months',
+          category: 'short_term'
+        });
+      });
+    }
+
+    // Medium-term actions
+    if (parsedData.action_items?.medium_term) {
+      parsedData.action_items.medium_term.forEach((action: string, index: number) => {
+        actionItems.push({
+          id: `medium_term_${index + 1}`,
+          title: action,
+          description: `Medium-term strategic initiative`,
+          priority: 'medium',
+          estimated_time: '3-12 months',
+          category: 'medium_term'
+        });
+      });
+    }
+
+    return actionItems;
   }
 
   /**
