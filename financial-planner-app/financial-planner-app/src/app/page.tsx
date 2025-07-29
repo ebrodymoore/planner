@@ -67,10 +67,10 @@ function HomePage() {
     await saveQuestionnaireData(data);
   };
 
-  // Show authentication if user not logged in
-  if (!user) {
-    return <AuthComponent />;
-  }
+  // TEMPORARILY DISABLED FOR TESTING - Show authentication if user not logged in
+  // if (!user) {
+  //   return <AuthComponent />;
+  // }
 
   // Show loading state
   if (isLoadingQuestionnaire) {

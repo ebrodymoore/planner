@@ -40,19 +40,15 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
 
   // Load questionnaire data from database
   const loadQuestionnaireData = async () => {
-    if (!user?.id) {
-      setError('User not authenticated');
-      return;
-    }
-
+    // TEMPORARILY DISABLED FOR TESTING - Using localStorage instead
     setIsLoadingQuestionnaire(true);
     setError(null);
 
     try {
-      const response = await FinancialDataService.loadQuestionnaireResponse(user.id);
-      
-      if (response) {
-        setQuestionnaireData(response.questionnaire_data);
+      const savedData = localStorage.getItem('financial-planning-data');
+      if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        setQuestionnaireData(parsedData);
       } else {
         setQuestionnaireData({});
       }
@@ -66,17 +62,18 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
 
   // Load existing analysis results
   const loadAnalysisResults = async () => {
-    if (!user?.id) {
-      setError('User not authenticated');
-      return;
-    }
-
+    // TEMPORARILY DISABLED FOR TESTING - Using localStorage instead
     setIsLoadingAnalysis(true);
     setError(null);
 
     try {
-      const analysis = await FinancialDataService.getCurrentAnalysis(user.id);
-      setAnalysisResults(analysis);
+      const savedAnalysis = localStorage.getItem('financial-analysis-results');
+      if (savedAnalysis) {
+        const parsedAnalysis = JSON.parse(savedAnalysis);
+        setAnalysisResults(parsedAnalysis);
+      } else {
+        setAnalysisResults(null);
+      }
     } catch (err) {
       console.error('Error loading analysis results:', err);
       setError('Failed to load analysis results');
@@ -87,8 +84,8 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
 
   // Generate new financial analysis using Claude AI
   const generateNewAnalysis = async () => {
-    if (!user?.id || !questionnaireData) {
-      setError('Missing user ID or questionnaire data');
+    if (!questionnaireData) {
+      setError('Missing questionnaire data');
       return;
     }
 
@@ -96,51 +93,71 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
     setError(null);
 
     try {
-      // First save/update questionnaire data
-      const questionnaireResponse = await FinancialDataService.saveQuestionnaireResponse(
-        user.id, 
-        questionnaireData, 
-        'completed'
-      );
+      // TEMPORARILY DISABLED FOR TESTING - Generate mock analysis
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
-      if (!questionnaireResponse) {
-        throw new Error('Failed to save questionnaire data');
-      }
-
-      // Generate comprehensive analysis using Claude API
-      const response = await fetch('/api/analyze', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const mockAnalysis: any = {
+        id: 'mock-analysis-1',
+        user_id: 'test-user',
+        analysis_date: new Date().toISOString(),
+        claude_response: {
+          executive_summary: 'Based on your financial profile, you have a solid foundation with $70,000 in total assets and moderate debt levels. Your primary focus should be on building emergency savings and optimizing debt payoff strategies.',
+          key_recommendations: [
+            'Build emergency fund to 6 months of expenses ($15,000)',
+            'Pay off high-interest credit cards using debt avalanche method',
+            'Increase 401k contribution to maximize employer match',
+            'Consider debt consolidation for student loans'
+          ]
         },
-        body: JSON.stringify({
-          userId: user.id,
-          formData: questionnaireData
-        })
-      });
+        structured_data: {
+          debt_management: {
+            total_debt: 30000,
+            debt_to_income_ratio: 0.25,
+            recommended_strategy: 'debt_avalanche',
+            payoff_timeline: '24 months with extra payments',
+            interest_savings: 5000,
+            monthly_payment_plan: {
+              'credit_card_1': 500,
+              'credit_card_2': 300,
+              'student_loan': 250
+            }
+          },
+          action_items: {
+            immediate: [
+              'Set up automatic emergency fund transfer of $500/month',
+              'Consolidate credit card debt to lowest rate card'
+            ],
+            short_term: [
+              'Increase 401k contribution by 2%',
+              'Research high-yield savings accounts'
+            ],
+            medium_term: [
+              'Review insurance coverage',
+              'Consider increasing income through side work'
+            ]
+          },
+          cash_flow: {
+            monthly_surplus: 800,
+            projected_savings_rate: 0.15,
+            optimization_opportunities: [
+              'Reduce dining out by $200/month',
+              'Switch to cheaper phone plan'
+            ]
+          }
+        },
+        recommendations: [],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to generate Claude analysis');
-      }
-
-      const { analysis } = await response.json();
-      
-      if (!analysis) {
-        throw new Error('No analysis returned from API');
-      }
-
-      // Create financial snapshot for historical tracking
-      await FinancialDataService.createFinancialSnapshot(user.id, questionnaireData);
-
-      // Set the analysis results (they're already saved by the API)
-      setAnalysisResults(analysis);
+      // Save to localStorage for persistence
+      localStorage.setItem('financial-analysis-results', JSON.stringify(mockAnalysis));
+      setAnalysisResults(mockAnalysis);
       
     } catch (err) {
       console.error('Error generating analysis:', err);
       setError(err instanceof Error ? err.message : 'Failed to generate analysis');
-      
-      // Error is already logged by ClaudeFinancialAnalysis service
     } finally {
       setIsGeneratingAnalysis(false);
     }
@@ -148,23 +165,10 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
 
   // Save questionnaire data to database
   const saveQuestionnaireData = async (data: FormData) => {
-    if (!user?.id) {
-      setError('User not authenticated');
-      return;
-    }
-
+    // TEMPORARILY DISABLED FOR TESTING - Using localStorage instead
     try {
-      const response = await FinancialDataService.saveQuestionnaireResponse(
-        user.id, 
-        data, 
-        'in_progress'
-      );
-      
-      if (response) {
-        setQuestionnaireData(data);
-      } else {
-        throw new Error('Failed to save questionnaire data');
-      }
+      localStorage.setItem('financial-planning-data', JSON.stringify(data));
+      setQuestionnaireData(data);
     } catch (err) {
       console.error('Error saving questionnaire data:', err);
       setError('Failed to save questionnaire data');
@@ -176,17 +180,11 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
     setError(null);
   };
 
-  // Load data on user change
+  // Load data on mount (temporarily disabled user dependency)
   useEffect(() => {
-    if (user?.id) {
-      loadQuestionnaireData();
-      loadAnalysisResults();
-    } else {
-      // Clear data when user logs out
-      setQuestionnaireData(null);
-      setAnalysisResults(null);
-    }
-  }, [user?.id]);
+    loadQuestionnaireData();
+    loadAnalysisResults();
+  }, []);
 
   return {
     // Data

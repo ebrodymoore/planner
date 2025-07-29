@@ -5,34 +5,37 @@ export class TestUserService {
   static async loginAsTestUser(): Promise<{ user: any; userData: FormData | null }> {
     try {
       // First try to sign in with test credentials
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email: 'ebm.test@gmail.com',
         password: 'testpassword123'
       });
 
-      if (authError) {
-        // If user doesn't exist, create them
+      let user = signInData.user;
+
+      if (signInError && signInError.message.includes('Invalid login credentials')) {
+        // If user doesn't exist, create them with auto-confirmation
         const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
           email: 'ebm.test@gmail.com',
           password: 'testpassword123',
+          options: {
+            emailRedirectTo: undefined // Disable email confirmation for test user
+          }
         });
 
         if (signUpError) {
           throw new Error(`Failed to create test user: ${signUpError.message}`);
         }
 
-        // Auto-confirm the user for testing
-        if (signUpData.user) {
-          await supabase.auth.signInWithPassword({
-            email: 'ebm.test@gmail.com',
-            password: 'testpassword123'
-          });
+        user = signUpData.user;
+
+        // If signup created a user but they need confirmation, we'll use them anyway for testing
+        if (!user) {
+          throw new Error('Failed to create test user');
         }
+      } else if (signInError) {
+        throw new Error(`Sign in failed: ${signInError.message}`);
       }
 
-      // Get the current user
-      const { data: { user } } = await supabase.auth.getUser();
-      
       if (!user) {
         throw new Error('Failed to authenticate test user');
       }
