@@ -8,6 +8,8 @@ import { supabase } from '@/lib/supabase';
 import OnboardingWizard from '@/components/OnboardingWizard';
 import FinancialPlan from '@/components/FinancialPlan';
 import AuthComponent from '@/components/AuthComponent';
+import PlanSelector from '@/components/PlanSelector';
+import QuickPlanWizard, { QuickPlanData } from '@/components/QuickPlanWizard';
 import { useFinancialPlan } from '@/hooks/useFinancialPlan';
 import { useUser } from '@supabase/auth-helpers-react';
 import { FormData } from '@/types/financial';
@@ -15,7 +17,7 @@ import { AlertTriangle, Loader2, Upload, Download } from 'lucide-react';
 
 function HomePage() {
   const user = useUser();
-  const [currentView, setCurrentView] = useState<'questionnaire' | 'plan'>('questionnaire');
+  const [currentView, setCurrentView] = useState<'selector' | 'quick-plan' | 'questionnaire' | 'plan'>('selector');
   const [isUploadingJSON, setIsUploadingJSON] = useState(false);
   
   const {
@@ -52,9 +54,113 @@ function HomePage() {
     }
   };
 
+  // Handle plan selection
+  const handleSelectQuickPlan = () => {
+    setCurrentView('quick-plan');
+  };
+
+  const handleSelectComprehensivePlan = () => {
+    setCurrentView('questionnaire');
+  };
+
+  // Handle Quick Plan completion
+  const handleQuickPlanComplete = async (data: QuickPlanData) => {
+    try {
+      // Convert QuickPlanData to FormData format for compatibility
+      const formData: Partial<FormData> = {
+        personal: {
+          name: 'Quick Plan User',
+          dateOfBirth: '', // Calculate from age if needed
+          maritalStatus: 'unknown',
+          dependents: 0,
+          dependentAges: '',
+          state: '',
+          country: '',
+          employmentStatus: data.employmentStatus,
+          industry: '',
+          profession: '',
+          communicationMethod: '',
+          meetingFrequency: ''
+        },
+        income: {
+          annualIncome: data.annualHouseholdIncome,
+          stability: '',
+          growthExpectation: '',
+          spouseIncome: 0,
+          rentalIncome: 0,
+          businessIncome: 0,
+          investmentIncome: 0,
+          otherIncome: 0,
+          otherIncomeDescription: '',
+          retirementAge: 65,
+          majorIncomeChanges: ''
+        },
+        expenses: {
+          housingType: 'unknown',
+          housing: data.monthlyHousingCost,
+          transportation: 0,
+          travel: 0,
+          recreation: 0,
+          food: 0,
+          healthcare: 0,
+          shopping: 0,
+          technology: 0,
+          personalCare: 0,
+          entertainment: 0,
+          fixedVsVariableRatio: '',
+          seasonalVariations: '',
+          recentExpenseChanges: '',
+          potentialReductions: ''
+        },
+        assets: {
+          checking: 0,
+          savings: data.currentSavings,
+          emergencyTarget: data.emergencyFundCoverage,
+          retirement401k: data.retirementBalance,
+          ira: 0,
+          taxableAccounts: 0,
+          homeValue: 0
+        },
+        liabilities: {
+          mortgageBalance: 0,
+          mortgageRate: 0,
+          mortgageYears: 0,
+          autoLoans: [],
+          creditCards: data.totalDebt > 0 ? [{
+            name: 'Credit Cards (estimated)',
+            balance: data.totalDebt,
+            limit: data.totalDebt * 2,
+            rate: 18
+          }] : [],
+          studentLoans: []
+        },
+        risk: {
+          experienceLevel: data.riskTolerance,
+          largestLoss: '',
+          portfolioDrop: '',
+          timeline: data.retirementTimeline
+        }
+      };
+
+      await saveQuestionnaireData(formData as FormData);
+      await generateNewAnalysis();
+      setCurrentView('plan');
+    } catch (err) {
+      console.error('Error completing Quick Plan:', err);
+    }
+  };
+
+  const handleUpgradeToComprehensive = () => {
+    setCurrentView('questionnaire');
+  };
+
   // Handle navigation
   const handleBackToQuestionnaire = () => {
     setCurrentView('questionnaire');
+  };
+
+  const handleBackToSelector = () => {
+    setCurrentView('selector');
   };
 
   const handleViewPlan = async () => {
@@ -157,6 +263,40 @@ function HomePage() {
     );
   }
 
+  // Show plan selector view
+  if (currentView === 'selector') {
+    return (
+      <div className="min-h-screen">
+        <PlanSelector 
+          onSelectQuickPlan={handleSelectQuickPlan}
+          onSelectComprehensivePlan={handleSelectComprehensivePlan}
+        />
+      </div>
+    );
+  }
+
+  // Show Quick Plan wizard view
+  if (currentView === 'quick-plan') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <QuickPlanWizard 
+          onComplete={handleQuickPlanComplete}
+          onUpgradeToComprehensive={handleUpgradeToComprehensive}
+          initialData={{}}
+        />
+        <div className="fixed bottom-4 left-4">
+          <Button
+            onClick={handleBackToSelector}
+            variant="outline"
+            className="bg-white shadow-lg"
+          >
+            ← Back to Plan Selection
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   // Show financial plan view
   if (currentView === 'plan') {
     return (
@@ -167,6 +307,13 @@ function HomePage() {
           onUpdateData={handleUpdateData}
         />
         <div className="fixed bottom-4 right-4 space-y-2">
+          <Button
+            onClick={handleBackToSelector}
+            variant="outline"
+            className="bg-white shadow-lg block w-full"
+          >
+            Back to Plan Selection
+          </Button>
           <Button
             onClick={handleBackToQuestionnaire}
             variant="outline"
@@ -203,6 +350,17 @@ function HomePage() {
         onSave={handleSave}
         initialData={questionnaireData || {}}
       />
+      
+      {/* Back to selector button */}
+      <div className="fixed bottom-4 left-4">
+        <Button
+          onClick={handleBackToSelector}
+          variant="outline"
+          className="bg-white shadow-lg"
+        >
+          ← Back to Plan Selection
+        </Button>
+      </div>
       
       {/* Action buttons */}
       <div className="fixed bottom-4 right-4 space-y-2">

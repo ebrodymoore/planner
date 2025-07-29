@@ -334,31 +334,33 @@ export default function FinancialPlan({
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           {/* Navigation Tabs */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-2">
-            <TabsList className="grid grid-cols-5 lg:grid-cols-10 gap-1 bg-transparent">
-              {planSections.map((section) => {
-                const IconComponent = section.icon;
-                return (
-                  <TabsTrigger
-                    key={section.id}
-                    value={section.id}
-                    className="flex flex-col items-center gap-1 p-3 text-xs data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700"
-                  >
-                    <div className="relative">
-                      <IconComponent className="w-5 h-5" />
-                      {section.status === 'needs-attention' && (
-                        <AlertTriangle className="w-3 h-3 text-orange-500 absolute -top-1 -right-1" />
-                      )}
-                      {section.status === 'complete' && (
-                        <CheckCircle className="w-3 h-3 text-green-500 absolute -top-1 -right-1" />
-                      )}
-                    </div>
-                    <span className="hidden lg:block text-center leading-tight">
-                      {section.label}
-                    </span>
-                  </TabsTrigger>
-                );
-              })}
-            </TabsList>
+            <div className="overflow-x-auto">
+              <TabsList className="flex gap-1 bg-transparent min-w-max">
+                {planSections.map((section) => {
+                  const IconComponent = section.icon;
+                  return (
+                    <TabsTrigger
+                      key={section.id}
+                      value={section.id}
+                      className="flex flex-col items-center gap-2 px-3 py-2 text-xs data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 min-w-[80px] whitespace-nowrap"
+                    >
+                      <div className="relative">
+                        <IconComponent className="w-4 h-4" />
+                        {section.status === 'needs-attention' && (
+                          <AlertTriangle className="w-2.5 h-2.5 text-orange-500 absolute -top-1 -right-1" />
+                        )}
+                        {section.status === 'complete' && (
+                          <CheckCircle className="w-2.5 h-2.5 text-green-500 absolute -top-1 -right-1" />
+                        )}
+                      </div>
+                      <span className="text-center leading-tight text-[10px] sm:text-xs font-medium">
+                        {section.label}
+                      </span>
+                    </TabsTrigger>
+                  );
+                })}
+              </TabsList>
+            </div>
           </div>
 
           {/* Tab Content */}
