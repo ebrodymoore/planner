@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/lib/supabase';
+import { TestUserService } from '@/services/testUserService';
 import { Loader2 } from 'lucide-react';
 
 export default function AuthComponent() {
@@ -14,6 +15,7 @@ export default function AuthComponent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [testLoading, setTestLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
@@ -43,6 +45,26 @@ export default function AuthComponent() {
       setError(error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleTestLogin = async () => {
+    setTestLoading(true);
+    setError('');
+    setMessage('');
+
+    try {
+      const { user, userData } = await TestUserService.loginAsTestUser();
+      
+      if (user) {
+        setMessage('Logged in as test user (EBM)!');
+        // Redirect to test financial plan page
+        window.location.href = '/test-plan';
+      }
+    } catch (error: any) {
+      setError(`Test login failed: ${error.message}`);
+    } finally {
+      setTestLoading(false);
     }
   };
 
@@ -111,6 +133,25 @@ export default function AuthComponent() {
                 )}
               </Button>
             </form>
+
+            {/* Test Button */}
+            <div className="mt-4">
+              <Button
+                onClick={handleTestLogin}
+                variant="outline"
+                className="w-full bg-green-50 hover:bg-green-100 border-green-300 text-green-700"
+                disabled={testLoading}
+              >
+                {testLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    Loading Test Data...
+                  </>
+                ) : (
+                  'Test (Login as EBM)'
+                )}
+              </Button>
+            </div>
 
             <div className="mt-6 text-center">
               <button
