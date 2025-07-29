@@ -6,14 +6,14 @@ export class TestUserService {
     try {
       // First try to sign in with test credentials
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email: 'test@example.com',
+        email: 'ebm.test@gmail.com',
         password: 'testpassword123'
       });
 
       if (authError) {
         // If user doesn't exist, create them
         const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-          email: 'test@example.com',
+          email: 'ebm.test@gmail.com',
           password: 'testpassword123',
         });
 
@@ -24,7 +24,7 @@ export class TestUserService {
         // Auto-confirm the user for testing
         if (signUpData.user) {
           await supabase.auth.signInWithPassword({
-            email: 'test@example.com',
+            email: 'ebm.test@gmail.com',
             password: 'testpassword123'
           });
         }
