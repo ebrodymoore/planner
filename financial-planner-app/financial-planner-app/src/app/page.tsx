@@ -278,17 +278,17 @@ function HomePage() {
   // Show Quick Plan wizard view
   if (currentView === 'quick-plan') {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         <QuickPlanWizard 
           onComplete={handleQuickPlanComplete}
           onUpgradeToComprehensive={handleUpgradeToComprehensive}
           initialData={{}}
         />
-        <div className="fixed bottom-4 left-4">
+        <div className="fixed bottom-6 left-6">
           <Button
             onClick={handleBackToSelector}
             variant="outline"
-            className="bg-white shadow-lg"
+            className="bg-slate-800/80 backdrop-blur-xl border-slate-700/50 text-slate-300 hover:bg-slate-700/80 hover:text-white shadow-xl px-6 py-3"
           >
             ← Back to Plan Selection
           </Button>
@@ -306,18 +306,18 @@ function HomePage() {
           analysisResults={analysisResults}
           onUpdateData={handleUpdateData}
         />
-        <div className="fixed bottom-4 right-4 space-y-2">
+        <div className="fixed bottom-6 right-6 space-y-3">
           <Button
             onClick={handleBackToSelector}
             variant="outline"
-            className="bg-white shadow-lg block w-full"
+            className="bg-slate-800/80 backdrop-blur-xl border-slate-700/50 text-slate-300 hover:bg-slate-700/80 hover:text-white shadow-xl block w-full px-6 py-3"
           >
             Back to Plan Selection
           </Button>
           <Button
             onClick={handleBackToQuestionnaire}
             variant="outline"
-            className="bg-white shadow-lg block w-full"
+            className="bg-slate-800/80 backdrop-blur-xl border-slate-700/50 text-slate-300 hover:bg-slate-700/80 hover:text-white shadow-xl block w-full px-6 py-3"
           >
             Back to Questionnaire
           </Button>
@@ -325,7 +325,7 @@ function HomePage() {
             <Button
               onClick={generateNewAnalysis}
               disabled={isGeneratingAnalysis}
-              className="bg-green-600 hover:bg-green-700 shadow-lg block w-full"
+              className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 shadow-xl block w-full px-6 py-3 disabled:opacity-50"
             >
               {isGeneratingAnalysis ? (
                 <>
@@ -344,7 +344,7 @@ function HomePage() {
 
   // Show questionnaire view
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <OnboardingWizard 
         onComplete={handleComplete}
         onSave={handleSave}
@@ -352,25 +352,25 @@ function HomePage() {
       />
       
       {/* Back to selector button */}
-      <div className="fixed bottom-4 left-4">
+      <div className="fixed bottom-6 left-6">
         <Button
           onClick={handleBackToSelector}
           variant="outline"
-          className="bg-white shadow-lg"
+          className="bg-slate-800/80 backdrop-blur-xl border-slate-700/50 text-slate-300 hover:bg-slate-700/80 hover:text-white shadow-xl px-6 py-3"
         >
           ← Back to Plan Selection
         </Button>
       </div>
       
       {/* Action buttons */}
-      <div className="fixed bottom-4 right-4 space-y-2">
+      <div className="fixed bottom-6 right-6 space-y-3">
         {/* JSON Upload and Sample Download Buttons */}
-        <div className="space-y-2">
+        <div className="space-y-3">
           {/* Download Sample Button */}
           <Button
             onClick={handleDownloadSample}
             variant="outline"
-            className="bg-white hover:bg-gray-50 shadow-lg block w-full"
+            className="bg-slate-800/80 backdrop-blur-xl border-slate-700/50 text-slate-300 hover:bg-slate-700/80 hover:text-white shadow-xl block w-full px-6 py-3"
           >
             <Download className="w-4 h-4 mr-2" />
             Download Sample JSON
@@ -389,7 +389,7 @@ function HomePage() {
             <Button
               onClick={() => document.getElementById('json-upload')?.click()}
               disabled={isUploadingJSON || isGeneratingAnalysis}
-              className="bg-purple-600 hover:bg-purple-700 shadow-lg block w-full"
+              className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 shadow-xl block w-full px-6 py-3 disabled:opacity-50"
             >
               {isUploadingJSON ? (
                 <>
@@ -410,7 +410,7 @@ function HomePage() {
           <Button
             onClick={handleViewPlan}
             disabled={isLoadingAnalysis}
-            className="bg-blue-600 hover:bg-blue-700 shadow-lg block w-full"
+            className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-xl block w-full px-6 py-3 disabled:opacity-50"
           >
             {isLoadingAnalysis ? (
               <>
@@ -428,7 +428,7 @@ function HomePage() {
             onClick={generateNewAnalysis}
             disabled={isGeneratingAnalysis}
             variant="outline"
-            className="bg-white shadow-lg block w-full"
+            className="bg-slate-800/80 backdrop-blur-xl border-slate-700/50 text-slate-300 hover:bg-slate-700/80 hover:text-white shadow-xl block w-full px-6 py-3 disabled:opacity-50"
           >
             {isGeneratingAnalysis ? (
               <>
@@ -444,10 +444,10 @@ function HomePage() {
       
       {/* Status indicator */}
       {isGeneratingAnalysis && (
-        <div className="fixed top-4 right-4">
-          <Alert>
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <AlertDescription>
+        <div className="fixed top-6 right-6">
+          <Alert className="bg-slate-800/90 backdrop-blur-xl border-slate-700/50 text-white shadow-xl">
+            <Loader2 className="h-4 w-4 animate-spin text-emerald-400" />
+            <AlertDescription className="text-slate-300">
               Generating your personalized financial analysis...
             </AlertDescription>
           </Alert>

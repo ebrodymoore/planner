@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
-import { ArrowLeft, ArrowRight, Clock, Zap } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Clock, Zap, Sparkles, TrendingUp } from 'lucide-react';
 
 export interface QuickPlanData {
   // Personal Information (3 questions)
@@ -132,58 +132,64 @@ export default function QuickPlanWizard({
     switch (currentStep) {
       case 0: // Personal Information
         return (
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="age">What is your age?</Label>
+          <div className="space-y-8">
+            <div className="space-y-3">
+              <Label htmlFor="age" className="text-white font-medium text-base">What is your age?</Label>
               <Input
                 id="age"
                 type="number"
                 placeholder="e.g., 35"
                 value={formData.age || ''}
                 onChange={(e) => updateFormData('age', parseInt(e.target.value) || 0)}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="income">Annual household income (combined if married)</Label>
-              <Input
-                id="income"
-                type="number"
-                placeholder="e.g., 75000"
-                value={formData.annualHouseholdIncome || ''}
-                onChange={(e) => updateFormData('annualHouseholdIncome', parseInt(e.target.value) || 0)}
+                className="bg-slate-700/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-emerald-500/50 focus:ring-emerald-500/20 h-12 text-lg"
               />
             </div>
 
             <div className="space-y-3">
-              <Label>What is your primary financial goal?</Label>
+              <Label htmlFor="income" className="text-white font-medium text-base">Annual household income (combined if married)</Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 font-medium">$</span>
+                <Input
+                  id="income"
+                  type="number"
+                  placeholder="75,000"
+                  value={formData.annualHouseholdIncome || ''}
+                  onChange={(e) => updateFormData('annualHouseholdIncome', parseInt(e.target.value) || 0)}
+                  className="bg-slate-700/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-emerald-500/50 focus:ring-emerald-500/20 h-12 text-lg pl-8"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <Label className="text-white font-medium text-base">What is your primary financial goal?</Label>
               <RadioGroup 
                 value={formData.primaryFinancialGoal || ''} 
                 onValueChange={(value) => updateFormData('primaryFinancialGoal', value)}
+                className="space-y-3"
               >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="retirement" id="retirement" />
-                  <Label htmlFor="retirement">Retirement planning</Label>
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700/30 transition-colors">
+                  <RadioGroupItem value="retirement" id="retirement" className="border-slate-500 text-emerald-400" />
+                  <Label htmlFor="retirement" className="text-slate-300 font-medium cursor-pointer flex-1">Retirement planning</Label>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="debt-payoff" id="debt-payoff" />
-                  <Label htmlFor="debt-payoff">Debt payoff</Label>
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700/30 transition-colors">
+                  <RadioGroupItem value="debt-payoff" id="debt-payoff" className="border-slate-500 text-emerald-400" />
+                  <Label htmlFor="debt-payoff" className="text-slate-300 font-medium cursor-pointer flex-1">Debt payoff</Label>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="emergency-fund" id="emergency-fund" />
-                  <Label htmlFor="emergency-fund">Emergency fund</Label>
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700/30 transition-colors">
+                  <RadioGroupItem value="emergency-fund" id="emergency-fund" className="border-slate-500 text-emerald-400" />
+                  <Label htmlFor="emergency-fund" className="text-slate-300 font-medium cursor-pointer flex-1">Emergency fund</Label>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="home-purchase" id="home-purchase" />
-                  <Label htmlFor="home-purchase">Home purchase</Label>
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700/30 transition-colors">
+                  <RadioGroupItem value="home-purchase" id="home-purchase" className="border-slate-500 text-emerald-400" />
+                  <Label htmlFor="home-purchase" className="text-slate-300 font-medium cursor-pointer flex-1">Home purchase</Label>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="investment-growth" id="investment-growth" />
-                  <Label htmlFor="investment-growth">Investment growth</Label>
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700/30 transition-colors">
+                  <RadioGroupItem value="investment-growth" id="investment-growth" className="border-slate-500 text-emerald-400" />
+                  <Label htmlFor="investment-growth" className="text-slate-300 font-medium cursor-pointer flex-1">Investment growth</Label>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="other" id="other" />
-                  <Label htmlFor="other">Other</Label>
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700/30 transition-colors">
+                  <RadioGroupItem value="other" id="other" className="border-slate-500 text-emerald-400" />
+                  <Label htmlFor="other" className="text-slate-300 font-medium cursor-pointer flex-1">Other</Label>
                 </div>
               </RadioGroup>
             </div>
@@ -504,86 +510,122 @@ export default function QuickPlanWizard({
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="text-center space-y-2">
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <Zap className="w-6 h-6 text-green-600" />
-          <h1 className="text-2xl font-bold text-gray-900">Quick Financial Plan</h1>
-        </div>
-        <p className="text-gray-600">Get essential financial guidance in just 5-7 minutes</p>
-        <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
-          <span>17 questions</span>
-          <span>•</span>
-          <span>5-7 minutes</span>
-          <span>•</span>
-          <span>Immediate results</span>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-20 -left-4 w-72 h-72 bg-emerald-500/5 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+        <div className="absolute top-20 -right-4 w-72 h-72 bg-blue-500/5 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse delay-1000"></div>
       </div>
 
-      {/* Progress */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-700">
-                Step {currentStep + 1} of {steps.length}
-              </span>
-              <span className="text-sm text-gray-600">{getProgress()}% Complete</span>
-            </div>
-            <Progress value={getProgress()} className="h-2" />
-            <div className="text-xs text-gray-500 text-center">
-              {steps[currentStep].description}
-            </div>
+      <div className="relative z-10 max-w-4xl mx-auto px-6 py-12 space-y-8">
+        {/* Header */}
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full mb-4">
+            <Sparkles className="w-4 h-4 text-emerald-400" />
+            <span className="text-sm font-medium text-slate-300">Quick Financial Analysis</span>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Current Step */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <span className="text-lg">{steps[currentStep].title}</span>
-            <span className="text-sm font-normal text-gray-500">
-              ({steps[currentStep].questions} questions)
-            </span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {renderStep()}
-        </CardContent>
-      </Card>
-
-      {/* Navigation */}
-      <div className="flex justify-between items-center">
-        <Button
-          variant="outline"
-          onClick={handlePrevious}
-          disabled={currentStep === 0}
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Previous
-        </Button>
-
-        <div className="text-sm text-gray-500">
-          Step {currentStep + 1} of {steps.length}
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="p-3 bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 rounded-xl border border-emerald-500/30">
+              <Zap className="w-8 h-8 text-emerald-400" />
+            </div>
+            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+              Quick Financial Plan
+            </h1>
+          </div>
+          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+            Get essential financial guidance powered by AI in just minutes
+          </p>
+          <div className="flex items-center justify-center gap-6 text-sm text-slate-500">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-emerald-400" />
+              <span>5-7 minutes</span>
+            </div>
+            <span>•</span>
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-emerald-400" />
+              <span>17 questions</span>
+            </div>
+            <span>•</span>
+            <span>Immediate results</span>
+          </div>
         </div>
 
-        {currentStep === steps.length - 1 ? (
-          <Button 
-            onClick={handleComplete} 
-            disabled={!isFormValid()}
-            className="bg-green-600 hover:bg-green-700"
+        {/* Progress */}
+        <Card className="bg-slate-800/60 backdrop-blur-xl border-slate-700/50">
+          <CardContent className="pt-6">
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <div className="text-sm font-semibold text-white">
+                    Step {currentStep + 1} of {steps.length}
+                  </div>
+                  <div className="px-2 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-medium">
+                    {steps[currentStep].title}
+                  </div>
+                </div>
+                <div className="text-sm text-slate-400 font-medium">{getProgress()}% Complete</div>
+              </div>
+              <div className="relative">
+                <Progress value={getProgress()} className="h-3 bg-slate-700/50" />
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 rounded-full" style={{width: `${getProgress()}%`}}></div>
+              </div>
+              <div className="text-sm text-slate-400 text-center font-medium">
+                {steps[currentStep].description}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Current Step */}
+        <Card className="bg-slate-800/80 backdrop-blur-xl border-slate-700/50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <span className="text-xl font-bold text-white">{steps[currentStep].title}</span>
+              <span className="text-sm font-medium text-slate-400 px-2 py-1 bg-slate-700/50 rounded-full">
+                {steps[currentStep].questions} questions
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {renderStep()}
+          </CardContent>
+        </Card>
+
+        {/* Navigation */}
+        <div className="flex justify-between items-center pt-4">
+          <Button
+            variant="outline"
+            onClick={handlePrevious}
+            disabled={currentStep === 0}
+            className="bg-slate-800/60 border-slate-700/50 text-slate-300 hover:bg-slate-700/60 hover:text-white disabled:opacity-50 px-6 py-3"
           >
-            <Zap className="w-4 h-4 mr-2" />
-            Get My Quick Plan
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Previous
           </Button>
-        ) : (
-          <Button onClick={handleNext}>
-            Next
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
-        )}
+
+          <div className="text-sm text-slate-500 font-medium">
+            Step {currentStep + 1} of {steps.length}
+          </div>
+
+          {currentStep === steps.length - 1 ? (
+            <Button 
+              onClick={handleComplete} 
+              disabled={!isFormValid()}
+              className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-emerald-500/25 transition-all duration-300 disabled:opacity-50"
+            >
+              <Zap className="w-4 h-4 mr-2" />
+              Get My Quick Plan
+            </Button>
+          ) : (
+            <Button 
+              onClick={handleNext}
+              className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-emerald-500/25 transition-all duration-300"
+            >
+              Next
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
