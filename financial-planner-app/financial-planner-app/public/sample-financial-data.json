@@ -1,0 +1,109 @@
+{
+  "personal": {
+    "name": "John Smith",
+    "dateOfBirth": "1988-03-15",
+    "maritalStatus": "married",
+    "dependents": 2,
+    "dependentAges": "8, 12",
+    "state": "CA",
+    "country": "USA",
+    "employmentStatus": "employed",
+    "industry": "Technology",
+    "profession": "Software Engineer",
+    "communicationMethod": "email",
+    "meetingFrequency": "quarterly"
+  },
+  "income": {
+    "annualIncome": 150000,
+    "stability": "stable",
+    "growthExpectation": "high",
+    "spouseIncome": 80000,
+    "rentalIncome": 0,
+    "businessIncome": 0,
+    "investmentIncome": 5000,
+    "otherIncome": 0,
+    "otherIncomeDescription": "",
+    "retirementAge": 62,
+    "majorIncomeChanges": "none"
+  },
+  "expenses": {
+    "housingType": "own",
+    "housing": 3500,
+    "transportation": 800,
+    "travel": 2000,
+    "recreation": 500,
+    "food": 1200,
+    "healthcare": 400,
+    "shopping": 600,
+    "technology": 200,
+    "personalCare": 150,
+    "entertainment": 400,
+    "fixedVsVariableRatio": "60/40",
+    "seasonalVariations": "higher in summer for travel",
+    "recentExpenseChanges": "increased childcare costs",
+    "potentialReductions": "dining out, subscriptions"
+  },
+  "assets": {
+    "checking": 15000,
+    "savings": 50000,
+    "emergencyTarget": "6_months",
+    "retirement401k": 120000,
+    "ira": 25000,
+    "taxableAccounts": 75000,
+    "homeValue": 650000
+  },
+  "liabilities": {
+    "mortgageBalance": 450000,
+    "mortgageRate": 3.25,
+    "mortgageYears": 28,
+    "autoLoans": [
+      {
+        "balance": 25000,
+        "rate": 4.5,
+        "term": "5 years",
+        "description": "Honda Pilot 2022"
+      }
+    ],
+    "creditCards": [
+      {
+        "name": "Chase Sapphire",
+        "balance": 3500,
+        "limit": 15000,
+        "rate": 16.99
+      },
+      {
+        "name": "Citi Double Cash",
+        "balance": 1200,
+        "limit": 8000,
+        "rate": 19.99
+      }
+    ],
+    "studentLoans": [
+      {
+        "balance": 15000,
+        "rate": 4.5,
+        "servicer": "Nelnet",
+        "type": "Federal Direct"
+      }
+    ]
+  },
+  "goals": {
+    "retirementPriority": 9,
+    "emergencyPriority": 8,
+    "debtPriority": 7,
+    "retirementAge": 62,
+    "retirementIncome": 120000
+  },
+  "preferences": {
+    "secondHome": "yes",
+    "secondHomeBudget": 300000,
+    "businessInterest": "no",
+    "businessCapital": 0
+  },
+  "risk": {
+    "experienceLevel": "intermediate",
+    "largestLoss": "10_20_percent",
+    "portfolioDrop": "buy_more",
+    "timeline": "long_term"
+  }
+}

@@ -11,11 +11,12 @@ import AuthComponent from '@/components/AuthComponent';
 import { useFinancialPlan } from '@/hooks/useFinancialPlan';
 import { useUser } from '@supabase/auth-helpers-react';
 import { FormData } from '@/types/financial';
-import { AlertTriangle, Loader2 } from 'lucide-react';
+import { AlertTriangle, Loader2, Upload, Download } from 'lucide-react';
 
 function HomePage() {
   const user = useUser();
   const [currentView, setCurrentView] = useState<'questionnaire' | 'plan'>('questionnaire');
+  const [isUploadingJSON, setIsUploadingJSON] = useState(false);
   
   const {
     questionnaireData,
@@ -65,6 +66,57 @@ function HomePage() {
 
   const handleUpdateData = async (data: FormData) => {
     await saveQuestionnaireData(data);
+  };
+
+  // Handle JSON file upload
+  const handleJSONUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+      alert('Please upload a valid JSON file');
+      return;
+    }
+
+    setIsUploadingJSON(true);
+    clearError();
+
+    try {
+      const text = await file.text();
+      const jsonData = JSON.parse(text);
+      
+      // Validate that it's financial data (basic check)
+      if (typeof jsonData !== 'object' || jsonData === null) {
+        throw new Error('Invalid JSON format - expected an object');
+      }
+
+      // Save the uploaded data
+      await saveQuestionnaireData(jsonData as FormData);
+      
+      // Generate analysis automatically
+      await generateNewAnalysis();
+      
+      // Switch to plan view
+      setCurrentView('plan');
+      
+    } catch (err) {
+      console.error('Error uploading JSON:', err);
+      alert(err instanceof Error ? err.message : 'Failed to upload JSON file');
+    } finally {
+      setIsUploadingJSON(false);
+      // Reset the file input
+      event.target.value = '';
+    }
+  };
+
+  // Handle download sample JSON
+  const handleDownloadSample = () => {
+    const link = document.createElement('a');
+    link.href = '/sample-financial-data.json';
+    link.download = 'sample-financial-data.json';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   // TEMPORARILY DISABLED FOR TESTING - Show authentication if user not logged in
@@ -154,6 +206,48 @@ function HomePage() {
       
       {/* Action buttons */}
       <div className="fixed bottom-4 right-4 space-y-2">
+        {/* JSON Upload and Sample Download Buttons */}
+        <div className="space-y-2">
+          {/* Download Sample Button */}
+          <Button
+            onClick={handleDownloadSample}
+            variant="outline"
+            className="bg-white hover:bg-gray-50 shadow-lg block w-full"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Download Sample JSON
+          </Button>
+          
+          {/* Upload JSON Button */}
+          <div className="relative">
+            <input
+              type="file"
+              accept=".json,application/json"
+              onChange={handleJSONUpload}
+              className="hidden"
+              id="json-upload"
+              disabled={isUploadingJSON || isGeneratingAnalysis}
+            />
+            <Button
+              onClick={() => document.getElementById('json-upload')?.click()}
+              disabled={isUploadingJSON || isGeneratingAnalysis}
+              className="bg-purple-600 hover:bg-purple-700 shadow-lg block w-full"
+            >
+              {isUploadingJSON ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Uploading & Analyzing...
+                </>
+              ) : (
+                <>
+                  <Upload className="w-4 h-4 mr-2" />
+                  Upload JSON & Generate Plan
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+
         {questionnaireData && Object.keys(questionnaireData).length > 0 && (
           <Button
             onClick={handleViewPlan}
