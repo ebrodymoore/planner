@@ -37,7 +37,7 @@ interface DebtItem {
 
 export default function DebtManagement({ clientData, analysisResults }: DebtManagementProps) {
   const [selectedStrategy, setSelectedStrategy] = useState<'avalanche' | 'snowball'>('avalanche');
-  const [extraPayment, setExtraPayment] = useState(500);
+  const [extraPayment] = useState(500);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -147,7 +147,7 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
     }
 
     const payoffPlan = [];
-    let remainingDebts = [...sortedDebts];
+    const remainingDebts = [...sortedDebts];
     let currentMonth = 1;
     let totalInterestSaved = 0;
 
@@ -201,8 +201,8 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
 
   const debts = getAllDebts();
   const metrics = getDebtMetrics(debts);
-  const avalancheStrategy = calculatePayoffStrategy(debts, 'avalanche', extraPayment);
-  const snowballStrategy = calculatePayoffStrategy(debts, 'snowball', extraPayment);
+  calculatePayoffStrategy(debts, 'avalanche', extraPayment);
+  calculatePayoffStrategy(debts, 'snowball', extraPayment);
 
   // Get Claude analysis data if available
   const debtData = analysisResults?.structured_data?.debt_management || {};

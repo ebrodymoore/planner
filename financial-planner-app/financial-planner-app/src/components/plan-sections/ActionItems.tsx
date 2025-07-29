@@ -56,7 +56,7 @@ export default function ActionItems({ clientData, analysisResults }: ActionItems
     
     if (claudeActionItems) {
       // Convert Claude API action items to our format
-      const timelineMapping = {
+      const timelineMapping: Record<string, '30 days' | '60 days' | '90 days' | '6 months' | '1 year'> = {
         'immediate': '30 days',
         'short_term': '60 days', 
         'medium_term': '90 days',
@@ -71,7 +71,7 @@ export default function ActionItems({ clientData, analysisResults }: ActionItems
               title: action,
               description: `Claude AI recommended action for ${timeline.replace('_', ' ')} implementation`,
               priority: timeline === 'immediate' ? 'high' : timeline === 'short_term' ? 'high' : 'medium',
-              timeline: timelineMapping[timeline as keyof typeof timelineMapping] || '90 days',
+              timeline: timelineMapping[timeline] || '90 days',
               category: determineCategory(action),
               impact: timeline === 'immediate' || timeline === 'short_term' ? 'high' : 'medium',
               completed: false,
