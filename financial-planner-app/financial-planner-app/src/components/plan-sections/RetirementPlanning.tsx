@@ -103,75 +103,98 @@ export default function RetirementPlanning({ clientData, analysisResults }: Reti
   const timeline = generateSavingsTimeline();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Header */}
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent mb-3">
           Retirement Planning Analysis
         </h2>
-        <p className="text-gray-600 dark:text-gray-300">
+        <p className="text-slate-400 text-lg">
           Your path to a secure retirement with detailed projections
         </p>
       </div>
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
+        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30 hover:bg-slate-700/40 transition-all duration-300">
           <CardContent className="pt-6 text-center">
-            <Calendar className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-            <p className="text-sm text-gray-600 dark:text-gray-300">Years to Retirement</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{yearsToRetirement}</p>
-            <p className="text-xs text-gray-500 mt-1">Age {currentAge} → {retirementAge}</p>
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-blue-600/20 rounded-xl blur-sm"></div>
+              <div className="relative p-3 bg-gradient-to-r from-blue-500/10 to-blue-600/10 rounded-xl border border-blue-500/20 mb-3 inline-block">
+                <Calendar className="w-8 h-8 text-blue-400" />
+              </div>
+            </div>
+            <p className="text-sm text-slate-400 font-medium">Years to Retirement</p>
+            <p className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">{yearsToRetirement}</p>
+            <p className="text-xs text-slate-500 mt-1">Age {currentAge} → {retirementAge}</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30 hover:bg-slate-700/40 transition-all duration-300">
           <CardContent className="pt-6 text-center">
-            <DollarSign className="w-8 h-8 mx-auto mb-2 text-green-600" />
-            <p className="text-sm text-gray-600 dark:text-gray-300">Current Savings</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 rounded-xl blur-sm"></div>
+              <div className="relative p-3 bg-gradient-to-r from-emerald-500/10 to-emerald-600/10 rounded-xl border border-emerald-500/20 mb-3 inline-block">
+                <DollarSign className="w-8 h-8 text-emerald-400" />
+              </div>
+            </div>
+            <p className="text-sm text-slate-400 font-medium">Current Savings</p>
+            <p className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-emerald-500 bg-clip-text text-transparent">
               {formatCurrency(currentRetirementSavings)}
             </p>
-            <p className="text-xs text-gray-500 mt-1">401k + IRA</p>
+            <p className="text-xs text-slate-500 mt-1">401k + IRA</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30 hover:bg-slate-700/40 transition-all duration-300">
           <CardContent className="pt-6 text-center">
-            <Target className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-            <p className="text-sm text-gray-600 dark:text-gray-300">Projected Total</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-purple-600/20 rounded-xl blur-sm"></div>
+              <div className="relative p-3 bg-gradient-to-r from-purple-500/10 to-purple-600/10 rounded-xl border border-purple-500/20 mb-3 inline-block">
+                <Target className="w-8 h-8 text-purple-400" />
+              </div>
+            </div>
+            <p className="text-sm text-slate-400 font-medium">Projected Total</p>
+            <p className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-purple-500 bg-clip-text text-transparent">
               {formatCurrency(projections.totalProjected)}
             </p>
-            <p className="text-xs text-gray-500 mt-1">At retirement</p>
+            <p className="text-xs text-slate-500 mt-1">At retirement</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30 hover:bg-slate-700/40 transition-all duration-300">
           <CardContent className="pt-6 text-center">
-            <BarChart3 className="w-8 h-8 mx-auto mb-2 text-orange-600" />
-            <p className="text-sm text-gray-600 dark:text-gray-300">Success Rate</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-xl blur-sm"></div>
+              <div className="relative p-3 bg-gradient-to-r from-orange-500/10 to-orange-600/10 rounded-xl border border-orange-500/20 mb-3 inline-block">
+                <BarChart3 className="w-8 h-8 text-orange-400" />
+              </div>
+            </div>
+            <p className="text-sm text-slate-400 font-medium">Success Rate</p>
+            <p className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
               {projections.successProbability.toFixed(0)}%
             </p>
-            <p className="text-xs text-gray-500 mt-1">Probability</p>
+            <p className="text-xs text-slate-500 mt-1">Probability</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Retirement Readiness Assessment */}
-      <Card>
+      <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="w-5 h-5" />
+          <CardTitle className="flex items-center gap-3 text-white">
+            <div className="p-2 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-lg border border-emerald-500/30">
+              <Target className="w-5 h-5 text-emerald-400" />
+            </div>
             Retirement Readiness Assessment
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
             {/* Progress Indicator */}
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900 dark:to-purple-900 p-6 rounded-lg">
+            <div className="bg-slate-600/20 border border-slate-600/30 rounded-xl p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-gray-900 dark:text-white">
+                <h3 className="font-semibold text-white">
                   Retirement Goal Progress
                 </h3>
                 <Badge variant={projections.successProbability >= 80 ? 'default' : 
@@ -180,75 +203,84 @@ export default function RetirementPlanning({ clientData, analysisResults }: Reti
                    projections.successProbability >= 60 ? 'Needs Work' : 'Behind'}
                 </Badge>
               </div>
-              <Progress value={projections.successProbability} className="h-3 mb-2" />
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <div className="relative mb-3">
+                <div className="w-full bg-slate-700 rounded-full h-4">
+                  <div 
+                    className="h-4 rounded-full transition-all duration-1000 bg-gradient-to-r from-emerald-500 to-emerald-600"
+                    style={{ width: `${projections.successProbability}%` }}
+                  ></div>
+                </div>
+              </div>
+              <p className="text-sm text-slate-300">
                 Based on current savings rate and projected growth
               </p>
             </div>
 
             {/* Income Projections */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-green-50 dark:bg-green-900 p-4 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <DollarSign className="w-5 h-5 text-green-600 dark:text-green-400" />
-                  <h4 className="font-medium text-green-900 dark:text-green-100">
+              <div className="bg-slate-600/20 border border-slate-600/30 rounded-xl p-4 hover:bg-slate-600/30 transition-all duration-300">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 rounded-lg border border-emerald-500/30">
+                    <DollarSign className="w-5 h-5 text-emerald-400" />
+                  </div>
+                  <h4 className="font-medium text-emerald-400">
                     Projected Annual Income
                   </h4>
                 </div>
-                <p className="text-2xl font-bold text-green-900 dark:text-green-100">
+                <p className="text-2xl font-bold text-white">
                   {formatCurrency(projections.annualWithdrawal)}
                 </p>
-                <p className="text-sm text-green-800 dark:text-green-200">
+                <p className="text-sm text-slate-300">
                   4% withdrawal rule
                 </p>
               </div>
               
-              <div className="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Target className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  <h4 className="font-medium text-blue-900 dark:text-blue-100">
+              <div className="bg-slate-600/20 border border-slate-600/30 rounded-xl p-4 hover:bg-slate-600/30 transition-all duration-300">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 bg-gradient-to-r from-blue-500/20 to-blue-600/20 rounded-lg border border-blue-500/30">
+                    <Target className="w-5 h-5 text-blue-400" />
+                  </div>
+                  <h4 className="font-medium text-blue-400">
                     Income Need
                   </h4>
                 </div>
-                <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">
+                <p className="text-2xl font-bold text-white">
                   {formatCurrency(projections.requiredIncomeFuture)}
                 </p>
-                <p className="text-sm text-blue-800 dark:text-blue-200">
+                <p className="text-sm text-slate-300">
                   80% of current income
                 </p>
               </div>
               
-              <div className={`p-4 rounded-lg ${
+              <div className={`p-4 rounded-xl border hover:bg-slate-600/30 transition-all duration-300 ${
                 projections.incomeGap > 0 
-                  ? 'bg-red-50 dark:bg-red-900' 
-                  : 'bg-green-50 dark:bg-green-900'
+                  ? 'bg-red-500/10 border-red-500/20' 
+                  : 'bg-emerald-500/10 border-emerald-500/20'
               }`}>
-                <div className="flex items-center gap-2 mb-2">
-                  {projections.incomeGap > 0 ? (
-                    <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />
-                  ) : (
-                    <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
-                  )}
+                <div className="flex items-center gap-3 mb-2">
+                  <div className={`p-2 rounded-lg border ${
+                    projections.incomeGap > 0
+                      ? 'bg-gradient-to-r from-red-500/20 to-red-600/20 border-red-500/30'
+                      : 'bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 border-emerald-500/30'
+                  }`}>
+                    {projections.incomeGap > 0 ? (
+                      <AlertTriangle className="w-5 h-5 text-red-400" />
+                    ) : (
+                      <CheckCircle className="w-5 h-5 text-emerald-400" />
+                    )}
+                  </div>
                   <h4 className={`font-medium ${
                     projections.incomeGap > 0
-                      ? 'text-red-900 dark:text-red-100'
-                      : 'text-green-900 dark:text-green-100'
+                      ? 'text-red-400'
+                      : 'text-emerald-400'
                   }`}>
                     {projections.incomeGap > 0 ? 'Shortfall' : 'Surplus'}
                   </h4>
                 </div>
-                <p className={`text-2xl font-bold ${
-                  projections.incomeGap > 0
-                    ? 'text-red-900 dark:text-red-100'
-                    : 'text-green-900 dark:text-green-100'
-                }`}>
+                <p className="text-2xl font-bold text-white">
                   {formatCurrency(Math.abs(projections.incomeGap))}
                 </p>
-                <p className={`text-sm ${
-                  projections.incomeGap > 0
-                    ? 'text-red-800 dark:text-red-200'
-                    : 'text-green-800 dark:text-green-200'
-                }`}>
+                <p className="text-sm text-slate-300">
                   {projections.incomeGap > 0 ? 'Annual gap' : 'Annual surplus'}
                 </p>
               </div>
@@ -259,40 +291,42 @@ export default function RetirementPlanning({ clientData, analysisResults }: Reti
 
       {/* Action Plan */}
       {projections.incomeGap > 0 && (
-        <Card>
+        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-orange-700 dark:text-orange-400">
-              <AlertTriangle className="w-5 h-5" />
+            <CardTitle className="flex items-center gap-3 text-orange-400">
+              <div className="p-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-lg border border-orange-500/30">
+                <AlertTriangle className="w-5 h-5 text-orange-400" />
+              </div>
               Retirement Savings Action Plan
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="bg-orange-50 dark:bg-orange-900 p-4 rounded-lg">
-                <h4 className="font-semibold text-orange-900 dark:text-orange-100 mb-3">
+              <div className="bg-slate-600/20 border border-slate-600/30 rounded-xl p-5">
+                <h4 className="font-semibold text-orange-400 mb-3">
                   Required Additional Savings
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-orange-800 dark:text-orange-200">Additional Monthly Savings Needed</p>
-                    <p className="text-xl font-bold text-orange-900 dark:text-orange-100">
+                    <p className="text-sm text-slate-300">Additional Monthly Savings Needed</p>
+                    <p className="text-xl font-bold text-white">
                       {formatCurrency(projections.additionalMonthlySavings)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-orange-800 dark:text-orange-200">Total Additional Savings Needed</p>
-                    <p className="text-xl font-bold text-orange-900 dark:text-orange-100">
+                    <p className="text-sm text-slate-300">Total Additional Savings Needed</p>
+                    <p className="text-xl font-bold text-white">
                       {formatCurrency(projections.additionalSavingsNeeded)}
                     </p>
                   </div>
                 </div>
               </div>
               
-              <div className="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg">
-                <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-3">
+              <div className="bg-slate-600/20 border border-slate-600/30 rounded-xl p-5">
+                <h4 className="font-semibold text-blue-400 mb-3">
                   Optimization Strategies
                 </h4>
-                <ul className="space-y-2 text-sm text-blue-800 dark:text-blue-200">
+                <ul className="space-y-2 text-sm text-slate-300">
                   <li>• Maximize employer 401(k) match - free money!</li>
                   <li>• Consider increasing contribution rate by 1% annually</li>
                   <li>• Explore Roth IRA for tax diversification</li>
@@ -306,49 +340,51 @@ export default function RetirementPlanning({ clientData, analysisResults }: Reti
       )}
 
       {/* Savings Timeline */}
-      <Card>
+      <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="w-5 h-5" />
+          <CardTitle className="flex items-center gap-3 text-white">
+            <div className="p-2 bg-gradient-to-r from-purple-500/20 to-purple-600/20 rounded-lg border border-purple-500/30">
+              <BarChart3 className="w-5 h-5 text-purple-400" />
+            </div>
             Projected Savings Timeline
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {timeline.map((milestone, index) => (
-              <div key={index} className={`flex items-center justify-between p-4 rounded-lg ${
+              <div key={index} className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-300 ${
                 milestone.isRetirement 
-                  ? 'bg-green-50 dark:bg-green-900 border-2 border-green-200 dark:border-green-700'
-                  : 'bg-gray-50 dark:bg-gray-800'
+                  ? 'bg-emerald-500/10 border-emerald-500/30 shadow-lg'
+                  : 'bg-slate-600/20 border-slate-600/30 hover:bg-slate-600/30'
               }`}>
                 <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 ${
                     milestone.isRetirement
-                      ? 'bg-green-100 dark:bg-green-800'
-                      : 'bg-blue-100 dark:bg-blue-800'
+                      ? 'bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 border-emerald-500/30'
+                      : 'bg-gradient-to-r from-blue-500/20 to-blue-600/20 border-blue-500/30'
                   }`}>
                     <span className={`font-bold ${
                       milestone.isRetirement
-                        ? 'text-green-700 dark:text-green-300'
-                        : 'text-blue-700 dark:text-blue-300'
+                        ? 'text-emerald-400'
+                        : 'text-blue-400'
                     }`}>
                       {milestone.age}
                     </span>
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
+                    <p className="font-medium text-white">
                       {milestone.year} {milestone.isRetirement ? '(Retirement)' : ''}
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <p className="text-sm text-slate-300">
                       Age {milestone.age}
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-lg font-bold text-gray-900 dark:text-white">
+                  <p className="text-lg font-bold text-white">
                     {formatCurrency(milestone.projectedSavings)}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                  <p className="text-sm text-slate-300">
                     Projected savings
                   </p>
                 </div>

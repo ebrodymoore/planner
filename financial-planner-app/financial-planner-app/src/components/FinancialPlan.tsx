@@ -19,7 +19,11 @@ import {
   FileText,
   Download,
   Moon,
-  Sun
+  Sun,
+  Sparkles,
+  Crown,
+  Zap,
+  Activity
 } from 'lucide-react';
 import { FormData } from '@/types/financial';
 
@@ -237,79 +241,96 @@ export default function FinancialPlan({
   };
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 -left-4 w-96 h-96 bg-emerald-500/5 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+        <div className="absolute top-0 -right-4 w-96 h-96 bg-blue-500/5 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse delay-1000"></div>
+        <div className="absolute -bottom-8 left-20 w-96 h-96 bg-purple-500/5 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse delay-2000"></div>
+      </div>
+
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+      <div className="relative z-10 bg-slate-800/80 backdrop-blur-xl border-b border-slate-700/50 shadow-xl">
+        <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Financial Plan
-              </h1>
-              <p className="text-gray-600 dark:text-gray-300 mt-1">
-                {clientData.personal?.name ? `${clientData.personal.name}'s` : 'Your'} Comprehensive Financial Analysis
-              </p>
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-xl border border-emerald-500/30">
+                <Activity className="w-8 h-8 text-emerald-400" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+                    Financial Plan
+                  </h1>
+                  <div className="inline-flex items-center gap-1 px-2 py-1 bg-slate-700/50 backdrop-blur-sm border border-slate-600/50 rounded-full">
+                    <Sparkles className="w-3 h-3 text-emerald-400" />
+                    <span className="text-xs font-medium text-slate-300">AI-Powered</span>
+                  </div>
+                </div>
+                <p className="text-slate-400 text-lg">
+                  {clientData.personal?.name ? `${clientData.personal.name}'s` : 'Your'} Comprehensive Financial Analysis
+                </p>
+              </div>
             </div>
             
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
               {/* Financial Health Score */}
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-4">
                 <div className="text-right">
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Financial Health</p>
-                  <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                  <p className="text-sm text-slate-400 font-medium">Financial Health</p>
+                  <p className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-emerald-500 bg-clip-text text-transparent">
                     {getFinancialHealthScore()}%
                   </p>
                 </div>
-                <div className="w-16 h-16">
-                  <div className="relative w-16 h-16">
-                    <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 100 100">
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="40"
-                        stroke="currentColor"
-                        strokeWidth="8"
-                        fill="transparent"
-                        className="text-gray-200 dark:text-gray-700"
-                      />
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="40"
-                        stroke="currentColor"
-                        strokeWidth="8"
-                        fill="transparent"
-                        strokeDasharray={`${2.51 * getFinancialHealthScore()} 251`}
-                        className="text-green-500"
-                      />
-                    </svg>
-                  </div>
+                <div className="relative w-20 h-20">
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 blur-sm"></div>
+                  <svg className="w-20 h-20 transform -rotate-90 relative z-10" viewBox="0 0 100 100">
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="35"
+                      stroke="currentColor"
+                      strokeWidth="6"
+                      fill="transparent"
+                      className="text-slate-700"
+                    />
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="35"
+                      stroke="url(#healthGradient)"
+                      strokeWidth="6"
+                      fill="transparent"
+                      strokeDasharray={`${2.199 * getFinancialHealthScore()} 220`}
+                      strokeLinecap="round"
+                      className="drop-shadow-sm"
+                    />
+                    <defs>
+                      <linearGradient id="healthGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#10b981" />
+                        <stop offset="100%" stopColor="#059669" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
                 </div>
               </div>
               
               {/* Net Worth */}
-              <div className="text-right">
-                <p className="text-sm text-gray-600 dark:text-gray-300">Net Worth</p>
-                <p className="text-xl font-bold text-gray-900 dark:text-white">
+              <div className="text-right bg-slate-700/30 backdrop-blur-sm rounded-xl px-4 py-3 border border-slate-600/30">
+                <p className="text-sm text-slate-400 font-medium">Net Worth</p>
+                <p className="text-2xl font-bold text-white">
                   {formatCurrency(calculateNetWorth())}
                 </p>
               </div>
               
               {/* Controls */}
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setDarkMode(!darkMode)}
-                >
-                  {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                </Button>
-                
+              <div className="flex items-center space-x-3">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={exportToExcel}
                   disabled={isGenerating}
+                  className="bg-slate-700/50 border-slate-600/50 text-slate-300 hover:bg-slate-600/50 hover:text-white"
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Excel
@@ -319,6 +340,7 @@ export default function FinancialPlan({
                   size="sm"
                   onClick={generatePDFReport}
                   disabled={isGenerating}
+                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold shadow-lg hover:shadow-emerald-500/25 transition-all duration-300"
                 >
                   <Download className="w-4 h-4 mr-2" />
                   {isGenerating ? 'Generating...' : 'PDF Report'}
@@ -330,30 +352,55 @@ export default function FinancialPlan({
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-6">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
           {/* Navigation Tabs */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-2">
+          <div className="bg-slate-800/60 backdrop-blur-xl rounded-2xl shadow-xl border border-slate-700/50 p-3">
             <div className="overflow-x-auto">
-              <TabsList className="flex gap-1 bg-transparent min-w-max">
+              <TabsList className="flex gap-2 bg-transparent min-w-max p-1">
                 {planSections.map((section) => {
                   const IconComponent = section.icon;
+                  const isActive = activeTab === section.id;
                   return (
                     <TabsTrigger
                       key={section.id}
                       value={section.id}
-                      className="flex flex-col items-center gap-2 px-3 py-2 text-xs data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 min-w-[80px] whitespace-nowrap"
+                      className={`flex flex-col items-center gap-2 px-4 py-3 rounded-xl text-xs transition-all duration-300 min-w-[90px] whitespace-nowrap border ${
+                        isActive 
+                          ? 'bg-gradient-to-r from-emerald-500/20 to-blue-500/20 border-emerald-500/30 text-white shadow-lg' 
+                          : 'bg-slate-700/30 border-slate-600/30 text-slate-400 hover:bg-slate-600/40 hover:text-slate-300'
+                      }`}
                     >
                       <div className="relative">
-                        <IconComponent className="w-4 h-4" />
+                        <IconComponent className={`w-5 h-5 ${isActive ? 'text-emerald-400' : 'text-slate-400'}`} />
                         {section.status === 'needs-attention' && (
-                          <AlertTriangle className="w-2.5 h-2.5 text-orange-500 absolute -top-1 -right-1" />
+                          <div className="absolute -top-1 -right-1">
+                            <div className="w-3 h-3 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center">
+                              <AlertTriangle className="w-1.5 h-1.5 text-white" />
+                            </div>
+                          </div>
                         )}
                         {section.status === 'complete' && (
-                          <CheckCircle className="w-2.5 h-2.5 text-green-500 absolute -top-1 -right-1" />
+                          <div className="absolute -top-1 -right-1">
+                            <div className="w-3 h-3 bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full flex items-center justify-center">
+                              <CheckCircle className="w-1.5 h-1.5 text-white" />
+                            </div>
+                          </div>
+                        )}
+                        {section.status === 'in-progress' && (
+                          <div className="absolute -top-1 -right-1">
+                            <div className="w-3 h-3 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full animate-pulse"></div>
+                          </div>
+                        )}
+                        {section.status === 'needs-review' && (
+                          <div className="absolute -top-1 -right-1">
+                            <div className="w-3 h-3 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full"></div>
+                          </div>
                         )}
                       </div>
-                      <span className="text-center leading-tight text-[10px] sm:text-xs font-medium">
+                      <span className={`text-center leading-tight text-[11px] font-medium ${
+                        isActive ? 'text-white' : 'text-slate-300'
+                      }`}>
                         {section.label}
                       </span>
                     </TabsTrigger>
@@ -368,11 +415,13 @@ export default function FinancialPlan({
             const SectionComponent = section.component;
             return (
               <TabsContent key={section.id} value={section.id} className="space-y-6">
-                <SectionComponent 
-                  clientData={clientData}
-                  analysisResults={analysisResults}
-                  onUpdateData={onUpdateData}
-                />
+                <div className="bg-slate-800/40 backdrop-blur-xl rounded-2xl border border-slate-700/50 shadow-xl p-6">
+                  <SectionComponent 
+                    clientData={clientData}
+                    analysisResults={analysisResults}
+                    onUpdateData={onUpdateData}
+                  />
+                </div>
               </TabsContent>
             );
           })}

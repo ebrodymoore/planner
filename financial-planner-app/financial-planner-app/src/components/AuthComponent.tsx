@@ -69,14 +69,14 @@ export default function AuthComponent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <Card>
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold text-gray-900">
+            <CardTitle className="text-2xl font-bold text-slate-100">
               Financial Planner
             </CardTitle>
-            <p className="text-gray-600">
+            <p className="text-slate-300">
               {isSignUp ? 'Create your account' : 'Sign in to your account'}
             </p>
           </CardHeader>
@@ -157,7 +157,7 @@ export default function AuthComponent() {
               <button
                 type="button"
                 onClick={() => setIsSignUp(!isSignUp)}
-                className="text-blue-600 hover:text-blue-500 text-sm"
+                className="text-blue-400 hover:text-blue-300 text-sm"
               >
                 {isSignUp 
                   ? 'Already have an account? Sign in' 

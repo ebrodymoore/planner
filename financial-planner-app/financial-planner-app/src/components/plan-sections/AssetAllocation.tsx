@@ -108,10 +108,10 @@ export default function AssetAllocation({ clientData }: AssetAllocationProps) {
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-emerald-500 bg-clip-text text-transparent">
               {formatCurrency(totalAssets)}
             </div>
-            <div className="text-sm text-gray-500">Total Assets</div>
+            <div className="text-sm text-slate-400 font-medium">Total Assets</div>
           </div>
         </div>
       </div>
@@ -119,12 +119,13 @@ export default function AssetAllocation({ clientData }: AssetAllocationProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Header */}
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent mb-3">
           Asset Allocation Analysis
         </h2>
-        <p className="text-gray-600 dark:text-gray-300">
+        <p className="text-slate-400 text-lg">
           Current portfolio breakdown and optimization recommendations
         </p>
       </div>
@@ -132,10 +133,12 @@ export default function AssetAllocation({ clientData }: AssetAllocationProps) {
       {/* Current vs Recommended Allocation */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Current Allocation */}
-        <Card>
+        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <PieChart className="w-5 h-5" />
+            <CardTitle className="flex items-center gap-3 text-white">
+              <div className="p-2 bg-gradient-to-r from-blue-500/20 to-blue-600/20 rounded-lg border border-blue-500/30">
+                <PieChart className="w-5 h-5 text-blue-400" />
+              </div>
               Current Allocation
             </CardTitle>
           </CardHeader>
@@ -151,11 +154,11 @@ export default function AssetAllocation({ clientData }: AssetAllocationProps) {
                       className="w-4 h-4 rounded" 
                       style={{ backgroundColor: item.color }}
                     />
-                    <span className="text-sm font-medium">{item.name}</span>
+                    <span className="text-sm font-medium text-white">{item.name}</span>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm font-medium">{formatCurrency(item.amount)}</div>
-                    <div className="text-xs text-gray-500">{item.percentage.toFixed(1)}%</div>
+                    <div className="text-sm font-medium text-white">{formatCurrency(item.amount)}</div>
+                    <div className="text-xs text-slate-400">{item.percentage.toFixed(1)}%</div>
                   </div>
                 </div>
               ))}
@@ -164,10 +167,12 @@ export default function AssetAllocation({ clientData }: AssetAllocationProps) {
         </Card>
 
         {/* Recommended Allocation */}
-        <Card>
+        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Target className="w-5 h-5" />
+            <CardTitle className="flex items-center gap-3 text-white">
+              <div className="p-2 bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 rounded-lg border border-emerald-500/30">
+                <Target className="w-5 h-5 text-emerald-400" />
+              </div>
               Recommended Target
             </CardTitle>
           </CardHeader>
@@ -181,13 +186,13 @@ export default function AssetAllocation({ clientData }: AssetAllocationProps) {
                         className="w-4 h-4 rounded" 
                         style={{ backgroundColor: item.color }}
                       />
-                      <span className="text-sm font-medium">{item.name}</span>
+                      <span className="text-sm font-medium text-white">{item.name}</span>
                     </div>
-                    <span className="text-sm font-medium">{item.percentage.toFixed(0)}%</span>
+                    <span className="text-sm font-medium text-white">{item.percentage.toFixed(0)}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div className="w-full bg-slate-700 rounded-full h-3">
                     <div
-                      className="h-2 rounded-full transition-all duration-300"
+                      className="h-3 rounded-full transition-all duration-500"
                       style={{ 
                         width: `${item.percentage}%`,
                         backgroundColor: item.color 
@@ -197,11 +202,11 @@ export default function AssetAllocation({ clientData }: AssetAllocationProps) {
                 </div>
               ))}
             </div>
-            <div className="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg">
-              <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">
+            <div className="bg-slate-600/20 border border-slate-600/30 rounded-xl p-4">
+              <h4 className="font-medium text-blue-400 mb-2">
                 Age-Based Strategy
               </h4>
-              <p className="text-sm text-blue-800 dark:text-blue-200">
+              <p className="text-sm text-slate-300">
                 This allocation is optimized for your age and risk tolerance, following the principle 
                 of reducing equity exposure as you approach retirement.
               </p>
@@ -211,26 +216,30 @@ export default function AssetAllocation({ clientData }: AssetAllocationProps) {
       </div>
 
       {/* Rebalancing Recommendations */}
-      <Card>
+      <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5" />
+          <CardTitle className="flex items-center gap-3 text-white">
+            <div className="p-2 bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-lg border border-orange-500/30">
+              <TrendingUp className="w-5 h-5 text-orange-400" />
+            </div>
             Rebalancing Recommendations
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="bg-yellow-50 dark:bg-yellow-900 p-4 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
-                <h4 className="font-medium text-yellow-900 dark:text-yellow-100">
+            <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-xl p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-lg border border-yellow-500/30">
+                  <AlertTriangle className="w-5 h-5 text-yellow-400" />
+                </div>
+                <h4 className="font-medium text-yellow-400">
                   Portfolio Review Needed
                 </h4>
               </div>
-              <p className="text-sm text-yellow-800 dark:text-yellow-200 mb-3">
+              <p className="text-sm text-slate-300 mb-4">
                 Your current allocation may not align with your target risk profile. Consider these adjustments:
               </p>
-              <ul className="space-y-2 text-sm text-yellow-800 dark:text-yellow-200">
+              <ul className="space-y-2 text-sm text-slate-300">
                 <li>• Increase retirement account contributions to reach target allocation</li>
                 <li>• Consider diversifying beyond cash and real estate</li>
                 <li>• Review and rebalance quarterly or when allocation drifts 5%+ from target</li>
@@ -239,29 +248,29 @@ export default function AssetAllocation({ clientData }: AssetAllocationProps) {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-green-50 dark:bg-green-900 p-4 rounded-lg">
-                <h4 className="font-medium text-green-900 dark:text-green-100 mb-2">
+              <div className="bg-slate-600/20 border border-slate-600/30 rounded-xl p-4 hover:bg-slate-600/30 transition-all duration-300">
+                <h4 className="font-medium text-emerald-400 mb-2">
                   Tax-Efficient Placement
                 </h4>
-                <p className="text-sm text-green-800 dark:text-green-200">
+                <p className="text-sm text-slate-300">
                   Hold growth stocks in tax-advantaged accounts, bonds in taxable accounts for tax efficiency.
                 </p>
               </div>
               
-              <div className="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg">
-                <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">
+              <div className="bg-slate-600/20 border border-slate-600/30 rounded-xl p-4 hover:bg-slate-600/30 transition-all duration-300">
+                <h4 className="font-medium text-blue-400 mb-2">
                   Rebalancing Frequency
                 </h4>
-                <p className="text-sm text-blue-800 dark:text-blue-200">
+                <p className="text-sm text-slate-300">
                   Review quarterly and rebalance when any asset class deviates 5%+ from target.
                 </p>
               </div>
               
-              <div className="bg-purple-50 dark:bg-purple-900 p-4 rounded-lg">
-                <h4 className="font-medium text-purple-900 dark:text-purple-100 mb-2">
+              <div className="bg-slate-600/20 border border-slate-600/30 rounded-xl p-4 hover:bg-slate-600/30 transition-all duration-300">
+                <h4 className="font-medium text-purple-400 mb-2">
                   Dollar-Cost Averaging
                 </h4>
-                <p className="text-sm text-purple-800 dark:text-purple-200">
+                <p className="text-sm text-slate-300">
                   Invest consistently through automatic contributions to smooth market volatility.
                 </p>
               </div>

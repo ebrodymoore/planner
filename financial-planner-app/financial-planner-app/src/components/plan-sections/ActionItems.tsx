@@ -334,10 +334,10 @@ export default function ActionItems({ clientData, analysisResults }: ActionItems
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-      case 'low': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+      case 'high': return 'bg-gradient-to-r from-red-500 to-red-600 text-white border-0';
+      case 'medium': return 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white border-0';
+      case 'low': return 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-0';
+      default: return 'bg-gradient-to-r from-slate-500 to-slate-600 text-white border-0';
     }
   };
 
@@ -347,38 +347,39 @@ export default function ActionItems({ clientData, analysisResults }: ActionItems
   const completionPercentage = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Header */}
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent mb-3">
           Prioritized Action Items
         </h2>
-        <p className="text-gray-600 dark:text-gray-300">
+        <p className="text-slate-400 text-lg">
           Your personalized financial action plan with step-by-step guidance
         </p>
       </div>
 
       {/* Progress Overview */}
-      <Card>
+      <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
         <CardContent className="pt-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <h3 className="text-lg font-semibold text-white">
                 Implementation Progress
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="text-sm text-slate-300">
                 {completedCount} of {totalCount} action items completed
               </p>
             </div>
             <div className="text-right">
-              <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+              <p className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-emerald-500 bg-clip-text text-transparent">
                 {completionPercentage.toFixed(0)}%
               </p>
-              <p className="text-sm text-gray-500">Complete</p>
+              <p className="text-sm text-slate-400">Complete</p>
             </div>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+          <div className="w-full bg-slate-700 rounded-full h-4">
             <div
-              className="bg-green-500 h-3 rounded-full transition-all duration-300"
+              className="bg-gradient-to-r from-emerald-500 to-emerald-600 h-4 rounded-full transition-all duration-500"
               style={{ width: `${completionPercentage}%` }}
             />
           </div>
@@ -390,10 +391,12 @@ export default function ActionItems({ clientData, analysisResults }: ActionItems
         {['30 days', '60 days', '90 days'].map(timeline => {
           const timelineItems = actionItems.filter(item => item.timeline === timeline);
           return (
-            <Card key={timeline}>
+            <Card key={timeline} className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
+                <CardTitle className="flex items-center gap-3 text-white">
+                  <div className="p-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg border border-blue-500/30">
+                    <Clock className="w-5 h-5 text-blue-400" />
+                  </div>
                   {timeline}
                 </CardTitle>
               </CardHeader>
@@ -405,7 +408,7 @@ export default function ActionItems({ clientData, analysisResults }: ActionItems
                     return (
                       <div 
                         key={item.id}
-                        className={`p-3 border rounded-lg ${isCompleted ? 'bg-green-50 dark:bg-green-900 border-green-200 dark:border-green-700' : 'border-gray-200 dark:border-gray-700'}`}
+                        className={`p-4 border rounded-xl transition-all duration-300 ${isCompleted ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-slate-600/20 border-slate-600/30 hover:bg-slate-600/30'}`}
                       >
                         <div className="flex items-start gap-3">
                           <Checkbox
@@ -416,11 +419,11 @@ export default function ActionItems({ clientData, analysisResults }: ActionItems
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
                               <IconComponent className="w-4 h-4" />
-                              <h4 className={`font-medium ${isCompleted ? 'line-through text-gray-600' : 'text-gray-900 dark:text-white'}`}>
+                              <h4 className={`font-medium ${isCompleted ? 'line-through text-slate-500' : 'text-white'}`}>
                                 {item.title}
                               </h4>
                             </div>
-                            <p className="text-xs text-gray-600 dark:text-gray-300 mb-2">
+                            <p className="text-xs text-slate-300 mb-2">
                               {item.description}
                             </p>
                             <div className="flex items-center gap-2">
@@ -437,7 +440,7 @@ export default function ActionItems({ clientData, analysisResults }: ActionItems
                     );
                   })}
                   {timelineItems.length === 0 && (
-                    <p className="text-gray-500 text-center py-4">
+                    <p className="text-slate-400 text-center py-4">
                       No items for this timeline
                     </p>
                   )}
@@ -450,7 +453,7 @@ export default function ActionItems({ clientData, analysisResults }: ActionItems
 
       {/* Detailed Action Items */}
       <div className="space-y-4">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+        <h3 className="text-xl font-semibold text-slate-100">
           Detailed Action Plan
         </h3>
         {actionItems.map((item, index) => {
@@ -473,11 +476,11 @@ export default function ActionItems({ clientData, analysisResults }: ActionItems
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <h3 className={`text-lg font-semibold ${isCompleted ? 'line-through text-gray-600' : 'text-gray-900 dark:text-white'}`}>
+                        <h3 className={`text-lg font-semibold ${isCompleted ? 'line-through text-slate-500' : 'text-slate-100'}`}>
                           #{index + 1}. {item.title}
                         </h3>
                       </div>
-                      <p className="text-gray-600 dark:text-gray-300 mb-3">
+                      <p className="text-slate-300 mb-3">
                         {item.description}
                       </p>
                       <div className="flex items-center gap-4 mb-4">
