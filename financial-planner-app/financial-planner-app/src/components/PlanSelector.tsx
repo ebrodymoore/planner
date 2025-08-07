@@ -24,11 +24,15 @@ import {
 interface PlanSelectorProps {
   onSelectQuickPlan: () => void;
   onSelectComprehensivePlan: () => void;
+  onSignIn?: () => void;
+  onBackToHome?: () => void;
 }
 
 export default function PlanSelector({ 
   onSelectQuickPlan, 
-  onSelectComprehensivePlan 
+  onSelectComprehensivePlan,
+  onSignIn,
+  onBackToHome
 }: PlanSelectorProps) {
   const quickPlanFeatures = [
     'Basic retirement readiness assessment',
@@ -80,6 +84,38 @@ export default function PlanSelector({
             Select the perfect plan tailored to your needs and goals.
           </p>
         </div>
+
+        {/* Back to Home Button */}
+        {onBackToHome && (
+          <div className="text-center mb-8">
+            <Button 
+              onClick={onBackToHome}
+              variant="ghost"
+              className="text-slate-400 hover:text-white hover:bg-slate-800/50"
+            >
+              ← Back to Home
+            </Button>
+          </div>
+        )}
+
+        {/* Sign In Option for Existing Users */}
+        {onSignIn && (
+          <div className="text-center mb-8">
+            <Card className="inline-block bg-slate-800/40 backdrop-blur-xl border-slate-700/30 px-8 py-6">
+              <CardContent className="p-0">
+                <p className="text-slate-300 mb-4">Already have an account?</p>
+                <Button 
+                  onClick={onSignIn}
+                  variant="outline"
+                  className="bg-slate-700/50 hover:bg-slate-600/50 border-slate-600/50 text-slate-200 hover:text-white"
+                >
+                  Sign In to View Your Plan
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Plan Comparison */}
         <div className="grid lg:grid-cols-2 gap-8 mb-16">

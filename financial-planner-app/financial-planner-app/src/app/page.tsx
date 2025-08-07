@@ -7,6 +7,8 @@ import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { supabase } from '@/lib/supabase';
 import OnboardingWizard from '@/components/OnboardingWizard';
 import FinancialPlan from '@/components/FinancialPlan';
+import AuthComponent from '@/components/AuthComponent';
+import LandingPage from '@/components/LandingPage';
 import PlanSelector from '@/components/PlanSelector';
 import QuickPlanWizard, { QuickPlanData } from '@/components/QuickPlanWizard';
 import { useFinancialPlan } from '@/hooks/useFinancialPlan';
@@ -15,7 +17,9 @@ import { FormData } from '@/types/financial';
 import { AlertTriangle, Loader2, Upload, Download } from 'lucide-react';
 
 function HomePage() {
-  const [currentView, setCurrentView] = useState<'selector' | 'quick-plan' | 'questionnaire' | 'plan'>('selector');
+  const user = useUser();
+  const [currentView, setCurrentView] = useState<'landing' | 'auth' | 'selector' | 'quick-plan' | 'questionnaire' | 'plan'>('landing');
+  const [showSignupPrompt, setShowSignupPrompt] = useState(false);
   const [isUploadingJSON, setIsUploadingJSON] = useState(false);
   
   const {
@@ -34,6 +38,13 @@ function HomePage() {
   const handleComplete = async (data: FormData) => {
     try {
       await saveQuestionnaireData(data);
+      
+      // If user is not authenticated, show signup prompt before showing plan
+      if (!user) {
+        setShowSignupPrompt(true);
+        return;
+      }
+      
       await generateNewAnalysis();
       setCurrentView('plan');
     } catch (err) {
@@ -139,6 +150,13 @@ function HomePage() {
       };
 
       await saveQuestionnaireData(formData as FormData);
+      
+      // If user is not authenticated, show signup prompt before showing plan
+      if (!user) {
+        setShowSignupPrompt(true);
+        return;
+      }
+      
       await generateNewAnalysis();
       setCurrentView('plan');
     } catch (err) {
@@ -159,7 +177,21 @@ function HomePage() {
     setCurrentView('selector');
   };
 
+  const handleBackToLanding = () => {
+    setCurrentView('landing');
+  };
+
+  const handleGetStarted = () => {
+    setCurrentView('selector');
+  };
+
   const handleViewPlan = async () => {
+    // If user is not authenticated, show signup prompt
+    if (!user) {
+      setShowSignupPrompt(true);
+      return;
+    }
+    
     if (!analysisResults && questionnaireData) {
       await generateNewAnalysis();
     }
@@ -198,6 +230,12 @@ function HomePage() {
       // Generate analysis automatically
       await generateNewAnalysis();
       
+      // If user is not authenticated, show signup prompt before showing plan
+      if (!user) {
+        setShowSignupPrompt(true);
+        return;
+      }
+      
       // Switch to plan view
       setCurrentView('plan');
       
@@ -221,10 +259,19 @@ function HomePage() {
     document.body.removeChild(link);
   };
 
-  // TEMPORARILY DISABLED FOR TESTING - Show authentication if user not logged in
-  // if (!user) {
-  //   return <AuthComponent />;
-  // }
+  // Handle authentication and user flow
+  React.useEffect(() => {
+    if (user && questionnaireData && Object.keys(questionnaireData).length > 0) {
+      // Existing user with data - take them to plan
+      if (currentView === 'landing' || currentView === 'selector' || currentView === 'auth') {
+        setCurrentView('plan');
+      }
+    } else if (!user && (currentView === 'plan' || showSignupPrompt)) {
+      // Redirect to auth if trying to access plan without login
+      setCurrentView('auth');
+      setShowSignupPrompt(false);
+    }
+  }, [user, questionnaireData, currentView, showSignupPrompt]);
 
   // Show loading state
   if (isLoadingQuestionnaire) {
@@ -259,6 +306,27 @@ function HomePage() {
     );
   }
 
+  // Show landing page
+  if (currentView === 'landing') {
+    return (
+      <div className="min-h-screen">
+        <LandingPage 
+          onGetStarted={handleGetStarted}
+          onSignIn={() => setCurrentView('auth')}
+        />
+      </div>
+    );
+  }
+
+  // Show authentication if not logged in and trying to access plan
+  if (currentView === 'auth' || (!user && showSignupPrompt)) {
+    return (
+      <div className="min-h-screen">
+        <AuthComponent />
+      </div>
+    );
+  }
+
   // Show plan selector view
   if (currentView === 'selector') {
     return (
@@ -266,6 +334,8 @@ function HomePage() {
         <PlanSelector 
           onSelectQuickPlan={handleSelectQuickPlan}
           onSelectComprehensivePlan={handleSelectComprehensivePlan}
+          onSignIn={() => setCurrentView('auth')}
+          onBackToHome={handleBackToLanding}
         />
       </div>
     );
@@ -280,7 +350,7 @@ function HomePage() {
           onUpgradeToComprehensive={handleUpgradeToComprehensive}
           initialData={{}}
         />
-        <div className="fixed bottom-6 left-6">
+        <div className="fixed bottom-6 left-6 space-y-3">
           <Button
             onClick={handleBackToSelector}
             variant="outline"
@@ -288,6 +358,14 @@ function HomePage() {
           >
             ← Back to Plan Selection
           </Button>
+          {!user && (
+            <Button
+              onClick={() => setCurrentView('auth')}
+              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-xl px-6 py-3"
+            >
+              Sign In
+            </Button>
+          )}
         </div>
       </div>
     );
@@ -347,8 +425,8 @@ function HomePage() {
         initialData={questionnaireData || {}}
       />
       
-      {/* Back to selector button */}
-      <div className="fixed bottom-6 left-6">
+      {/* Back to selector and auth buttons */}
+      <div className="fixed bottom-6 left-6 space-y-3">
         <Button
           onClick={handleBackToSelector}
           variant="outline"
@@ -356,6 +434,14 @@ function HomePage() {
         >
           ← Back to Plan Selection
         </Button>
+        {!user && (
+          <Button
+            onClick={() => setCurrentView('auth')}
+            className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-xl px-6 py-3"
+          >
+            Sign In to Save Progress
+          </Button>
+        )}
       </div>
       
       {/* Action buttons */}

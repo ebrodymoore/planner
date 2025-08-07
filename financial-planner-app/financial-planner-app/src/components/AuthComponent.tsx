@@ -77,7 +77,7 @@ export default function AuthComponent() {
               Financial Planner
             </CardTitle>
             <p className="text-slate-300">
-              {isSignUp ? 'Create your account' : 'Sign in to your account'}
+              {isSignUp ? 'Create your account to save and view your personalized financial plan' : 'Sign in to access your financial plan'}
             </p>
           </CardHeader>
           <CardContent>
