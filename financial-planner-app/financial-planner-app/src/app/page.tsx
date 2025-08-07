@@ -7,7 +7,6 @@ import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { supabase } from '@/lib/supabase';
 import OnboardingWizard from '@/components/OnboardingWizard';
 import FinancialPlan from '@/components/FinancialPlan';
-import AuthComponent from '@/components/AuthComponent';
 import PlanSelector from '@/components/PlanSelector';
 import QuickPlanWizard, { QuickPlanData } from '@/components/QuickPlanWizard';
 import { useFinancialPlan } from '@/hooks/useFinancialPlan';
@@ -16,7 +15,6 @@ import { FormData } from '@/types/financial';
 import { AlertTriangle, Loader2, Upload, Download } from 'lucide-react';
 
 function HomePage() {
-  const user = useUser();
   const [currentView, setCurrentView] = useState<'selector' | 'quick-plan' | 'questionnaire' | 'plan'>('selector');
   const [isUploadingJSON, setIsUploadingJSON] = useState(false);
   
@@ -26,8 +24,6 @@ function HomePage() {
     isLoadingQuestionnaire,
     isLoadingAnalysis,
     isGeneratingAnalysis,
-    loadQuestionnaireData,
-    loadAnalysisResults,
     generateNewAnalysis,
     saveQuestionnaireData,
     error,

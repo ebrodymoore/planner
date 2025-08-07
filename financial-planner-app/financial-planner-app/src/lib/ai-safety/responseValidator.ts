@@ -1,11 +1,9 @@
 // Comprehensive AI response validation and hallucination detection
 
 import { 
-  AnalysisResult, 
   CompressedFinancialData, 
   HallucinationFlag, 
-  ValidationResult,
-  MonitoringMetrics 
+  ValidationResult
 } from './types';
 import { FINANCIAL_CONSTRAINTS } from './constraints';
 
@@ -396,7 +394,7 @@ export class AIResponseValidator {
     response: any, 
     inputData: CompressedFinancialData, 
     errors: string[], 
-    warnings: string[]
+    _warnings: string[]
   ): boolean {
     let valid = true;
 
@@ -438,7 +436,7 @@ export class AIResponseValidator {
     errors: string[], 
     warnings: string[]
   ): boolean {
-    let valid = true;
+    const valid = true;
 
     // Check priority consistency
     if (response.emergency_fund?.priority === 'low' && inputData.emergencyFundMonths < 1) {
