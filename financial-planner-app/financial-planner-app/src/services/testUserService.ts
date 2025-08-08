@@ -32,6 +32,9 @@ export class TestUserService {
         if (!user) {
           throw new Error('Failed to create test user');
         }
+      } else if (signInError && signInError.message.includes('Email not confirmed')) {
+        // For test users with unconfirmed emails, provide helpful error message
+        throw new Error(`Test user exists but email not confirmed. Please either:\n1. Disable email confirmation in Supabase Settings\n2. Or manually confirm the test user email in Supabase Dashboard\n\nOriginal error: ${signInError.message}`);
       } else if (signInError) {
         throw new Error(`Sign in failed: ${signInError.message}`);
       }
@@ -278,14 +281,14 @@ export class TestUserService {
             user_id: userId,
             name: 'Chase Sapphire',
             balance: 2500,
-            limit: 10000,
+            credit_limit: 10000,
             rate: 18.99
           },
           {
             user_id: userId,
             name: 'Capital One',
             balance: 1200,
-            limit: 5000,
+            credit_limit: 5000,
             rate: 22.99
           }
         ]),

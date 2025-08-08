@@ -242,7 +242,7 @@ export type Database = {
           user_id: string
           name: string
           balance: number
-          limit: number
+          credit_limit: number
           rate: number
           created_at: string
           updated_at: string
@@ -252,7 +252,7 @@ export type Database = {
           user_id: string
           name: string
           balance: number
-          limit: number
+          credit_limit: number
           rate: number
           created_at?: string
           updated_at?: string

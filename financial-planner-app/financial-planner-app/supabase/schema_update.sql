@@ -1,3 +1,18 @@
+-- Drop existing tables if they exist (in correct order to handle dependencies)
+DROP TABLE IF EXISTS public.plan_implementations;
+DROP TABLE IF EXISTS public.financial_analyses;
+DROP TABLE IF EXISTS public.client_risk_assessment;
+DROP TABLE IF EXISTS public.client_preferences;
+DROP TABLE IF EXISTS public.client_goals;
+DROP TABLE IF EXISTS public.student_loans;
+DROP TABLE IF EXISTS public.credit_cards;
+DROP TABLE IF EXISTS public.auto_loans;
+DROP TABLE IF EXISTS public.client_liabilities;
+DROP TABLE IF EXISTS public.client_assets;
+DROP TABLE IF EXISTS public.client_expenses;
+DROP TABLE IF EXISTS public.client_income;
+DROP TABLE IF EXISTS public.user_profiles;
+
 -- Enable necessary extensions
 create extension if not exists "uuid-ossp";
 
@@ -90,7 +105,7 @@ create table public.auto_loans (
   updated_at timestamp with time zone default now()
 );
 
--- Create credit cards table (multiple allowed)
+-- Create credit cards table (multiple allowed) - FIXED: limit -> credit_limit
 create table public.credit_cards (
   id uuid default uuid_generate_v4() primary key,
   user_id uuid references auth.users not null,
