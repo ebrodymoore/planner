@@ -40,18 +40,14 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
 
   // Load questionnaire data from database
   const loadQuestionnaireData = async () => {
-    // TEMPORARILY DISABLED FOR TESTING - Using localStorage instead
+    if (!user) return;
+    
     setIsLoadingQuestionnaire(true);
     setError(null);
 
     try {
-      const savedData = localStorage.getItem('financial-planning-data');
-      if (savedData) {
-        const parsedData = JSON.parse(savedData);
-        setQuestionnaireData(parsedData);
-      } else {
-        setQuestionnaireData({});
-      }
+      const response = await FinancialDataService.loadQuestionnaireResponse(user.id);
+      setQuestionnaireData(response?.questionnaire_data || {});
     } catch (err) {
       console.error('Error loading questionnaire data:', err);
       setError('Failed to load questionnaire data');
@@ -62,18 +58,14 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
 
   // Load existing analysis results
   const loadAnalysisResults = async () => {
-    // TEMPORARILY DISABLED FOR TESTING - Using localStorage instead
+    if (!user) return;
+    
     setIsLoadingAnalysis(true);
     setError(null);
 
     try {
-      const savedAnalysis = localStorage.getItem('financial-analysis-results');
-      if (savedAnalysis) {
-        const parsedAnalysis = JSON.parse(savedAnalysis);
-        setAnalysisResults(parsedAnalysis);
-      } else {
-        setAnalysisResults(null);
-      }
+      const data = await FinancialDataService.getCurrentAnalysis(user.id);
+      setAnalysisResults(data);
     } catch (err) {
       console.error('Error loading analysis results:', err);
       setError('Failed to load analysis results');
