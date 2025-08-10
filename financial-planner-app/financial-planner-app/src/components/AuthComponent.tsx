@@ -9,6 +9,21 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/lib/supabase';
 import { Loader2, ArrowRight, Shield, Sparkles, TrendingUp, CheckCircle } from 'lucide-react';
 
+// Helper function to create user profile after signup
+async function createUserProfile(userId: string, email: string) {
+  try {
+    const { error } = await supabase
+      .from('user_profiles')
+      .insert({
+        user_id: userId,
+        name: email.split('@')[0], // Use email prefix as default name
+      });
+    return error;
+  } catch (err) {
+    return err;
+  }
+}
+
 export default function AuthComponent() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
@@ -33,7 +48,7 @@ export default function AuthComponent() {
           throw new Error('Password must be at least 6 characters');
         }
         
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -41,6 +56,15 @@ export default function AuthComponent() {
           }
         });
         if (error) throw error;
+        
+        // Create user profile after successful signup
+        if (data.user) {
+          const profileError = await createUserProfile(data.user.id, email);
+          if (profileError) {
+            console.error('Error creating user profile:', profileError);
+          }
+        }
+        
         setMessage('Account created successfully! You can now start using your financial planner.');
       } else {
         const { error } = await supabase.auth.signInWithPassword({
