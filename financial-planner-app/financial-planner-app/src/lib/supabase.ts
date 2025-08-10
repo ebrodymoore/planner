@@ -5,6 +5,15 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+// Add auth state debugging
+supabase.auth.onAuthStateChange((event, session) => {
+  console.log('🔐 [DEBUG] Auth state change:', {
+    event,
+    user: session?.user?.id,
+    session: session ? 'present' : 'null'
+  });
+});
+
 export type Database = {
   public: {
     Tables: {

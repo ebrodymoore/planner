@@ -82,15 +82,29 @@ export class FinancialDataService {
    * Load user's questionnaire response
    */
   static async loadQuestionnaireResponse(userId: string): Promise<QuestionnaireResponse | null> {
+    console.log('📊 [DEBUG] loadQuestionnaireResponse called for userId:', userId);
+
     const { data, error } = await supabase
       .from('financial_questionnaire_responses')
       .select('*')
       .eq('user_id', userId)
       .single();
 
+    console.log('📊 [DEBUG] loadQuestionnaireResponse result:', {
+      data,
+      error: error?.message,
+      errorCode: error?.code,
+      errorDetails: error?.details,
+      errorHint: error?.hint
+    });
+
     if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
-      console.error('Error loading questionnaire response:', error);
+      console.error('📊 [DEBUG] Questionnaire response error (not no-rows-found):', error);
       return null;
+    }
+
+    if (error?.code === 'PGRST116') {
+      console.log('📊 [DEBUG] No questionnaire response found for user - this is normal for new users');
     }
 
     return data;
@@ -192,6 +206,8 @@ export class FinancialDataService {
    * Get current financial analysis
    */
   static async getCurrentAnalysis(userId: string): Promise<FinancialAnalysis | null> {
+    console.log('📊 [DEBUG] getCurrentAnalysis called for userId:', userId);
+
     const { data, error } = await supabase
       .from('financial_analysis')
       .select('*')
@@ -201,9 +217,21 @@ export class FinancialDataService {
       .limit(1)
       .single();
 
+    console.log('📊 [DEBUG] getCurrentAnalysis result:', {
+      data,
+      error: error?.message,
+      errorCode: error?.code,
+      errorDetails: error?.details,
+      errorHint: error?.hint
+    });
+
     if (error && error.code !== 'PGRST116') {
-      console.error('Error loading current analysis:', error);
+      console.error('📊 [DEBUG] Financial analysis error (not no-rows-found):', error);
       return null;
+    }
+
+    if (error?.code === 'PGRST116') {
+      console.log('📊 [DEBUG] No financial analysis found for user - this is normal for new users');
     }
 
     return data;

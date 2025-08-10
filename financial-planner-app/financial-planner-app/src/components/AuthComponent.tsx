@@ -11,15 +11,59 @@ import { Loader2, ArrowRight, Shield, Sparkles, TrendingUp, CheckCircle } from '
 
 // Helper function to create user profile after signup
 async function createUserProfile(userId: string, email: string) {
+  console.log('🔧 [DEBUG] Creating user profile for:', { userId, email });
+  
   try {
-    const { error } = await supabase
+    // First check current auth state
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    console.log('🔧 [DEBUG] Current auth state:', { 
+      user: authData?.user?.id, 
+      error: authError?.message 
+    });
+
+    // Check if profile already exists
+    const { data: existing, error: checkError } = await supabase
       .from('user_profiles')
-      .insert({
-        user_id: userId,
-        name: email.split('@')[0], // Use email prefix as default name
-      });
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+    
+    console.log('🔧 [DEBUG] Existing profile check:', { 
+      existing, 
+      checkError: checkError?.message,
+      checkErrorCode: checkError?.code 
+    });
+
+    if (existing) {
+      console.log('🔧 [DEBUG] Profile already exists, skipping creation');
+      return null;
+    }
+
+    // Create profile with detailed logging
+    const profileData = {
+      user_id: userId,
+      name: email.split('@')[0], // Use email prefix as default name
+    };
+    
+    console.log('🔧 [DEBUG] Attempting to insert profile:', profileData);
+
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .insert(profileData)
+      .select()
+      .single();
+
+    console.log('🔧 [DEBUG] Profile creation result:', { 
+      data, 
+      error: error?.message,
+      errorCode: error?.code,
+      errorDetails: error?.details,
+      errorHint: error?.hint 
+    });
+
     return error;
   } catch (err) {
+    console.error('🔧 [DEBUG] Exception in createUserProfile:', err);
     return err;
   }
 }
@@ -39,6 +83,8 @@ export default function AuthComponent() {
     setError('');
     setMessage('');
 
+    console.log('🚀 [DEBUG] Starting authentication process:', { isSignUp, email });
+
     try {
       if (isSignUp) {
         if (password !== confirmPassword) {
@@ -48,6 +94,8 @@ export default function AuthComponent() {
           throw new Error('Password must be at least 6 characters');
         }
         
+        console.log('🚀 [DEBUG] Calling supabase.auth.signUp...');
+        
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -55,26 +103,56 @@ export default function AuthComponent() {
             emailRedirectTo: process.env.NEXT_PUBLIC_APP_URL || 'https://planner-phi-jet.vercel.app'
           }
         });
-        if (error) throw error;
+        
+        console.log('🚀 [DEBUG] SignUp response:', { 
+          user: data?.user?.id, 
+          session: data?.session?.access_token ? 'present' : 'null',
+          error: error?.message,
+          errorCode: error?.code,
+          errorStatus: error?.status 
+        });
+        
+        if (error) {
+          console.error('🚀 [DEBUG] SignUp error details:', error);
+          throw error;
+        }
         
         // Create user profile after successful signup
         if (data.user) {
+          console.log('🚀 [DEBUG] User created successfully, creating profile...');
           const profileError = await createUserProfile(data.user.id, email);
           if (profileError) {
-            console.error('Error creating user profile:', profileError);
+            console.error('🚀 [DEBUG] Profile creation failed:', profileError);
+            setError(`Account created but profile setup failed: ${(profileError as any)?.message || 'Unknown error'}`);
+            return;
+          } else {
+            console.log('🚀 [DEBUG] Profile created successfully');
           }
+        } else {
+          console.warn('🚀 [DEBUG] No user data returned from signUp');
         }
         
         setMessage('Account created successfully! You can now start using your financial planner.');
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
+        console.log('🚀 [DEBUG] Attempting sign in...');
+        
+        const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
+        
+        console.log('🚀 [DEBUG] SignIn response:', { 
+          user: data?.user?.id, 
+          session: data?.session?.access_token ? 'present' : 'null',
+          error: error?.message 
+        });
+        
         if (error) throw error;
         setMessage('Welcome back! Redirecting to your dashboard...');
       }
     } catch (error: any) {
+      console.error('🚀 [DEBUG] Authentication error:', error);
+      console.error('🚀 [DEBUG] Error stack:', error.stack);
       setError(error.message);
     } finally {
       setLoading(false);

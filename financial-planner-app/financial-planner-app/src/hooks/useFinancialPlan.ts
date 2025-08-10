@@ -40,17 +40,30 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
 
   // Load questionnaire data from database
   const loadQuestionnaireData = async () => {
-    if (!user) return;
+    console.log('🔍 [DEBUG] loadQuestionnaireData called, user:', user?.id);
+    
+    if (!user) {
+      console.log('🔍 [DEBUG] No user, skipping database load');
+      return;
+    }
     
     setIsLoadingQuestionnaire(true);
     setError(null);
 
     try {
+      console.log('🔍 [DEBUG] Calling FinancialDataService.loadQuestionnaireResponse...');
       const response = await FinancialDataService.loadQuestionnaireResponse(user.id);
+      console.log('🔍 [DEBUG] Response from loadQuestionnaireResponse:', response);
       setQuestionnaireData(response?.questionnaire_data || {});
     } catch (err) {
-      console.error('Error loading questionnaire data:', err);
-      setError('Failed to load questionnaire data');
+      console.error('🔍 [DEBUG] Error loading questionnaire data:', err);
+      console.error('🔍 [DEBUG] Error details:', {
+        message: (err as any)?.message,
+        code: (err as any)?.code,
+        details: (err as any)?.details,
+        hint: (err as any)?.hint
+      });
+      setError(`Failed to load questionnaire data: ${(err as any)?.message || 'Unknown error'}`);
     } finally {
       setIsLoadingQuestionnaire(false);
     }
@@ -58,17 +71,30 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
 
   // Load existing analysis results
   const loadAnalysisResults = async () => {
-    if (!user) return;
+    console.log('🔍 [DEBUG] loadAnalysisResults called, user:', user?.id);
+    
+    if (!user) {
+      console.log('🔍 [DEBUG] No user, skipping analysis load');
+      return;
+    }
     
     setIsLoadingAnalysis(true);
     setError(null);
 
     try {
+      console.log('🔍 [DEBUG] Calling FinancialDataService.getCurrentAnalysis...');
       const data = await FinancialDataService.getCurrentAnalysis(user.id);
+      console.log('🔍 [DEBUG] Response from getCurrentAnalysis:', data);
       setAnalysisResults(data);
     } catch (err) {
-      console.error('Error loading analysis results:', err);
-      setError('Failed to load analysis results');
+      console.error('🔍 [DEBUG] Error loading analysis results:', err);
+      console.error('🔍 [DEBUG] Analysis error details:', {
+        message: (err as any)?.message,
+        code: (err as any)?.code,
+        details: (err as any)?.details,
+        hint: (err as any)?.hint
+      });
+      setError(`Failed to load analysis results: ${(err as any)?.message || 'Unknown error'}`);
     } finally {
       setIsLoadingAnalysis(false);
     }
