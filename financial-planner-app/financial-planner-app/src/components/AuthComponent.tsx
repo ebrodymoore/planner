@@ -132,7 +132,7 @@ export default function AuthComponent() {
           console.warn('🚀 [DEBUG] No user data returned from signUp');
         }
         
-        setMessage('Account created successfully! You can now start using your financial planner.');
+        setMessage('Account created successfully! Redirecting to your dashboard...');
       } else {
         console.log('🚀 [DEBUG] Attempting sign in...');
         

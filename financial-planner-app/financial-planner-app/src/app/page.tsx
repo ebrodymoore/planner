@@ -266,6 +266,9 @@ function HomePage() {
       if (currentView === 'landing' || currentView === 'selector' || currentView === 'auth') {
         setCurrentView('plan');
       }
+    } else if (user && currentView === 'auth') {
+      // New user just signed up/in but has no data - take them to plan selector
+      setCurrentView('selector');
     } else if (!user && (currentView === 'plan' || showSignupPrompt)) {
       // Redirect to auth if trying to access plan without login
       setCurrentView('auth');
