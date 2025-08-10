@@ -7,12 +7,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/lib/supabase';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ArrowRight, Shield, Sparkles, TrendingUp, CheckCircle } from 'lucide-react';
 
 export default function AuthComponent() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -25,6 +26,13 @@ export default function AuthComponent() {
 
     try {
       if (isSignUp) {
+        if (password !== confirmPassword) {
+          throw new Error('Passwords do not match');
+        }
+        if (password.length < 6) {
+          throw new Error('Password must be at least 6 characters');
+        }
+        
         const { error } = await supabase.auth.signUp({
           email,
           password,
@@ -33,14 +41,14 @@ export default function AuthComponent() {
           }
         });
         if (error) throw error;
-        setMessage('Check your email for the confirmation link!');
+        setMessage('Account created successfully! You can now start using your financial planner.');
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         if (error) throw error;
-        setMessage('Signed in successfully!');
+        setMessage('Welcome back! Redirecting to your dashboard...');
       }
     } catch (error: any) {
       setError(error.message);
@@ -49,35 +57,204 @@ export default function AuthComponent() {
     }
   };
 
+  // Reset form when switching between login/signup
+  const switchMode = () => {
+    setIsSignUp(!isSignUp);
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setError('');
+    setMessage('');
+  };
 
+  if (isSignUp) {
+    // SIGNUP SCREEN - More visual, benefit-focused
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-6">
+        <div className="w-full max-w-lg">
+          <Card className="bg-slate-800/60 backdrop-blur-xl border-slate-700/50">
+            <CardHeader className="text-center space-y-4 pb-8">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <div className="p-2 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg">
+                  <TrendingUp className="w-6 h-6 text-white" />
+                </div>
+                <span className="text-xl font-bold text-white">ContextFi</span>
+              </div>
+              
+              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+                Get Your Financial Plan
+              </CardTitle>
+              
+              <p className="text-slate-300 text-lg leading-relaxed">
+                Join thousands who've taken control of their financial future with personalized, AI-powered guidance.
+              </p>
+
+              {/* Benefits */}
+              <div className="grid grid-cols-2 gap-4 mt-6">
+                <div className="flex items-center gap-2 text-sm text-slate-300">
+                  <CheckCircle className="w-4 h-4 text-emerald-400" />
+                  <span>Personalized plans</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-300">
+                  <CheckCircle className="w-4 h-4 text-emerald-400" />
+                  <span>AI-powered insights</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-300">
+                  <CheckCircle className="w-4 h-4 text-emerald-400" />
+                  <span>Real-world scenarios</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-300">
+                  <CheckCircle className="w-4 h-4 text-emerald-400" />
+                  <span>Secure & private</span>
+                </div>
+              </div>
+            </CardHeader>
+            
+            <CardContent className="space-y-6">
+              <form onSubmit={handleAuth} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-slate-300">Email Address</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="your@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-500"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-slate-300">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Choose a secure password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-500"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword" className="text-slate-300">Confirm Password</Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    placeholder="Confirm your password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-500"
+                  />
+                </div>
+
+                {error && (
+                  <Alert variant="destructive" className="bg-red-900/50 border-red-500/50">
+                    <AlertDescription className="text-red-200">{error}</AlertDescription>
+                  </Alert>
+                )}
+
+                {message && (
+                  <Alert className="bg-green-900/50 border-green-500/50">
+                    <AlertDescription className="text-green-200">{message}</AlertDescription>
+                  </Alert>
+                )}
+
+                <Button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold py-3 text-lg rounded-xl"
+                  disabled={loading}
+                  size="lg"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                      Creating Account...
+                    </>
+                  ) : (
+                    <>
+                      Start My Financial Journey
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </>
+                  )}
+                </Button>
+
+                <p className="text-xs text-slate-400 text-center leading-relaxed">
+                  By signing up, you agree to our terms and privacy policy. Your financial data is encrypted and secure.
+                </p>
+              </form>
+
+              <div className="pt-4 border-t border-slate-700/50">
+                <p className="text-center text-slate-400 text-sm">
+                  Already have an account?{' '}
+                  <button
+                    type="button"
+                    onClick={switchMode}
+                    className="text-emerald-400 hover:text-emerald-300 font-medium"
+                  >
+                    Sign in here
+                  </button>
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // LOGIN SCREEN - Clean, minimal, focused
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-6">
       <div className="w-full max-w-md">
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold text-slate-100">
-              Financial Planner
+        <Card className="bg-slate-800/60 backdrop-blur-xl border-slate-700/50">
+          <CardHeader className="text-center space-y-3">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <div className="p-2 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-xl font-bold text-white">ContextFi</span>
+            </div>
+            
+            <CardTitle className="text-2xl font-bold text-white">
+              Welcome Back
             </CardTitle>
+            
             <p className="text-slate-300">
-              {isSignUp ? 'Create your account to save and view your personalized financial plan' : 'Sign in to access your financial plan'}
+              Sign in to continue your financial planning journey
             </p>
           </CardHeader>
+          
           <CardContent>
             <form onSubmit={handleAuth} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-slate-300">Email</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-500"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password" className="text-slate-300">Password</Label>
+                  <button 
+                    type="button" 
+                    className="text-xs text-emerald-400 hover:text-emerald-300"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
                 <Input
                   id="password"
                   type="password"
@@ -85,48 +262,49 @@ export default function AuthComponent() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-500"
                 />
               </div>
 
               {error && (
-                <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
+                <Alert variant="destructive" className="bg-red-900/50 border-red-500/50">
+                  <AlertDescription className="text-red-200">{error}</AlertDescription>
                 </Alert>
               )}
 
               {message && (
-                <Alert>
-                  <AlertDescription>{message}</AlertDescription>
+                <Alert className="bg-green-900/50 border-green-500/50">
+                  <AlertDescription className="text-green-200">{message}</AlertDescription>
                 </Alert>
               )}
 
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-medium py-3"
                 disabled={loading}
               >
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                    Please wait...
+                    Signing in...
                   </>
                 ) : (
-                  isSignUp ? 'Sign Up' : 'Sign In'
+                  'Sign In'
                 )}
               </Button>
             </form>
 
-
             <div className="mt-6 text-center">
-              <button
-                type="button"
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="text-blue-400 hover:text-blue-300 text-sm"
-              >
-                {isSignUp 
-                  ? 'Already have an account? Sign in' 
-                  : "Don't have an account? Sign up"}
-              </button>
+              <p className="text-slate-400 text-sm">
+                New to ContextFi?{' '}
+                <button
+                  type="button"
+                  onClick={switchMode}
+                  className="text-emerald-400 hover:text-emerald-300 font-medium"
+                >
+                  Create your account
+                </button>
+              </p>
             </div>
           </CardContent>
         </Card>
