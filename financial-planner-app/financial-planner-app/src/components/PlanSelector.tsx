@@ -107,7 +107,7 @@ export default function PlanSelector({
                 <Button 
                   onClick={onSignIn}
                   variant="outline"
-                  className="bg-gray-100 hover:bg-gray-200 border-gray-300 text-gray-700 hover:text-gray-800">
+                  className="bg-gray-100 hover:bg-gray-200 border-gray-300 text-gray-700 hover:text-gray-800"
                 >
                   Sign In to View Your Plan
                   <ArrowRight className="w-4 h-4 ml-2" />
