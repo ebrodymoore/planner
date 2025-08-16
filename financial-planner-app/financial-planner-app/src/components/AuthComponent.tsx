@@ -172,40 +172,40 @@ export default function AuthComponent() {
   if (isSignUp) {
     // SIGNUP SCREEN - More visual, benefit-focused
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-6">
         <div className="w-full max-w-lg">
-          <Card className="bg-slate-800/60 backdrop-blur-xl border-slate-700/50">
+          <Card className="bg-white/80 backdrop-blur-xl border-gray-200/50 shadow-2xl">
             <CardHeader className="text-center space-y-4 pb-8">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <div className="p-2 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg">
                   <TrendingUp className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-xl font-bold text-white">ContextFi</span>
+                <span className="text-xl font-bold text-gray-800">ContextFi</span>
               </div>
               
-              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
                 Get Your Financial Plan
               </CardTitle>
               
-              <p className="text-slate-300 text-lg leading-relaxed">
+              <p className="text-gray-600 text-lg leading-relaxed">
                 Join thousands who've taken control of their financial future with personalized, AI-powered guidance.
               </p>
 
               {/* Benefits */}
               <div className="grid grid-cols-2 gap-4 mt-6">
-                <div className="flex items-center gap-2 text-sm text-slate-300">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
                   <CheckCircle className="w-4 h-4 text-emerald-400" />
                   <span>Personalized plans</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-slate-300">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
                   <CheckCircle className="w-4 h-4 text-emerald-400" />
                   <span>AI-powered insights</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-slate-300">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
                   <CheckCircle className="w-4 h-4 text-emerald-400" />
                   <span>Real-world scenarios</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-slate-300">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
                   <CheckCircle className="w-4 h-4 text-emerald-400" />
                   <span>Secure & private</span>
                 </div>
@@ -215,7 +215,7 @@ export default function AuthComponent() {
             <CardContent className="space-y-6">
               <form onSubmit={handleAuth} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-slate-300">Email Address</Label>
+                  <Label htmlFor="email" className="text-gray-700">Email Address</Label>
                   <Input
                     id="email"
                     type="email"
@@ -223,12 +223,12 @@ export default function AuthComponent() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-500"
+                    className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500/20"
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="text-slate-300">Password</Label>
+                  <Label htmlFor="password" className="text-gray-700">Password</Label>
                   <Input
                     id="password"
                     type="password"
@@ -237,12 +237,12 @@ export default function AuthComponent() {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     minLength={6}
-                    className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-500"
+                    className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500/20"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-slate-300">Confirm Password</Label>
+                  <Label htmlFor="confirmPassword" className="text-gray-700">Confirm Password</Label>
                   <Input
                     id="confirmPassword"
                     type="password"
@@ -251,19 +251,19 @@ export default function AuthComponent() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                     minLength={6}
-                    className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-500"
+                    className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500/20"
                   />
                 </div>
 
                 {error && (
-                  <Alert variant="destructive" className="bg-red-900/50 border-red-500/50">
-                    <AlertDescription className="text-red-200">{error}</AlertDescription>
+                  <Alert variant="destructive" className="bg-red-50 border-red-200">
+                    <AlertDescription className="text-red-800">{error}</AlertDescription>
                   </Alert>
                 )}
 
                 {message && (
-                  <Alert className="bg-green-900/50 border-green-500/50">
-                    <AlertDescription className="text-green-200">{message}</AlertDescription>
+                  <Alert className="bg-green-50 border-green-200">
+                    <AlertDescription className="text-green-800">{message}</AlertDescription>
                   </Alert>
                 )}
 
@@ -286,18 +286,18 @@ export default function AuthComponent() {
                   )}
                 </Button>
 
-                <p className="text-xs text-slate-400 text-center leading-relaxed">
+                <p className="text-xs text-gray-500 text-center leading-relaxed">
                   By signing up, you agree to our terms and privacy policy. Your financial data is encrypted and secure.
                 </p>
               </form>
 
-              <div className="pt-4 border-t border-slate-700/50">
-                <p className="text-center text-slate-400 text-sm">
+              <div className="pt-4 border-t border-gray-200">
+                <p className="text-center text-gray-500 text-sm">
                   Already have an account?{' '}
                   <button
                     type="button"
                     onClick={switchMode}
-                    className="text-emerald-400 hover:text-emerald-300 font-medium"
+                    className="text-emerald-600 hover:text-emerald-500 font-medium"
                   >
                     Sign in here
                   </button>
@@ -312,22 +312,22 @@ export default function AuthComponent() {
 
   // LOGIN SCREEN - Clean, minimal, focused
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-6">
       <div className="w-full max-w-md">
-        <Card className="bg-slate-800/60 backdrop-blur-xl border-slate-700/50">
+        <Card className="bg-white/80 backdrop-blur-xl border-gray-200/50 shadow-2xl">
           <CardHeader className="text-center space-y-3">
             <div className="flex items-center justify-center gap-2 mb-4">
               <div className="p-2 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg">
                 <Shield className="w-6 h-6 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">ContextFi</span>
+              <span className="text-xl font-bold text-gray-800">ContextFi</span>
             </div>
             
-            <CardTitle className="text-2xl font-bold text-white">
+            <CardTitle className="text-2xl font-bold text-gray-800">
               Welcome Back
             </CardTitle>
             
-            <p className="text-slate-300">
+            <p className="text-gray-600">
               Sign in to continue your financial planning journey
             </p>
           </CardHeader>
@@ -349,10 +349,10 @@ export default function AuthComponent() {
               
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-slate-300">Password</Label>
+                  <Label htmlFor="password" className="text-gray-700">Password</Label>
                   <button 
                     type="button" 
-                    className="text-xs text-emerald-400 hover:text-emerald-300"
+                    className="text-xs text-emerald-600 hover:text-emerald-500"
                   >
                     Forgot password?
                   </button>
