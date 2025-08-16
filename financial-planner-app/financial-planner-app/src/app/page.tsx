@@ -304,8 +304,8 @@ function HomePage() {
   // Handle authentication and user flow
   React.useEffect(() => {
     if (user && questionnaireData && Object.keys(questionnaireData).length > 0) {
-      // Existing user with data - take them to plan
-      if (currentView === 'landing' || currentView === 'selector' || currentView === 'auth') {
+      // Existing user with data - take them to plan (but not if they manually went to auth)
+      if (currentView === 'landing' || currentView === 'selector') {
         setCurrentView('plan');
       }
     } else if (user && currentView === 'auth') {
