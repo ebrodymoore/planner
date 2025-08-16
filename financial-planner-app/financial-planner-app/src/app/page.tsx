@@ -269,8 +269,11 @@ function HomePage() {
     } else if (user && currentView === 'auth') {
       // New user just signed up/in but has no data - take them to plan selector
       setCurrentView('selector');
-    } else if (!user && (currentView === 'plan' || showSignupPrompt)) {
+    } else if (!user && currentView === 'plan') {
       // Redirect to auth if trying to access plan without login
+      setCurrentView('auth');
+    } else if (!user && showSignupPrompt) {
+      // Only redirect to auth when showSignupPrompt is true
       setCurrentView('auth');
       setShowSignupPrompt(false);
     }
