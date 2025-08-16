@@ -241,7 +241,7 @@ export default function FinancialPlan({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-0 -left-4 w-96 h-96 bg-emerald-500/5 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
@@ -250,7 +250,7 @@ export default function FinancialPlan({
       </div>
 
       {/* Header */}
-      <div className="relative z-10 bg-slate-800/80 backdrop-blur-xl border-b border-slate-700/50 shadow-xl">
+      <div className="relative z-10 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-xl">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
@@ -259,15 +259,15 @@ export default function FinancialPlan({
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+                  <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
                     Financial Plan
                   </h1>
-                  <div className="inline-flex items-center gap-1 px-2 py-1 bg-slate-700/50 backdrop-blur-sm border border-slate-600/50 rounded-full">
+                  <div className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100/50 backdrop-blur-sm border border-gray-300/50 rounded-full">
                     <Sparkles className="w-3 h-3 text-emerald-400" />
-                    <span className="text-xs font-medium text-slate-300">AI-Powered</span>
+                    <span className="text-xs font-medium text-gray-600">AI-Powered</span>
                   </div>
                 </div>
-                <p className="text-slate-400 text-lg">
+                <p className="text-gray-600 text-lg">
                   {clientData.personal?.name ? `${clientData.personal.name}'s` : 'Your'} Comprehensive Financial Analysis
                 </p>
               </div>
@@ -277,7 +277,7 @@ export default function FinancialPlan({
               {/* Financial Health Score */}
               <div className="flex items-center space-x-4">
                 <div className="text-right">
-                  <p className="text-sm text-slate-400 font-medium">Financial Health</p>
+                  <p className="text-sm text-gray-500 font-medium">Financial Health</p>
                   <p className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-emerald-500 bg-clip-text text-transparent">
                     {getFinancialHealthScore()}%
                   </p>
@@ -292,7 +292,7 @@ export default function FinancialPlan({
                       stroke="currentColor"
                       strokeWidth="6"
                       fill="transparent"
-                      className="text-slate-700"
+                      className="text-gray-600"
                     />
                     <circle
                       cx="50"
@@ -316,7 +316,7 @@ export default function FinancialPlan({
               </div>
               
               {/* Net Worth */}
-              <div className="text-right bg-slate-700/30 backdrop-blur-sm rounded-xl px-4 py-3 border border-slate-600/30">
+              <div className="text-right bg-gray-100/30 backdrop-blur-sm rounded-xl px-4 py-3 border border-gray-200/30">
                 <p className="text-sm text-slate-400 font-medium">Net Worth</p>
                 <p className="text-2xl font-bold text-white">
                   {formatCurrency(calculateNetWorth())}
@@ -330,7 +330,7 @@ export default function FinancialPlan({
                   size="sm"
                   onClick={exportToExcel}
                   disabled={isGenerating}
-                  className="bg-slate-700/50 border-slate-600/50 text-slate-300 hover:bg-slate-600/50 hover:text-white"
+                  className="bg-gray-100/50 border-gray-300/50 text-gray-700 hover:bg-gray-200/50 hover:text-gray-900"
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Excel

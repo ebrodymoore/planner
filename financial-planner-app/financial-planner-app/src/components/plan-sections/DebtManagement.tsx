@@ -211,17 +211,17 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent mb-3">
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-3">
           Debt Management Strategy
         </h2>
-        <p className="text-slate-400 text-lg">
+        <p className="text-gray-600 text-lg">
           Optimize your debt payoff strategy and accelerate financial freedom
         </p>
       </div>
 
       {/* Debt Overview Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30 hover:bg-slate-700/40 transition-all duration-300">
+        <Card className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-gray-50 transition-all duration-300">
           <CardContent className="pt-6 text-center">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-600/20 rounded-xl blur-sm"></div>
@@ -229,7 +229,7 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
                 <TrendingDown className="w-8 h-8 text-red-400" />
               </div>
             </div>
-            <p className="text-sm text-slate-400 font-medium">Total Debt</p>
+            <p className="text-sm text-gray-600 font-medium">Total Debt</p>
             <p className="text-2xl font-bold bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">
               {formatCurrency(metrics.totalDebt)}
             </p>
@@ -239,7 +239,7 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30 hover:bg-slate-700/40 transition-all duration-300">
+        <Card className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-gray-50 transition-all duration-300">
           <CardContent className="pt-6 text-center">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-xl blur-sm"></div>
@@ -247,15 +247,15 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
                 <Calculator className="w-8 h-8 text-orange-400" />
               </div>
             </div>
-            <p className="text-sm text-slate-400 font-medium">Monthly Payments</p>
+            <p className="text-sm text-gray-600 font-medium">Monthly Payments</p>
             <p className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
               {formatCurrency(metrics.totalMinimumPayments)}
             </p>
-            <p className="text-xs text-slate-500 mt-1">Minimum required</p>
+            <p className="text-xs text-gray-500 mt-1">Minimum required</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30 hover:bg-slate-700/40 transition-all duration-300">
+        <Card className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-gray-50 transition-all duration-300">
           <CardContent className="pt-6 text-center">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-blue-600/20 rounded-xl blur-sm"></div>
@@ -263,15 +263,15 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
                 <BarChart3 className="w-8 h-8 text-blue-400" />
               </div>
             </div>
-            <p className="text-sm text-slate-400 font-medium">Avg Interest Rate</p>
+            <p className="text-sm text-gray-600 font-medium">Avg Interest Rate</p>
             <p className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
               {metrics.weightedAverageRate.toFixed(1)}%
             </p>
-            <p className="text-xs text-slate-500 mt-1">Weighted average</p>
+            <p className="text-xs text-gray-500 mt-1">Weighted average</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30 hover:bg-slate-700/40 transition-all duration-300">
+        <Card className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-gray-50 transition-all duration-300">
           <CardContent className="pt-6 text-center">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-purple-600/20 rounded-xl blur-sm"></div>
@@ -279,7 +279,7 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
                 <Target className="w-8 h-8 text-purple-400" />
               </div>
             </div>
-            <p className="text-sm text-slate-400 font-medium">Debt-to-Income</p>
+            <p className="text-sm text-gray-600 font-medium">Debt-to-Income</p>
             <p className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-purple-500 bg-clip-text text-transparent">
               {metrics.debtToIncomeRatio.toFixed(0)}%
             </p>
@@ -291,9 +291,9 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
       </div>
 
       {/* Individual Debts */}
-      <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
+      <Card className="bg-white/80 backdrop-blur-sm border-gray-200">
         <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-white">
+          <CardTitle className="flex items-center gap-3 text-gray-800">
             <div className="p-2 bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-lg border border-red-500/30">
               <CreditCard className="w-5 h-5 text-red-400" />
             </div>
@@ -307,38 +307,38 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
               const balancePercentage = metrics.totalDebt > 0 ? (debt.balance / metrics.totalDebt) * 100 : 0;
               
               return (
-                <div key={debt.id} className="bg-slate-600/20 border border-slate-600/30 rounded-xl p-4 hover:bg-slate-600/30 transition-all duration-300">
+                <div key={debt.id} className="bg-gray-100 border border-gray-200 rounded-xl p-4 hover:bg-gray-50 transition-all duration-300">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-gradient-to-r from-slate-700/50 to-slate-600/50 rounded-lg border border-slate-600/30">
-                        <IconComponent className="w-5 h-5 text-slate-300" />
+                      <div className="p-2 bg-gradient-to-r from-gray-200 to-gray-100 rounded-lg border border-gray-300">
+                        <IconComponent className="w-5 h-5 text-gray-600" />
                       </div>
                       <div>
-                        <h4 className="font-medium text-white">{debt.name}</h4>
-                        <p className="text-sm text-slate-300">
+                        <h4 className="font-medium text-gray-800">{debt.name}</h4>
+                        <p className="text-sm text-gray-600">
                           {debt.rate.toFixed(1)}% APR
                         </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-bold text-white">
+                      <p className="text-lg font-bold text-gray-800">
                         {formatCurrency(debt.balance)}
                       </p>
-                      <p className="text-sm text-slate-300">
+                      <p className="text-sm text-gray-600">
                         Min: {formatCurrency(debt.minimumPayment)}/mo
                       </p>
                     </div>
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-300">
+                      <span className="text-gray-600">
                         {balancePercentage.toFixed(1)}% of total debt
                       </span>
                       <Badge variant={debt.rate > 15 ? 'destructive' : debt.rate > 8 ? 'secondary' : 'default'}>
                         {debt.rate > 15 ? 'High Interest' : debt.rate > 8 ? 'Medium Interest' : 'Low Interest'}
                       </Badge>
                     </div>
-                    <div className="w-full bg-slate-700 rounded-full h-2">
+                    <div className="w-full bg-gray-300 rounded-full h-2">
                       <div 
                         className="h-2 rounded-full transition-all duration-500 bg-gradient-to-r from-red-500 to-orange-500"
                         style={{ width: `${balancePercentage}%` }}
@@ -355,9 +355,9 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
       {/* Payoff Strategies */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Debt Avalanche */}
-        <Card className={`bg-slate-700/30 backdrop-blur-sm border-slate-600/30 transition-all duration-300 ${selectedStrategy === 'avalanche' ? 'ring-2 ring-blue-400 bg-slate-700/50' : 'hover:bg-slate-700/40'}`}>
+        <Card className={`bg-white/80 backdrop-blur-sm border-gray-200 transition-all duration-300 ${selectedStrategy === 'avalanche' ? 'ring-2 ring-blue-400 bg-blue-50' : 'hover:bg-gray-50'}`}>
           <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-white">
+            <CardTitle className="flex items-center gap-3 text-gray-800">
               <div className="p-2 bg-gradient-to-r from-blue-500/20 to-blue-600/20 rounded-lg border border-blue-500/30">
                 <TrendingDown className="w-5 h-5 text-blue-400" />
               </div>
@@ -366,24 +366,24 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="bg-slate-600/20 border border-slate-600/30 rounded-xl p-4">
+              <div className="bg-gray-100 border border-gray-200 rounded-xl p-4">
                 <h4 className="font-semibold text-blue-400 mb-2">
                   Pay highest interest rates first
                 </h4>
-                <p className="text-sm text-slate-300">
+                <p className="text-sm text-gray-600">
                   Mathematically optimal - saves the most money in interest payments
                 </p>
               </div>
               
               <div className="space-y-3">
-                <h5 className="font-medium text-white">Payoff Order:</h5>
+                <h5 className="font-medium text-gray-800">Payoff Order:</h5>
                 {debts.sort((a, b) => b.rate - a.rate).map((debt, index) => (
-                  <div key={debt.id} className="flex items-center justify-between p-3 bg-slate-600/20 border border-slate-600/30 rounded-lg">
+                  <div key={debt.id} className="flex items-center justify-between p-3 bg-gray-100 border border-gray-200 rounded-lg">
                     <div className="flex items-center gap-2">
                       <span className="bg-gradient-to-r from-blue-500 to-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">
                         {index + 1}
                       </span>
-                      <span className="text-sm text-white">{debt.name}</span>
+                      <span className="text-sm text-gray-800">{debt.name}</span>
                     </div>
                     <span className="text-sm font-medium text-blue-400">{debt.rate.toFixed(1)}%</span>
                   </div>
@@ -395,7 +395,7 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
                 className={`w-full transition-all duration-300 ${
                   selectedStrategy === 'avalanche' 
                     ? 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white' 
-                    : 'bg-slate-700/50 border-slate-600/50 text-slate-300 hover:bg-slate-600/50 hover:text-white'
+                    : 'bg-gray-200 border-gray-300 text-gray-700 hover:bg-gray-300 hover:text-gray-800'
                 }`}
               >
                 Use Avalanche Strategy
@@ -405,9 +405,9 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
         </Card>
 
         {/* Debt Snowball */}
-        <Card className={`bg-slate-700/30 backdrop-blur-sm border-slate-600/30 transition-all duration-300 ${selectedStrategy === 'snowball' ? 'ring-2 ring-emerald-400 bg-slate-700/50' : 'hover:bg-slate-700/40'}`}>
+        <Card className={`bg-white/80 backdrop-blur-sm border-gray-200 transition-all duration-300 ${selectedStrategy === 'snowball' ? 'ring-2 ring-emerald-400 bg-emerald-50' : 'hover:bg-gray-50'}`}>
           <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-white">
+            <CardTitle className="flex items-center gap-3 text-gray-800">
               <div className="p-2 bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 rounded-lg border border-emerald-500/30">
                 <Target className="w-5 h-5 text-emerald-400" />
               </div>
@@ -416,24 +416,24 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="bg-slate-600/20 border border-slate-600/30 rounded-xl p-4">
+              <div className="bg-gray-100 border border-gray-200 rounded-xl p-4">
                 <h4 className="font-semibold text-emerald-400 mb-2">
                   Pay smallest balances first
                 </h4>
-                <p className="text-sm text-slate-300">
+                <p className="text-sm text-gray-600">
                   Psychologically motivating - builds momentum with quick wins
                 </p>
               </div>
               
               <div className="space-y-3">
-                <h5 className="font-medium text-white">Payoff Order:</h5>
+                <h5 className="font-medium text-gray-800">Payoff Order:</h5>
                 {debts.sort((a, b) => a.balance - b.balance).map((debt, index) => (
-                  <div key={debt.id} className="flex items-center justify-between p-3 bg-slate-600/20 border border-slate-600/30 rounded-lg">
+                  <div key={debt.id} className="flex items-center justify-between p-3 bg-gray-100 border border-gray-200 rounded-lg">
                     <div className="flex items-center gap-2">
                       <span className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">
                         {index + 1}
                       </span>
-                      <span className="text-sm text-white">{debt.name}</span>
+                      <span className="text-sm text-gray-800">{debt.name}</span>
                     </div>
                     <span className="text-sm font-medium text-emerald-400">{formatCurrency(debt.balance)}</span>
                   </div>
@@ -445,7 +445,7 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
                 className={`w-full transition-all duration-300 ${
                   selectedStrategy === 'snowball' 
                     ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white' 
-                    : 'bg-slate-700/50 border-slate-600/50 text-slate-300 hover:bg-slate-600/50 hover:text-white'
+                    : 'bg-gray-200 border-gray-300 text-gray-700 hover:bg-gray-300 hover:text-gray-800'
                 }`}
               >
                 Use Snowball Strategy
@@ -457,9 +457,9 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
 
       {/* Claude API Recommendations */}
       {debtData.recommended_strategy && (
-        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
+        <Card className="bg-white/80 backdrop-blur-sm border-gray-200">
           <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-white">
+            <CardTitle className="flex items-center gap-3 text-gray-800">
               <div className="p-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg border border-blue-500/30">
                 <CheckCircle className="w-5 h-5 text-blue-400" />
               </div>
@@ -467,23 +467,23 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="bg-slate-600/20 border border-slate-600/30 rounded-xl p-5">
+            <div className="bg-gray-100 border border-gray-200 rounded-xl p-5">
               <h4 className="font-semibold text-blue-400 mb-3">
                 Recommended Strategy: {debtData.recommended_strategy}
               </h4>
-              <p className="text-sm text-slate-300 mb-3">
+              <p className="text-sm text-gray-600 mb-3">
                 {debtData.payoff_timeline}
               </p>
               {debtData.monthly_payment_plan && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm font-medium text-white">Monthly Payment Plan:</p>
-                    <pre className="text-xs text-slate-300 mt-1 bg-slate-700/50 p-3 rounded-lg border border-slate-600/30">
+                    <p className="text-sm font-medium text-gray-800">Monthly Payment Plan:</p>
+                    <pre className="text-xs text-gray-600 mt-1 bg-gray-200 p-3 rounded-lg border border-gray-300">
                       {JSON.stringify(debtData.monthly_payment_plan, null, 2)}
                     </pre>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white">Interest Savings:</p>
+                    <p className="text-sm font-medium text-gray-800">Interest Savings:</p>
                     <p className="text-lg font-bold bg-gradient-to-r from-emerald-400 to-emerald-500 bg-clip-text text-transparent">
                       {formatCurrency(debtData.interest_savings || 0)}
                     </p>
@@ -496,9 +496,9 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
       )}
 
       {/* Action Plan */}
-      <Card>
+      <Card className="bg-white/80 backdrop-blur-sm border-gray-200">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-gray-800">
             <AlertTriangle className="w-5 h-5 text-orange-600" />
             Your Debt Elimination Action Plan
           </CardTitle>
@@ -506,11 +506,11 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
         <CardContent>
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-orange-900/30 border border-orange-500/30 p-4 rounded-lg">
-                <h4 className="font-semibold text-orange-100 mb-2">
+              <div className="bg-orange-50 border border-orange-200 p-4 rounded-lg">
+                <h4 className="font-semibold text-orange-700 mb-2">
                   Immediate Actions (30 days)
                 </h4>
-                <ul className="text-sm text-slate-300 space-y-1">
+                <ul className="text-sm text-gray-700 space-y-1">
                   <li>• List all debts with balances and rates</li>
                   <li>• Stop using credit cards for new purchases</li>
                   <li>• Set up automatic minimum payments</li>
@@ -518,11 +518,11 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
                 </ul>
               </div>
               
-              <div className="bg-blue-900/30 border border-blue-500/30 p-4 rounded-lg">
-                <h4 className="font-semibold text-blue-100 mb-2">
+              <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                <h4 className="font-semibold text-blue-700 mb-2">
                   Short-term (3-6 months)
                 </h4>
-                <ul className="text-sm text-slate-300 space-y-1">
+                <ul className="text-sm text-gray-700 space-y-1">
                   <li>• Increase income through side work</li>
                   <li>• Reduce expenses to free up money</li>
                   <li>• Apply extra payments to target debt</li>
@@ -530,11 +530,11 @@ export default function DebtManagement({ clientData, analysisResults }: DebtMana
                 </ul>
               </div>
               
-              <div className="bg-green-900/30 border border-green-500/30 p-4 rounded-lg">
-                <h4 className="font-semibold text-green-100 mb-2">
+              <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
+                <h4 className="font-semibold text-green-700 mb-2">
                   Long-term (6+ months)
                 </h4>
-                <ul className="text-sm text-slate-300 space-y-1">
+                <ul className="text-sm text-gray-700 space-y-1">
                   <li>• Maintain discipline with strategy</li>
                   <li>• Celebrate debt payoff milestones</li>
                   <li>• Build emergency fund as debts are paid</li>

@@ -90,7 +90,7 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-0 -left-4 w-96 h-96 bg-emerald-500/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse"></div>
@@ -105,17 +105,17 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
             <div className="p-2 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg">
               <TrendingUp className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xl font-bold text-white">ContextFi</span>
+            <span className="text-xl font-bold text-gray-800">ContextFi</span>
           </div>
           
           <div className="hidden md:flex items-center gap-8">
-            <a href="#how-it-works" className="text-slate-300 hover:text-white transition-colors">How It Works</a>
-            <a href="#features" className="text-slate-300 hover:text-white transition-colors">Scenarios</a>
-            <a href="#faq" className="text-slate-300 hover:text-white transition-colors">FAQ</a>
+            <a href="#how-it-works" className="text-gray-600 hover:text-gray-800 transition-colors">How It Works</a>
+            <a href="#features" className="text-gray-600 hover:text-gray-800 transition-colors">Scenarios</a>
+            <a href="#faq" className="text-gray-600 hover:text-gray-800 transition-colors">FAQ</a>
             <Button 
               onClick={onSignIn}
               variant="ghost" 
-              className="text-slate-300 hover:text-white hover:bg-slate-800"
+              className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
             >
               Sign In
             </Button>
@@ -126,12 +126,12 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
         {/* Hero Section */}
         <section className="text-center mb-32">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full mb-8">
             <Sparkles className="w-4 h-4 text-emerald-400" />
-            <span className="text-sm font-medium text-slate-300">Contextual Financial Intelligence Platform</span>
+            <span className="text-sm font-medium text-gray-600">Contextual Financial Intelligence Platform</span>
           </div>
           
-          <h1 className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent mb-6 leading-tight">
+          <h1 className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-gray-800 via-gray-700 to-gray-600 bg-clip-text text-transparent mb-6 leading-tight">
             Your Continuous Finance
             <br />
             <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
@@ -143,13 +143,13 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
             </span>
           </h1>
           
-          <p className="text-xl text-slate-300 max-w-4xl mx-auto leading-relaxed mb-8">
+          <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-8">
             Stop getting generic advice that ignores your real situation. Get personalized financial guidance 
             that factors in your job, family, health, and life goals—not just your bank balance.
           </p>
           
           <div className="max-w-5xl mx-auto mb-12">
-            <p className="text-lg text-slate-400 leading-relaxed mb-8">
+            <p className="text-lg text-gray-600 leading-relaxed mb-8">
               Should you max out your 401k or pay off debt first? Which health insurance plan saves you the most money? 
               Take that job offer or stay put? Our software understands your unique situation and gives you answers 
               that actually make sense for YOUR life.
@@ -159,25 +159,25 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
               <div className="flex items-start gap-3">
                 <CheckCircle className="w-6 h-6 text-emerald-400 mt-1 flex-shrink-0" />
                 <div>
-                  <p className="text-slate-300 font-medium">Real-world scenarios, not generic calculators</p>
+                  <p className="text-gray-700 font-medium">Real-world scenarios, not generic calculators</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <CheckCircle className="w-6 h-6 text-emerald-400 mt-1 flex-shrink-0" />
                 <div>
-                  <p className="text-slate-300 font-medium">Considers your actual job, family, and goals</p>
+                  <p className="text-gray-700 font-medium">Considers your actual job, family, and goals</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <CheckCircle className="w-6 h-6 text-emerald-400 mt-1 flex-shrink-0" />
                 <div>
-                  <p className="text-slate-300 font-medium">Adapts as your life changes</p>
+                  <p className="text-gray-700 font-medium">Adapts as your life changes</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <CheckCircle className="w-6 h-6 text-emerald-400 mt-1 flex-shrink-0" />
                 <div>
-                  <p className="text-slate-300 font-medium">Get answers in minutes, not months</p>
+                  <p className="text-gray-700 font-medium">Get answers in minutes, not months</p>
                 </div>
               </div>
             </div>
@@ -196,14 +196,14 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
         {/* Problem Section */}
         <section className="mb-32">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
               Tired of Financial Advice That
               <br />
               <span className="bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">
                 Doesn't Fit Your Life?
               </span>
             </h2>
-            <p className="text-xl text-slate-300 max-w-4xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto">
               Every financial decision happens in context, but most tools treat you like a spreadsheet:
             </p>
           </div>
@@ -231,20 +231,20 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
                 description: "that don't account for life's messiness"
               }
             ].map((problem, index) => (
-              <div key={index} className="flex items-start gap-4 p-6 bg-red-900/10 border border-red-500/20 rounded-2xl">
+              <div key={index} className="flex items-start gap-4 p-6 bg-red-50 border border-red-200 rounded-2xl">
                 <div className="p-2 bg-red-500/20 rounded-lg">
                   <X className="w-6 h-6 text-red-400" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-white mb-2">{problem.title}</h4>
-                  <p className="text-slate-300">{problem.description}</p>
+                  <h4 className="text-lg font-semibold text-gray-800 mb-2">{problem.title}</h4>
+                  <p className="text-gray-600">{problem.description}</p>
                 </div>
               </div>
             ))}
           </div>
 
           <div className="text-center mt-12">
-            <p className="text-lg text-slate-300 max-w-3xl mx-auto">
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               The result? You're left making major financial decisions with advice that doesn't actually apply to your situation.
             </p>
           </div>
@@ -254,7 +254,7 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
         <section className="mb-32">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="text-white">Introducing </span>
+              <span className="text-gray-800">Introducing </span>
               <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
                 Contextual Financial
               </span>
@@ -265,31 +265,31 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
             </h2>
           </div>
 
-          <Card className="max-w-5xl mx-auto bg-slate-800/60 backdrop-blur-xl border-slate-700/50 overflow-hidden">
+          <Card className="max-w-5xl mx-auto bg-white/80 backdrop-blur-xl border-gray-200 overflow-hidden">
             <CardContent className="p-12">
               <div className="text-center mb-8">
                 <div className="inline-flex items-center gap-4 mb-6">
                   <div className="p-3 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-xl">
                     <Users className="w-8 h-8 text-emerald-400" />
                   </div>
-                  <Plus className="w-6 h-6 text-slate-400" />
+                  <Plus className="w-6 h-6 text-gray-400" />
                   <div className="p-3 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl">
                     <MapPin className="w-8 h-8 text-blue-400" />
                   </div>
-                  <Plus className="w-6 h-6 text-slate-400" />
+                  <Plus className="w-6 h-6 text-gray-400" />
                   <div className="p-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl">
                     <Heart className="w-8 h-8 text-purple-400" />
                   </div>
-                  <Plus className="w-6 h-6 text-slate-400" />
+                  <Plus className="w-6 h-6 text-gray-400" />
                   <div className="p-3 bg-gradient-to-r from-pink-500/20 to-emerald-500/20 rounded-xl">
                     <Calendar className="w-8 h-8 text-pink-400" />
                   </div>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-white mb-4">
+                <h3 className="text-2xl font-bold text-gray-800 mb-4">
                   We built software that understands your actual life—not just your numbers.
                 </h3>
-                <p className="text-lg text-slate-300 leading-relaxed mb-6">
+                <p className="text-lg text-gray-600 leading-relaxed mb-6">
                   Our system considers your job situation, family dynamics, health needs, location, and life stage 
                   to give you financial guidance that actually makes sense for YOUR specific circumstances.
                 </p>
@@ -305,7 +305,7 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
         {/* Features Section */}
         <section id="features" className="mb-32">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
               Financial Decisions Made
               <br />
               <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
@@ -318,20 +318,20 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
             {features.map((feature, index) => {
               const IconComponent = feature.icon;
               return (
-                <Card key={index} className="group bg-slate-800/40 backdrop-blur-xl border-slate-700/30 hover:bg-slate-800/60 hover:border-emerald-500/30 transition-all duration-500">
+                <Card key={index} className="group bg-white/60 backdrop-blur-xl border-gray-200 hover:bg-white/80 hover:border-emerald-500/30 transition-all duration-500">
                   <CardHeader>
                     <div className="flex items-center gap-4 mb-4">
                       <div className="p-3 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-xl group-hover:from-emerald-500/30 group-hover:to-blue-500/30 transition-all duration-300">
                         <IconComponent className="w-6 h-6 text-emerald-400" />
                       </div>
                     </div>
-                    <CardTitle className="text-xl text-white mb-3">{feature.title}</CardTitle>
-                    <div className="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
+                    <CardTitle className="text-xl text-gray-800 mb-3">{feature.title}</CardTitle>
+                    <div className="bg-gray-100 p-4 rounded-lg border border-gray-200">
                       <p className="text-emerald-400 font-medium italic">"{feature.question}"</p>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-slate-300 leading-relaxed">{feature.description}</p>
+                    <p className="text-gray-600 leading-relaxed">{feature.description}</p>
                   </CardContent>
                 </Card>
               );
@@ -342,7 +342,7 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
         {/* How It Works Section */}
         <section id="how-it-works" className="mb-32">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
               Get Smart Answers in
               <br />
               <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
@@ -380,13 +380,13 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
                       <span className="text-2xl font-bold text-white">{step.step}</span>
                     </div>
                     <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
-                      <div className="p-2 bg-slate-800 rounded-lg border border-slate-700">
+                      <div className="p-2 bg-white rounded-lg border border-gray-200">
                         <IconComponent className="w-6 h-6 text-emerald-400" />
                       </div>
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-4">{step.title}</h3>
-                  <p className="text-slate-300 leading-relaxed">{step.description}</p>
+                  <h3 className="text-xl font-bold text-gray-800 mb-4">{step.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">{step.description}</p>
                 </div>
               );
             })}
@@ -396,7 +396,7 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
         {/* FAQ Section */}
         <section id="faq" className="mb-32">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
               Frequently Asked
               <br />
               <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
@@ -407,22 +407,22 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
 
           <div className="max-w-4xl mx-auto space-y-4">
             {faqs.map((faq, index) => (
-              <Card key={index} className="bg-slate-800/40 backdrop-blur-xl border-slate-700/30">
+              <Card key={index} className="bg-white/60 backdrop-blur-xl border-gray-200">
                 <CardContent className="p-0">
                   <button
                     onClick={() => setExpandedFAQ(expandedFAQ === index ? null : index)}
-                    className="w-full p-6 text-left flex items-center justify-between hover:bg-slate-800/60 transition-colors"
+                    className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
                   >
-                    <h4 className="text-lg font-semibold text-white pr-4">{faq.question}</h4>
+                    <h4 className="text-lg font-semibold text-gray-800 pr-4">{faq.question}</h4>
                     {expandedFAQ === index ? (
-                      <ChevronUp className="w-5 h-5 text-slate-400 flex-shrink-0" />
+                      <ChevronUp className="w-5 h-5 text-gray-400 flex-shrink-0" />
                     ) : (
-                      <ChevronDown className="w-5 h-5 text-slate-400 flex-shrink-0" />
+                      <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />
                     )}
                   </button>
                   {expandedFAQ === index && (
                     <div className="px-6 pb-6">
-                      <p className="text-slate-300 leading-relaxed">{faq.answer}</p>
+                      <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
                     </div>
                   )}
                 </CardContent>
@@ -433,14 +433,14 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
 
         {/* Final CTA Section */}
         <section className="text-center">
-          <Card className="bg-gradient-to-r from-emerald-500/10 via-blue-500/10 to-purple-600/10 border border-slate-700/30 backdrop-blur-xl overflow-hidden max-w-4xl mx-auto">
+          <Card className="bg-gradient-to-r from-emerald-50 via-blue-50 to-purple-50 border border-gray-200 backdrop-blur-xl overflow-hidden max-w-4xl mx-auto">
             <CardContent className="p-12">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full mb-8">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full mb-8">
                 <Sparkles className="w-4 h-4 text-emerald-400" />
-                <span className="text-sm font-medium text-slate-300">Ready to get started?</span>
+                <span className="text-sm font-medium text-gray-600">Ready to get started?</span>
               </div>
               
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
                 Stop Making Financial
                 <br />
                 <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
@@ -448,7 +448,7 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
                 </span>
               </h2>
               
-              <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-8">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
                 Every day you wait is another day of making important financial choices without the full picture. 
                 Join people who stopped guessing about money and started making smart decisions based on their actual situation.
               </p>
@@ -462,7 +462,7 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
               
-              <p className="text-slate-400">
+              <p className="text-gray-600">
                 Try risk-free. Cancel anytime if you're not making better financial decisions.
               </p>
             </CardContent>
@@ -471,17 +471,17 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
       </div>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-slate-700/50 mt-32">
+      <footer className="relative z-10 border-t border-gray-200 mt-32">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-4">
               <div className="p-2 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg">
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">ContextFi</span>
+              <span className="text-xl font-bold text-gray-800">ContextFi</span>
             </div>
-            <p className="text-slate-400 mb-6">Financial intelligence that gets your life</p>
-            <p className="text-sm text-slate-500 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-gray-600 mb-6">Financial intelligence that gets your life</p>
+            <p className="text-sm text-gray-600 max-w-4xl mx-auto leading-relaxed">
               ContextFi provides educational content and general financial guidance based on your specific situation. 
               We do not provide investment advice or manage assets. For investment recommendations, consult with a licensed financial advisor.
             </p>

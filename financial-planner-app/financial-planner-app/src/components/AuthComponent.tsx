@@ -68,19 +68,35 @@ async function createUserProfile(userId: string, email: string) {
   }
 }
 
-export default function AuthComponent() {
+interface AuthComponentProps {
+  initialError?: string;
+  onErrorClear?: () => void;
+}
+
+export default function AuthComponent({ initialError = '', onErrorClear }: AuthComponentProps) {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState(initialError);
+
+  // Update error state when initialError changes
+  React.useEffect(() => {
+    setError(initialError);
+  }, [initialError]);
+
+  // Clear parent error when local error is cleared
+  const clearError = () => {
+    setError('');
+    onErrorClear?.();
+  };
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    clearError();
     setMessage('');
 
     console.log('🚀 [DEBUG] Starting authentication process:', { isSignUp, email });
@@ -165,7 +181,7 @@ export default function AuthComponent() {
     setEmail('');
     setPassword('');
     setConfirmPassword('');
-    setError('');
+    clearError();
     setMessage('');
   };
 
@@ -335,7 +351,7 @@ export default function AuthComponent() {
           <CardContent>
             <form onSubmit={handleAuth} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-slate-300">Email</Label>
+                <Label htmlFor="email" className="text-gray-700">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -343,7 +359,7 @@ export default function AuthComponent() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-500"
+                  className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500/20"
                 />
               </div>
               
@@ -364,7 +380,7 @@ export default function AuthComponent() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-500"
+                  className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500/20"
                 />
               </div>
 
@@ -397,7 +413,7 @@ export default function AuthComponent() {
             </form>
 
             <div className="mt-6 text-center">
-              <p className="text-slate-400 text-sm">
+              <p className="text-gray-500 text-sm">
                 New to ContextFi?{' '}
                 <button
                   type="button"

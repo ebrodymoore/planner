@@ -278,10 +278,10 @@ export default function CashFlowAnalysis({ clientData, analysisResults }: CashFl
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-slate-100 mb-2">
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">
           Cash Flow Analysis
         </h2>
-        <p className="text-slate-300">
+        <p className="text-gray-600">
           Comprehensive analysis of your income, expenses, and optimization opportunities
         </p>
       </div>
@@ -291,11 +291,11 @@ export default function CashFlowAnalysis({ clientData, analysisResults }: CashFl
         <Card>
           <CardContent className="pt-6 text-center">
             <TrendingUp className="w-8 h-8 mx-auto mb-2 text-green-600" />
-            <p className="text-sm text-slate-400">Monthly Income</p>
-            <p className="text-2xl font-bold text-slate-100">
+            <p className="text-sm text-gray-500">Monthly Income</p>
+            <p className="text-2xl font-bold text-gray-800">
               {formatCurrency(metrics.monthlyIncome)}
             </p>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-gray-500 mt-1">
               {cashFlowData.monthly_income ? `Claude: ${formatCurrency(cashFlowData.monthly_income)}` : 'After taxes'}
             </p>
           </CardContent>
@@ -304,11 +304,11 @@ export default function CashFlowAnalysis({ clientData, analysisResults }: CashFl
         <Card>
           <CardContent className="pt-6 text-center">
             <TrendingDown className="w-8 h-8 mx-auto mb-2 text-red-600" />
-            <p className="text-sm text-slate-400">Monthly Expenses</p>
-            <p className="text-2xl font-bold text-slate-100">
+            <p className="text-sm text-gray-500">Monthly Expenses</p>
+            <p className="text-2xl font-bold text-gray-800">
               {formatCurrency(metrics.monthlyExpenses)}
             </p>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-gray-500 mt-1">
               {cashFlowData.monthly_expenses ? `Claude: ${formatCurrency(cashFlowData.monthly_expenses)}` : 'All categories'}
             </p>
           </CardContent>
@@ -317,11 +317,11 @@ export default function CashFlowAnalysis({ clientData, analysisResults }: CashFl
         <Card>
           <CardContent className="pt-6 text-center">
             <DollarSign className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-            <p className="text-sm text-slate-400">Net Cash Flow</p>
+            <p className="text-sm text-gray-500">Net Cash Flow</p>
             <p className={`text-2xl font-bold ${metrics.netCashFlow >= 0 ? 'text-green-400' : 'text-red-400'}`}>
               {formatCurrency(metrics.netCashFlow)}
             </p>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-gray-500 mt-1">
               {cashFlowData.net_cash_flow ? `Claude: ${formatCurrency(cashFlowData.net_cash_flow)}` : 'Income - Expenses'}
             </p>
           </CardContent>
@@ -330,11 +330,11 @@ export default function CashFlowAnalysis({ clientData, analysisResults }: CashFl
         <Card>
           <CardContent className="pt-6 text-center">
             <Target className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-            <p className="text-sm text-slate-400">Savings Rate</p>
+            <p className="text-sm text-gray-500">Savings Rate</p>
             <p className={`text-2xl font-bold ${metrics.savingsRate >= 20 ? 'text-green-400' : metrics.savingsRate >= 10 ? 'text-yellow-400' : 'text-red-400'}`}>
               {metrics.savingsRate.toFixed(1)}%
             </p>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-gray-500 mt-1">
               {cashFlowData.savings_rate ? `Claude: ${(cashFlowData.savings_rate * 100).toFixed(1)}%` : 'Target: 20%+'}
             </p>
           </CardContent>
@@ -356,21 +356,21 @@ export default function CashFlowAnalysis({ clientData, analysisResults }: CashFl
               const incomePercentage = metrics.monthlyIncome > 0 ? (category.amount / metrics.monthlyIncome) * 100 : 0;
               
               return (
-                <div key={category.name} className="border border-slate-600/30 rounded-lg p-4 bg-slate-800/20">
+                <div key={category.name} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
                       <div className="p-2 rounded-lg" style={{ backgroundColor: `${category.color}20` }}>
                         <IconComponent className="w-5 h-5" style={{ color: category.color }} />
                       </div>
                       <div>
-                        <h4 className="font-medium text-slate-100">{category.name}</h4>
-                        <p className="text-sm text-slate-300">
+                        <h4 className="font-medium text-gray-800">{category.name}</h4>
+                        <p className="text-sm text-gray-600">
                           {incomePercentage.toFixed(1)}% of income
                         </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-bold text-slate-100">
+                      <p className="text-lg font-bold text-gray-800">
                         {formatCurrency(category.amount)}
                       </p>
                       <Badge variant={
@@ -385,7 +385,7 @@ export default function CashFlowAnalysis({ clientData, analysisResults }: CashFl
                   
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-300">
+                      <span className="text-gray-600">
                         Recommended: {formatCurrency(category.recommended)}
                       </span>
                       <span className={category.amount > category.recommended ? 'text-red-400' : 'text-green-400'}>
@@ -445,11 +445,11 @@ export default function CashFlowAnalysis({ clientData, analysisResults }: CashFl
             <div className="space-y-2">
               {projection.slice(0, 6).map((month) => (
                 <div key={month.month} className="flex items-center gap-4">
-                  <div className="w-12 text-sm font-medium text-slate-300">
+                  <div className="w-12 text-sm font-medium text-gray-600">
                     {month.monthName}
                   </div>
                   <div className="flex-1 relative">
-                    <div className="h-8 bg-slate-700/50 rounded">
+                    <div className="h-8 bg-gray-200 rounded">
                       <div 
                         className="h-full bg-green-500 rounded"
                         style={{ 

@@ -16,17 +16,17 @@ export default function GoalTimeline({ clientData }: GoalTimelineProps) {
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent mb-3">
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-3">
           Goal Timeline
         </h2>
-        <p className="text-slate-400 text-lg">
+        <p className="text-gray-600 text-lg">
           Your financial goals roadmap
         </p>
       </div>
 
-      <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
+      <Card className="bg-white/80 backdrop-blur-sm border-gray-200">
         <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-white">
+          <CardTitle className="flex items-center gap-3 text-gray-800">
             <div className="p-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg border border-blue-500/30">
               <Calendar className="w-5 h-5 text-blue-400" />
             </div>
@@ -36,7 +36,7 @@ export default function GoalTimeline({ clientData }: GoalTimelineProps) {
         <CardContent>
           <div className="text-center py-12">
             <div className="mb-4">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100/50 backdrop-blur-sm border border-gray-300/50 rounded-full">
                 <Calendar className="w-4 h-4 text-blue-400" />
                 <span className="text-sm font-medium text-slate-300">Coming Soon</span>
               </div>

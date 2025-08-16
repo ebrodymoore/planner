@@ -133,9 +133,9 @@ export default function AssetAllocation({ clientData }: AssetAllocationProps) {
       {/* Current vs Recommended Allocation */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Current Allocation */}
-        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
+        <Card className="bg-white backdrop-blur-sm border-gray-200">
           <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-white">
+            <CardTitle className="flex items-center gap-3 text-gray-800">
               <div className="p-2 bg-gradient-to-r from-blue-500/20 to-blue-600/20 rounded-lg border border-blue-500/30">
                 <PieChart className="w-5 h-5 text-blue-400" />
               </div>
@@ -167,9 +167,9 @@ export default function AssetAllocation({ clientData }: AssetAllocationProps) {
         </Card>
 
         {/* Recommended Allocation */}
-        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
+        <Card className="bg-white backdrop-blur-sm border-gray-200">
           <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-white">
+            <CardTitle className="flex items-center gap-3 text-gray-800">
               <div className="p-2 bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 rounded-lg border border-emerald-500/30">
                 <Target className="w-5 h-5 text-emerald-400" />
               </div>
@@ -216,9 +216,9 @@ export default function AssetAllocation({ clientData }: AssetAllocationProps) {
       </div>
 
       {/* Rebalancing Recommendations */}
-      <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
+      <Card className="bg-white backdrop-blur-sm border-gray-200">
         <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-white">
+          <CardTitle className="flex items-center gap-3 text-gray-800">
             <div className="p-2 bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-lg border border-orange-500/30">
               <TrendingUp className="w-5 h-5 text-orange-400" />
             </div>

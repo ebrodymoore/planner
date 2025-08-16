@@ -134,62 +134,62 @@ export default function QuickPlanWizard({
         return (
           <div className="space-y-8">
             <div className="space-y-3">
-              <Label htmlFor="age" className="text-white font-medium text-base">What is your age?</Label>
+              <Label htmlFor="age" className="text-gray-800 font-medium text-base">What is your age?</Label>
               <Input
                 id="age"
                 type="number"
                 placeholder="e.g., 35"
                 value={formData.age || ''}
                 onChange={(e) => updateFormData('age', parseInt(e.target.value) || 0)}
-                className="bg-slate-700/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-emerald-500/50 focus:ring-emerald-500/20 h-12 text-lg"
+                className="bg-white border-gray-300 text-gray-800 placeholder:text-gray-400 focus:border-emerald-500/50 focus:ring-emerald-500/20 h-12 text-lg"
               />
             </div>
 
             <div className="space-y-3">
-              <Label htmlFor="income" className="text-white font-medium text-base">Annual household income (combined if married)</Label>
+              <Label htmlFor="income" className="text-gray-800 font-medium text-base">Annual household income (combined if married)</Label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 font-medium">$</span>
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 font-medium">$</span>
                 <Input
                   id="income"
                   type="number"
                   placeholder="75,000"
                   value={formData.annualHouseholdIncome || ''}
                   onChange={(e) => updateFormData('annualHouseholdIncome', parseInt(e.target.value) || 0)}
-                  className="bg-slate-700/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-emerald-500/50 focus:ring-emerald-500/20 h-12 text-lg pl-8"
+                  className="bg-white border-gray-300 text-gray-800 placeholder:text-gray-400 focus:border-emerald-500/50 focus:ring-emerald-500/20 h-12 text-lg pl-8"
                 />
               </div>
             </div>
 
             <div className="space-y-4">
-              <Label className="text-white font-medium text-base">What is your primary financial goal?</Label>
+              <Label className="text-gray-800 font-medium text-base">What is your primary financial goal?</Label>
               <RadioGroup 
                 value={formData.primaryFinancialGoal || ''} 
                 onValueChange={(value) => updateFormData('primaryFinancialGoal', value)}
                 className="space-y-3"
               >
-                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700/30 transition-colors">
-                  <RadioGroupItem value="retirement" id="retirement" className="border-slate-500 text-emerald-400" />
-                  <Label htmlFor="retirement" className="text-slate-300 font-medium cursor-pointer flex-1">Retirement planning</Label>
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <RadioGroupItem value="retirement" id="retirement" className="border-gray-400 text-emerald-400" />
+                  <Label htmlFor="retirement" className="text-gray-600 font-medium cursor-pointer flex-1">Retirement planning</Label>
                 </div>
-                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700/30 transition-colors">
-                  <RadioGroupItem value="debt-payoff" id="debt-payoff" className="border-slate-500 text-emerald-400" />
-                  <Label htmlFor="debt-payoff" className="text-slate-300 font-medium cursor-pointer flex-1">Debt payoff</Label>
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <RadioGroupItem value="debt-payoff" id="debt-payoff" className="border-gray-400 text-emerald-400" />
+                  <Label htmlFor="debt-payoff" className="text-gray-600 font-medium cursor-pointer flex-1">Debt payoff</Label>
                 </div>
-                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700/30 transition-colors">
-                  <RadioGroupItem value="emergency-fund" id="emergency-fund" className="border-slate-500 text-emerald-400" />
-                  <Label htmlFor="emergency-fund" className="text-slate-300 font-medium cursor-pointer flex-1">Emergency fund</Label>
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <RadioGroupItem value="emergency-fund" id="emergency-fund" className="border-gray-400 text-emerald-400" />
+                  <Label htmlFor="emergency-fund" className="text-gray-600 font-medium cursor-pointer flex-1">Emergency fund</Label>
                 </div>
-                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700/30 transition-colors">
-                  <RadioGroupItem value="home-purchase" id="home-purchase" className="border-slate-500 text-emerald-400" />
-                  <Label htmlFor="home-purchase" className="text-slate-300 font-medium cursor-pointer flex-1">Home purchase</Label>
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <RadioGroupItem value="home-purchase" id="home-purchase" className="border-gray-400 text-emerald-400" />
+                  <Label htmlFor="home-purchase" className="text-gray-600 font-medium cursor-pointer flex-1">Home purchase</Label>
                 </div>
-                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700/30 transition-colors">
-                  <RadioGroupItem value="investment-growth" id="investment-growth" className="border-slate-500 text-emerald-400" />
-                  <Label htmlFor="investment-growth" className="text-slate-300 font-medium cursor-pointer flex-1">Investment growth</Label>
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <RadioGroupItem value="investment-growth" id="investment-growth" className="border-gray-400 text-emerald-400" />
+                  <Label htmlFor="investment-growth" className="text-gray-600 font-medium cursor-pointer flex-1">Investment growth</Label>
                 </div>
-                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700/30 transition-colors">
-                  <RadioGroupItem value="other" id="other" className="border-slate-500 text-emerald-400" />
-                  <Label htmlFor="other" className="text-slate-300 font-medium cursor-pointer flex-1">Other</Label>
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <RadioGroupItem value="other" id="other" className="border-gray-400 text-emerald-400" />
+                  <Label htmlFor="other" className="text-gray-600 font-medium cursor-pointer flex-1">Other</Label>
                 </div>
               </RadioGroup>
             </div>
@@ -510,7 +510,7 @@ export default function QuickPlanWizard({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-20 -left-4 w-72 h-72 bg-emerald-500/5 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
@@ -520,22 +520,22 @@ export default function QuickPlanWizard({
       <div className="relative z-10 max-w-4xl mx-auto px-6 py-12 space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full mb-4">
             <Sparkles className="w-4 h-4 text-emerald-400" />
-            <span className="text-sm font-medium text-slate-300">Quick Financial Analysis</span>
+            <span className="text-sm font-medium text-gray-600">Quick Financial Analysis</span>
           </div>
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="p-3 bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 rounded-xl border border-emerald-500/30">
               <Zap className="w-8 h-8 text-emerald-400" />
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
               Quick Financial Plan
             </h1>
           </div>
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Get essential financial guidance powered by AI in just minutes
           </p>
-          <div className="flex items-center justify-center gap-6 text-sm text-slate-500">
+          <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-emerald-400" />
               <span>5-7 minutes</span>
@@ -551,25 +551,25 @@ export default function QuickPlanWizard({
         </div>
 
         {/* Progress */}
-        <Card className="bg-slate-800/60 backdrop-blur-xl border-slate-700/50">
+        <Card className="bg-white/80 backdrop-blur-xl border-gray-200">
           <CardContent className="pt-6">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
-                  <div className="text-sm font-semibold text-white">
+                  <div className="text-sm font-semibold text-gray-800">
                     Step {currentStep + 1} of {steps.length}
                   </div>
                   <div className="px-2 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-medium">
                     {steps[currentStep].title}
                   </div>
                 </div>
-                <div className="text-sm text-slate-400 font-medium">{getProgress()}% Complete</div>
+                <div className="text-sm text-gray-600 font-medium">{getProgress()}% Complete</div>
               </div>
               <div className="relative">
-                <Progress value={getProgress()} className="h-3 bg-slate-700/50" />
+                <Progress value={getProgress()} className="h-3 bg-gray-200" />
                 <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 rounded-full" style={{width: `${getProgress()}%`}}></div>
               </div>
-              <div className="text-sm text-slate-400 text-center font-medium">
+              <div className="text-sm text-gray-600 text-center font-medium">
                 {steps[currentStep].description}
               </div>
             </div>
@@ -577,11 +577,11 @@ export default function QuickPlanWizard({
         </Card>
 
         {/* Current Step */}
-        <Card className="bg-slate-800/80 backdrop-blur-xl border-slate-700/50">
+        <Card className="bg-white/80 backdrop-blur-xl border-gray-200">
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
-              <span className="text-xl font-bold text-white">{steps[currentStep].title}</span>
-              <span className="text-sm font-medium text-slate-400 px-2 py-1 bg-slate-700/50 rounded-full">
+              <span className="text-xl font-bold text-gray-800">{steps[currentStep].title}</span>
+              <span className="text-sm font-medium text-gray-600 px-2 py-1 bg-gray-100 rounded-full">
                 {steps[currentStep].questions} questions
               </span>
             </CardTitle>
@@ -597,13 +597,13 @@ export default function QuickPlanWizard({
             variant="outline"
             onClick={handlePrevious}
             disabled={currentStep === 0}
-            className="bg-slate-800/60 border-slate-700/50 text-slate-300 hover:bg-slate-700/60 hover:text-white disabled:opacity-50 px-6 py-3"
+            className="bg-gray-100 border-gray-300 text-gray-600 hover:bg-gray-200 hover:text-gray-800 disabled:opacity-50 px-6 py-3"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Previous
           </Button>
 
-          <div className="text-sm text-slate-500 font-medium">
+          <div className="text-sm text-gray-500 font-medium">
             Step {currentStep + 1} of {steps.length}
           </div>
 

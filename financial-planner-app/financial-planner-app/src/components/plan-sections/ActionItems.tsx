@@ -501,7 +501,7 @@ export default function ActionItems({ clientData, analysisResults }: ActionItems
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-3">
+                    <h4 className="font-medium text-gray-800 mb-3">
                       Implementation Steps:
                     </h4>
                     <ul className="space-y-2">
@@ -518,7 +518,7 @@ export default function ActionItems({ clientData, analysisResults }: ActionItems
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-3">
+                    <h4 className="font-medium text-gray-800 mb-3">
                       Expected Outcome:
                     </h4>
                     <div className="bg-green-50 dark:bg-green-900 p-4 rounded-lg">

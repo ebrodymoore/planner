@@ -21,6 +21,7 @@ function HomePage() {
   const [currentView, setCurrentView] = useState<'landing' | 'auth' | 'selector' | 'quick-plan' | 'questionnaire' | 'plan'>('landing');
   const [showSignupPrompt, setShowSignupPrompt] = useState(false);
   const [isUploadingJSON, setIsUploadingJSON] = useState(false);
+  const [authError, setAuthError] = useState<string>('');
   
   const {
     questionnaireData,
@@ -259,6 +260,47 @@ function HomePage() {
     document.body.removeChild(link);
   };
 
+  // Check for auth errors in URL parameters
+  React.useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    
+    // Check both URL params and hash params for auth errors
+    const authErrorFlag = urlParams.get('auth_error') || hashParams.get('error');
+    const errorParam = urlParams.get('error') || hashParams.get('error');
+    const errorDescription = urlParams.get('error_description') || hashParams.get('error_description');
+    
+    if (authErrorFlag || errorParam) {
+      let errorMessage = 'Authentication failed';
+      
+      if (errorDescription) {
+        // Decode and format the error message
+        const decodedError = decodeURIComponent(errorDescription);
+        if (decodedError.includes('Database error granting user')) {
+          errorMessage = 'Account creation failed due to a database error. Please try again or contact support if the issue persists.';
+        } else if (decodedError.includes('server_error')) {
+          errorMessage = 'Server error occurred during authentication. Please try again.';
+        } else {
+          errorMessage = decodedError;
+        }
+      } else if (errorParam === 'server_error') {
+        errorMessage = 'Server error occurred during authentication. Please try again.';
+      }
+      
+      setAuthError(errorMessage);
+      setCurrentView('auth');
+      
+      // Clean up URL parameters
+      const cleanUrl = new URL(window.location.href);
+      cleanUrl.searchParams.delete('auth_error');
+      cleanUrl.searchParams.delete('error');
+      cleanUrl.searchParams.delete('error_code');
+      cleanUrl.searchParams.delete('error_description');
+      cleanUrl.hash = '';
+      window.history.replaceState({}, '', cleanUrl.toString());
+    }
+  }, []);
+
   // Handle authentication and user flow
   React.useEffect(() => {
     if (user && questionnaireData && Object.keys(questionnaireData).length > 0) {
@@ -328,7 +370,7 @@ function HomePage() {
   if (currentView === 'auth' || (!user && showSignupPrompt)) {
     return (
       <div className="min-h-screen">
-        <AuthComponent />
+        <AuthComponent initialError={authError} onErrorClear={() => setAuthError('')} />
       </div>
     );
   }
@@ -350,7 +392,7 @@ function HomePage() {
   // Show Quick Plan wizard view
   if (currentView === 'quick-plan') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
         <QuickPlanWizard 
           onComplete={handleQuickPlanComplete}
           onUpgradeToComprehensive={handleUpgradeToComprehensive}
@@ -360,7 +402,7 @@ function HomePage() {
           <Button
             onClick={handleBackToSelector}
             variant="outline"
-            className="bg-slate-800/80 backdrop-blur-xl border-slate-700/50 text-slate-300 hover:bg-slate-700/80 hover:text-white shadow-xl px-6 py-3"
+            className="bg-white/80 backdrop-blur-xl border-gray-200/50 text-gray-700 hover:bg-gray-50/80 hover:text-gray-900 shadow-xl px-6 py-3"
           >
             ← Back to Plan Selection
           </Button>
@@ -380,7 +422,7 @@ function HomePage() {
   // Show financial plan view
   if (currentView === 'plan') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
         <FinancialPlan 
           clientData={questionnaireData || {}}
           analysisResults={analysisResults}
@@ -390,14 +432,14 @@ function HomePage() {
           <Button
             onClick={handleBackToSelector}
             variant="outline"
-            className="bg-slate-800/80 backdrop-blur-xl border-slate-700/50 text-slate-300 hover:bg-slate-700/80 hover:text-white shadow-xl block w-full px-6 py-3"
+            className="bg-white/80 backdrop-blur-xl border-gray-200/50 text-gray-700 hover:bg-gray-50/80 hover:text-gray-900 shadow-xl block w-full px-6 py-3"
           >
             Back to Plan Selection
           </Button>
           <Button
             onClick={handleBackToQuestionnaire}
             variant="outline"
-            className="bg-slate-800/80 backdrop-blur-xl border-slate-700/50 text-slate-300 hover:bg-slate-700/80 hover:text-white shadow-xl block w-full px-6 py-3"
+            className="bg-white/80 backdrop-blur-xl border-gray-200/50 text-gray-700 hover:bg-gray-50/80 hover:text-gray-900 shadow-xl block w-full px-6 py-3"
           >
             Back to Questionnaire
           </Button>
@@ -424,7 +466,7 @@ function HomePage() {
 
   // Show questionnaire view
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       <OnboardingWizard 
         onComplete={handleComplete}
         onSave={handleSave}
@@ -436,7 +478,7 @@ function HomePage() {
         <Button
           onClick={handleBackToSelector}
           variant="outline"
-          className="bg-slate-800/80 backdrop-blur-xl border-slate-700/50 text-slate-300 hover:bg-slate-700/80 hover:text-white shadow-xl px-6 py-3"
+          className="bg-white/80 backdrop-blur-xl border-gray-200/50 text-gray-700 hover:bg-gray-50/80 hover:text-gray-900 shadow-xl px-6 py-3"
         >
           ← Back to Plan Selection
         </Button>
@@ -458,7 +500,7 @@ function HomePage() {
           <Button
             onClick={handleDownloadSample}
             variant="outline"
-            className="bg-slate-800/80 backdrop-blur-xl border-slate-700/50 text-slate-300 hover:bg-slate-700/80 hover:text-white shadow-xl block w-full px-6 py-3"
+            className="bg-white/80 backdrop-blur-xl border-gray-200/50 text-gray-700 hover:bg-gray-50/80 hover:text-gray-900 shadow-xl block w-full px-6 py-3"
           >
             <Download className="w-4 h-4 mr-2" />
             Download Sample JSON
@@ -516,7 +558,7 @@ function HomePage() {
             onClick={generateNewAnalysis}
             disabled={isGeneratingAnalysis}
             variant="outline"
-            className="bg-slate-800/80 backdrop-blur-xl border-slate-700/50 text-slate-300 hover:bg-slate-700/80 hover:text-white shadow-xl block w-full px-6 py-3 disabled:opacity-50"
+            className="bg-white/80 backdrop-blur-xl border-gray-200/50 text-gray-700 hover:bg-gray-50/80 hover:text-gray-900 shadow-xl block w-full px-6 py-3 disabled:opacity-50"
           >
             {isGeneratingAnalysis ? (
               <>
@@ -533,9 +575,9 @@ function HomePage() {
       {/* Status indicator */}
       {isGeneratingAnalysis && (
         <div className="fixed top-6 right-6">
-          <Alert className="bg-slate-800/90 backdrop-blur-xl border-slate-700/50 text-white shadow-xl">
+          <Alert className="bg-white/90 backdrop-blur-xl border-gray-200/50 text-gray-800 shadow-xl">
             <Loader2 className="h-4 w-4 animate-spin text-emerald-400" />
-            <AlertDescription className="text-slate-300">
+            <AlertDescription className="text-gray-600">
               Generating your personalized financial analysis...
             </AlertDescription>
           </Alert>

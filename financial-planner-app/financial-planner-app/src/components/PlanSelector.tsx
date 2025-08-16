@@ -59,7 +59,7 @@ export default function PlanSelector({
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-0 -left-4 w-72 h-72 bg-emerald-500/10 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
@@ -70,16 +70,16 @@ export default function PlanSelector({
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full mb-6">
             <Sparkles className="w-4 h-4 text-emerald-400" />
-            <span className="text-sm font-medium text-slate-300">Premium Financial Planning</span>
+            <span className="text-sm font-medium text-gray-600">Premium Financial Planning</span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent mb-6 leading-tight">
+          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-gray-800 via-gray-700 to-gray-600 bg-clip-text text-transparent mb-6 leading-tight">
             Choose Your Path to
             <br />
             <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">Financial Freedom</span>
           </h1>
-          <p className="text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Experience AI-powered financial planning designed for the modern investor. 
             Select the perfect plan tailored to your needs and goals.
           </p>
@@ -91,7 +91,7 @@ export default function PlanSelector({
             <Button 
               onClick={onBackToHome}
               variant="ghost"
-              className="text-slate-400 hover:text-white hover:bg-slate-800/50"
+              className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
             >
               ← Back to Home
             </Button>
@@ -101,13 +101,13 @@ export default function PlanSelector({
         {/* Sign In Option for Existing Users */}
         {onSignIn && (
           <div className="text-center mb-8">
-            <Card className="inline-block bg-slate-800/40 backdrop-blur-xl border-slate-700/30 px-8 py-6">
+            <Card className="inline-block bg-white/60 backdrop-blur-xl border-gray-200 px-8 py-6">
               <CardContent className="p-0">
-                <p className="text-slate-300 mb-4">Already have an account?</p>
+                <p className="text-gray-600 mb-4">Already have an account?</p>
                 <Button 
                   onClick={onSignIn}
                   variant="outline"
-                  className="bg-slate-700/50 hover:bg-slate-600/50 border-slate-600/50 text-slate-200 hover:text-white"
+                  className="bg-gray-100 hover:bg-gray-200 border-gray-300 text-gray-700 hover:text-gray-800">
                 >
                   Sign In to View Your Plan
                   <ArrowRight className="w-4 h-4 ml-2" />
@@ -122,7 +122,7 @@ export default function PlanSelector({
           {/* Quick Plan */}
           <div className="group relative">
             <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-500 blur-sm"></div>
-            <Card className="relative bg-slate-800/80 backdrop-blur-xl border-slate-700/50 hover:bg-slate-800/90 transition-all duration-500 overflow-hidden">
+            <Card className="relative bg-white/80 backdrop-blur-xl border-gray-200 hover:bg-white/90 transition-all duration-500 overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-500/20 to-transparent rounded-full transform translate-x-16 -translate-y-16"></div>
               
               <div className="absolute -top-4 left-6">
@@ -138,17 +138,17 @@ export default function PlanSelector({
                     <Zap className="w-7 h-7 text-emerald-400" />
                   </div>
                   <div className="flex-1">
-                    <CardTitle className="text-2xl font-bold text-white mb-2">Quick Start Plan</CardTitle>
-                    <p className="text-slate-400">Get instant financial clarity</p>
+                    <CardTitle className="text-2xl font-bold text-gray-800 mb-2">Quick Start Plan</CardTitle>
+                    <p className="text-gray-600">Get instant financial clarity</p>
                   </div>
                 </div>
                 
                 <div className="flex items-center gap-6 text-sm">
-                  <div className="flex items-center gap-2 text-slate-300">
+                  <div className="flex items-center gap-2 text-gray-600">
                     <Clock className="w-4 h-4 text-emerald-400" />
                     <span>5-7 minutes</span>
                   </div>
-                  <div className="flex items-center gap-2 text-slate-300">
+                  <div className="flex items-center gap-2 text-gray-600">
                     <FileText className="w-4 h-4 text-emerald-400" />
                     <span>17 questions</span>
                   </div>
@@ -157,14 +157,14 @@ export default function PlanSelector({
 
               <CardContent className="space-y-6 pt-0">
                 <div>
-                  <h4 className="font-semibold text-white mb-4">What you'll get:</h4>
+                  <h4 className="font-semibold text-gray-800 mb-4">What you'll get:</h4>
                   <ul className="space-y-3">
                     {quickPlanFeatures.map((feature, index) => (
                       <li key={index} className="flex items-start gap-3">
                         <div className="flex-shrink-0 mt-0.5">
                           <CheckCircle className="w-4 h-4 text-emerald-400" />
                         </div>
-                        <span className="text-sm text-slate-300 leading-relaxed">{feature}</span>
+                        <span className="text-sm text-gray-600 leading-relaxed">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -175,7 +175,7 @@ export default function PlanSelector({
                     <Award className="w-4 h-4" />
                     Perfect for:
                   </h5>
-                  <ul className="text-sm text-slate-300 space-y-2">
+                  <ul className="text-sm text-gray-600 space-y-2">
                     <li className="flex items-center gap-2">
                       <div className="w-1 h-1 bg-emerald-400 rounded-full"></div>
                       Getting started with financial planning
@@ -210,7 +210,7 @@ export default function PlanSelector({
           {/* Comprehensive Plan */}
           <div className="group relative">
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-500 blur-sm"></div>
-            <Card className="relative bg-slate-800/80 backdrop-blur-xl border-slate-700/50 hover:bg-slate-800/90 transition-all duration-500 overflow-hidden">
+            <Card className="relative bg-white/80 backdrop-blur-xl border-gray-200 hover:bg-white/90 transition-all duration-500 overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/20 to-transparent rounded-full transform translate-x-16 -translate-y-16"></div>
               
               <div className="absolute -top-4 left-6">
@@ -226,17 +226,17 @@ export default function PlanSelector({
                     <Target className="w-7 h-7 text-blue-400" />
                   </div>
                   <div className="flex-1">
-                    <CardTitle className="text-2xl font-bold text-white mb-2">Comprehensive Plan</CardTitle>
-                    <p className="text-slate-400">Complete wealth strategy</p>
+                    <CardTitle className="text-2xl font-bold text-gray-800 mb-2">Comprehensive Plan</CardTitle>
+                    <p className="text-gray-600">Complete wealth strategy</p>
                   </div>
                 </div>
                 
                 <div className="flex items-center gap-6 text-sm">
-                  <div className="flex items-center gap-2 text-slate-300">
+                  <div className="flex items-center gap-2 text-gray-600">
                     <Clock className="w-4 h-4 text-blue-400" />
                     <span>20-30 minutes</span>
                   </div>
-                  <div className="flex items-center gap-2 text-slate-300">
+                  <div className="flex items-center gap-2 text-gray-600">
                     <FileText className="w-4 h-4 text-blue-400" />
                     <span>All sections</span>
                   </div>
@@ -245,14 +245,14 @@ export default function PlanSelector({
 
               <CardContent className="space-y-6 pt-0">
                 <div>
-                  <h4 className="font-semibold text-white mb-4">What you'll get:</h4>
+                  <h4 className="font-semibold text-gray-800 mb-4">What you'll get:</h4>
                   <ul className="space-y-3">
                     {comprehensiveFeatures.map((feature, index) => (
                       <li key={index} className="flex items-start gap-3">
                         <div className="flex-shrink-0 mt-0.5">
                           <CheckCircle className="w-4 h-4 text-blue-400" />
                         </div>
-                        <span className={`text-sm leading-relaxed ${index === 0 ? 'font-medium text-blue-300' : 'text-slate-300'}`}>
+                        <span className={`text-sm leading-relaxed ${index === 0 ? 'font-medium text-blue-600' : 'text-gray-600'}`}>
                           {feature}
                         </span>
                       </li>
@@ -265,7 +265,7 @@ export default function PlanSelector({
                     <Crown className="w-4 h-4" />
                     Perfect for:
                   </h5>
-                  <ul className="text-sm text-slate-300 space-y-2">
+                  <ul className="text-sm text-gray-600 space-y-2">
                     <li className="flex items-center gap-2">
                       <div className="w-1 h-1 bg-blue-400 rounded-full"></div>
                       Detailed financial planning
@@ -299,38 +299,38 @@ export default function PlanSelector({
         </div>
 
         {/* Feature Comparison */}
-        <Card className="mb-16 bg-slate-800/60 backdrop-blur-xl border-slate-700/50 overflow-hidden">
-          <CardHeader className="text-center bg-gradient-to-r from-slate-800/80 to-slate-700/80 border-b border-slate-700/50">
-            <CardTitle className="text-2xl font-bold text-white mb-2">
+        <Card className="mb-16 bg-white/80 backdrop-blur-xl border-gray-200 overflow-hidden">
+          <CardHeader className="text-center bg-gradient-to-r from-gray-100 to-gray-50 border-b border-gray-200">
+            <CardTitle className="text-2xl font-bold text-gray-800 mb-2">
               Detailed Feature Comparison
             </CardTitle>
-            <p className="text-slate-400">See exactly what's included in each plan</p>
+            <p className="text-gray-600">See exactly what's included in each plan</p>
           </CardHeader>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-slate-800/80 border-b border-slate-700/50">
-                    <th className="text-left py-4 px-6 font-semibold text-white">Feature</th>
+                  <tr className="bg-gray-100 border-b border-gray-200">
+                    <th className="text-left py-4 px-6 font-semibold text-gray-800">Feature</th>
                     <th className="text-center py-4 px-6">
                       <div className="flex items-center justify-center gap-2">
                         <Zap className="w-5 h-5 text-emerald-400" />
-                        <span className="font-semibold text-emerald-400">Quick Plan</span>
+                        <span className="font-semibold text-emerald-600">Quick Plan</span>
                       </div>
                     </th>
                     <th className="text-center py-4 px-6">
                       <div className="flex items-center justify-center gap-2">
                         <Crown className="w-5 h-5 text-blue-400" />
-                        <span className="font-semibold text-blue-400">Comprehensive</span>
+                        <span className="font-semibold text-blue-600">Comprehensive</span>
                       </div>
                     </th>
                   </tr>
                 </thead>
                 <tbody className="text-sm">
-                  <tr className="border-b border-slate-700/30 hover:bg-slate-800/40 transition-colors">
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
                     <td className="py-4 px-6 flex items-center gap-3">
-                      <TrendingUp className="w-5 h-5 text-slate-400" />
-                      <span className="text-slate-300 font-medium">Financial health score</span>
+                      <TrendingUp className="w-5 h-5 text-gray-400" />
+                      <span className="text-gray-600 font-medium">Financial health score</span>
                     </td>
                     <td className="text-center py-4 px-6">
                       <CheckCircle className="w-5 h-5 text-emerald-400 mx-auto" />
@@ -339,10 +339,10 @@ export default function PlanSelector({
                       <CheckCircle className="w-5 h-5 text-blue-400 mx-auto" />
                     </td>
                   </tr>
-                  <tr className="border-b border-slate-700/30 hover:bg-slate-800/40 transition-colors">
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
                     <td className="py-4 px-6 flex items-center gap-3">
-                      <Target className="w-5 h-5 text-slate-400" />
-                      <span className="text-slate-300 font-medium">Retirement readiness</span>
+                      <Target className="w-5 h-5 text-gray-400" />
+                      <span className="text-gray-600 font-medium">Retirement readiness</span>
                     </td>
                     <td className="text-center py-4 px-6">
                       <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-medium">Basic</span>
@@ -351,10 +351,10 @@ export default function PlanSelector({
                       <span className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs font-medium">Detailed</span>
                     </td>
                   </tr>
-                  <tr className="border-b border-slate-700/30 hover:bg-slate-800/40 transition-colors">
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
                     <td className="py-4 px-6 flex items-center gap-3">
-                      <PieChart className="w-5 h-5 text-slate-400" />
-                      <span className="text-slate-300 font-medium">Investment allocation</span>
+                      <PieChart className="w-5 h-5 text-gray-400" />
+                      <span className="text-gray-600 font-medium">Investment allocation</span>
                     </td>
                     <td className="text-center py-4 px-6">
                       <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-medium">High-level</span>
@@ -363,37 +363,37 @@ export default function PlanSelector({
                       <span className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs font-medium">Custom</span>
                     </td>
                   </tr>
-                  <tr className="border-b border-slate-700/30 hover:bg-slate-800/40 transition-colors">
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
                     <td className="py-4 px-6 flex items-center gap-3">
-                      <Calculator className="w-5 h-5 text-slate-400" />
-                      <span className="text-slate-300 font-medium">Tax optimization</span>
+                      <Calculator className="w-5 h-5 text-gray-400" />
+                      <span className="text-gray-600 font-medium">Tax optimization</span>
                     </td>
                     <td className="text-center py-4 px-6">
-                      <span className="text-slate-500 text-lg">—</span>
+                      <span className="text-gray-400 text-lg">—</span>
                     </td>
                     <td className="text-center py-4 px-6">
                       <CheckCircle className="w-5 h-5 text-blue-400 mx-auto" />
                     </td>
                   </tr>
-                  <tr className="border-b border-slate-700/30 hover:bg-slate-800/40 transition-colors">
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
                     <td className="py-4 px-6 flex items-center gap-3">
-                      <Shield className="w-5 h-5 text-slate-400" />
-                      <span className="text-slate-300 font-medium">Insurance analysis</span>
+                      <Shield className="w-5 h-5 text-gray-400" />
+                      <span className="text-gray-600 font-medium">Insurance analysis</span>
                     </td>
                     <td className="text-center py-4 px-6">
-                      <span className="text-slate-500 text-lg">—</span>
+                      <span className="text-gray-400 text-lg">—</span>
                     </td>
                     <td className="text-center py-4 px-6">
                       <CheckCircle className="w-5 h-5 text-blue-400 mx-auto" />
                     </td>
                   </tr>
-                  <tr className="hover:bg-slate-800/40 transition-colors">
+                  <tr className="hover:bg-gray-50 transition-colors">
                     <td className="py-4 px-6 flex items-center gap-3">
-                      <FileText className="w-5 h-5 text-slate-400" />
-                      <span className="text-slate-300 font-medium">Written plan document</span>
+                      <FileText className="w-5 h-5 text-gray-400" />
+                      <span className="text-gray-600 font-medium">Written plan document</span>
                     </td>
                     <td className="text-center py-4 px-6">
-                      <span className="text-slate-500 text-lg">—</span>
+                      <span className="text-gray-400 text-lg">—</span>
                     </td>
                     <td className="text-center py-4 px-6">
                       <CheckCircle className="w-5 h-5 text-blue-400 mx-auto" />
@@ -406,36 +406,36 @@ export default function PlanSelector({
         </Card>
 
         {/* Upgrade Path */}
-        <Card className="bg-gradient-to-r from-emerald-500/10 via-blue-500/10 to-purple-600/10 border border-slate-700/30 backdrop-blur-xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 via-blue-500/5 to-purple-600/5"></div>
+        <Card className="bg-gradient-to-r from-emerald-50 via-blue-50 to-purple-50 border border-gray-200 backdrop-blur-xl overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-50/50 via-blue-50/50 to-purple-50/50"></div>
           <CardContent className="pt-8 pb-8 relative">
             <div className="text-center">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full mb-6">
                 <Sparkles className="w-4 h-4 text-emerald-400" />
-                <span className="text-sm font-medium text-slate-300">Still deciding?</span>
+                <span className="text-sm font-medium text-gray-600">Still deciding?</span>
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">
                 Not sure which plan to choose?
               </h3>
-              <p className="text-slate-400 mb-8 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
                 Start with the Quick Plan to get immediate insights and actionable recommendations. 
                 You can always upgrade to unlock comprehensive analysis and advanced wealth strategies.
               </p>
-              <div className="flex items-center justify-center gap-4 text-slate-300 mb-6">
+              <div className="flex items-center justify-center gap-4 text-gray-600 mb-6">
                 <div className="flex items-center gap-2">
                   <div className="p-2 bg-emerald-500/20 rounded-lg">
                     <Zap className="w-4 h-4 text-emerald-400" />
                   </div>
                   <span className="font-medium">Quick Start</span>
                 </div>
-                <ArrowRight className="w-5 h-5 text-slate-500" />
+                <ArrowRight className="w-5 h-5 text-gray-400" />
                 <div className="flex items-center gap-2">
                   <div className="p-2 bg-blue-500/20 rounded-lg">
                     <TrendingUp className="w-4 h-4 text-blue-400" />
                   </div>
                   <span className="font-medium">Get Results</span>
                 </div>
-                <ArrowRight className="w-5 h-5 text-slate-500" />
+                <ArrowRight className="w-5 h-5 text-gray-400" />
                 <div className="flex items-center gap-2">
                   <div className="p-2 bg-purple-500/20 rounded-lg">
                     <Crown className="w-4 h-4 text-purple-400" />

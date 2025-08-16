@@ -244,25 +244,25 @@ export default function ExecutiveSummary({ clientData, analysisResults }: Execut
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent mb-3">
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-3">
           Executive Summary
         </h2>
-        <p className="text-slate-400 text-lg">
+        <p className="text-gray-600 text-lg">
           Your complete financial overview and key insights
         </p>
       </div>
 
       {/* Key Metrics Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30 hover:bg-slate-700/40 transition-all duration-300">
+        <Card className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-gray-50 transition-all duration-300">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-400">Net Worth</p>
+                <p className="text-sm font-medium text-gray-600">Net Worth</p>
                 <p className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-emerald-500 bg-clip-text text-transparent">
                   {formatCurrency(netWorth.total)}
                 </p>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-gray-500 mt-1">
                   Assets: {formatCurrency(netWorth.assets)} | Debt: {formatCurrency(netWorth.liabilities)}
                 </p>
               </div>
@@ -276,15 +276,15 @@ export default function ExecutiveSummary({ clientData, analysisResults }: Execut
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30 hover:bg-slate-700/40 transition-all duration-300">
+        <Card className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-gray-50 transition-all duration-300">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-400">Monthly Expenses</p>
+                <p className="text-sm font-medium text-gray-600">Monthly Expenses</p>
                 <p className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">
                   {formatCurrency(getTotalMonthlyExpenses())}
                 </p>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-gray-500 mt-1">
                   Annual: {formatCurrency(getTotalMonthlyExpenses() * 12)}
                 </p>
               </div>
@@ -298,15 +298,15 @@ export default function ExecutiveSummary({ clientData, analysisResults }: Execut
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30 hover:bg-slate-700/40 transition-all duration-300">
+        <Card className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-gray-50 transition-all duration-300">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-400">Annual Income</p>
+                <p className="text-sm font-medium text-gray-600">Annual Income</p>
                 <p className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
                   {formatCurrency(clientData.income?.annualIncome || 0)}
                 </p>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-gray-500 mt-1">
                   Stability: {clientData.income?.stability?.replace('_', ' ') || 'Not specified'}
                 </p>
               </div>
@@ -322,9 +322,9 @@ export default function ExecutiveSummary({ clientData, analysisResults }: Execut
       </div>
 
       {/* Goal Progress */}
-      <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
+      <Card className="bg-white/80 backdrop-blur-sm border-gray-200">
         <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-white">
+          <CardTitle className="flex items-center gap-3 text-gray-800">
             <div className="p-2 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-lg border border-emerald-500/30">
               <Target className="w-5 h-5 text-emerald-400" />
             </div>
@@ -334,11 +334,11 @@ export default function ExecutiveSummary({ clientData, analysisResults }: Execut
         <CardContent>
           <div className="space-y-6">
             {goalProgress.map((goal, index) => (
-              <div key={index} className="bg-slate-600/20 rounded-xl p-4 border border-slate-600/30">
+              <div key={index} className="bg-gray-100 rounded-xl p-4 border border-gray-200">
                 <div className="flex justify-between items-center mb-3">
                   <div>
-                    <h4 className="font-semibold text-white">{goal.name}</h4>
-                    <p className="text-sm text-slate-400">
+                    <h4 className="font-semibold text-gray-800">{goal.name}</h4>
+                    <p className="text-sm text-gray-600">
                       Target: {goal.target} | Current: {goal.current}
                     </p>
                   </div>
@@ -352,7 +352,7 @@ export default function ExecutiveSummary({ clientData, analysisResults }: Execut
                   </Badge>
                 </div>
                 <div className="relative">
-                  <div className="w-full bg-slate-700 rounded-full h-3">
+                  <div className="w-full bg-gray-300 rounded-full h-3">
                     <div 
                       className={`h-3 rounded-full transition-all duration-1000 ${
                         goal.status === 'complete' ? 'bg-gradient-to-r from-emerald-500 to-emerald-600' :
@@ -363,7 +363,7 @@ export default function ExecutiveSummary({ clientData, analysisResults }: Execut
                     ></div>
                   </div>
                 </div>
-                <p className="text-xs text-slate-500 mt-2 font-medium">{goal.progress.toFixed(1)}% complete</p>
+                <p className="text-xs text-gray-500 mt-2 font-medium">{goal.progress.toFixed(1)}% complete</p>
               </div>
             ))}
           </div>
@@ -373,7 +373,7 @@ export default function ExecutiveSummary({ clientData, analysisResults }: Execut
       {/* Strengths and Areas for Improvement */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Financial Strengths */}
-        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
+        <Card className="bg-white/80 backdrop-blur-sm border-gray-200">
           <CardHeader>
             <CardTitle className="flex items-center gap-3 text-emerald-400">
               <div className="p-2 bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 rounded-lg border border-emerald-500/30">
@@ -387,22 +387,22 @@ export default function ExecutiveSummary({ clientData, analysisResults }: Execut
               {strengths.length > 0 ? strengths.map((strength, index) => {
                 const IconComponent = strength.icon;
                 return (
-                  <div key={index} className="flex items-start gap-3 p-3 bg-slate-600/20 rounded-xl border border-slate-600/30 hover:bg-slate-600/30 transition-all duration-300">
+                  <div key={index} className="flex items-start gap-3 p-3 bg-gray-100 rounded-xl border border-gray-200 hover:bg-gray-50 transition-all duration-300">
                     <div className="p-2 bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 rounded-lg border border-emerald-500/30">
                       <IconComponent className="w-4 h-4 text-emerald-400" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-white">
+                      <h4 className="font-semibold text-gray-800">
                         {strength.title}
                       </h4>
-                      <p className="text-sm text-slate-400">
+                      <p className="text-sm text-gray-600">
                         {strength.description}
                       </p>
                     </div>
                   </div>
                 );
               }) : (
-                <p className="text-slate-400 text-center py-8">
+                <p className="text-gray-600 text-center py-8">
                   Continue building your financial foundation to unlock more strengths.
                 </p>
               )}
@@ -411,7 +411,7 @@ export default function ExecutiveSummary({ clientData, analysisResults }: Execut
         </Card>
 
         {/* Areas for Improvement */}
-        <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
+        <Card className="bg-white/80 backdrop-blur-sm border-gray-200">
           <CardHeader>
             <CardTitle className="flex items-center gap-3 text-orange-400">
               <div className="p-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-lg border border-orange-500/30">
@@ -425,7 +425,7 @@ export default function ExecutiveSummary({ clientData, analysisResults }: Execut
               {improvements.length > 0 ? improvements.map((improvement, index) => {
                 const IconComponent = improvement.icon;
                 return (
-                  <div key={index} className="flex items-start gap-3 p-3 bg-slate-600/20 rounded-xl border border-slate-600/30 hover:bg-slate-600/30 transition-all duration-300">
+                  <div key={index} className="flex items-start gap-3 p-3 bg-gray-100 rounded-xl border border-gray-200 hover:bg-gray-50 transition-all duration-300">
                     <div className={`p-2 rounded-lg border ${
                       improvement.priority === 'high' 
                         ? 'bg-gradient-to-r from-red-500/20 to-red-600/20 border-red-500/30' 
@@ -437,7 +437,7 @@ export default function ExecutiveSummary({ clientData, analysisResults }: Execut
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-semibold text-white">
+                        <h4 className="font-semibold text-gray-800">
                           {improvement.title}
                         </h4>
                         <Badge className={`text-xs border-0 ${
@@ -448,14 +448,14 @@ export default function ExecutiveSummary({ clientData, analysisResults }: Execut
                           {improvement.priority}
                         </Badge>
                       </div>
-                      <p className="text-sm text-slate-400">
+                      <p className="text-sm text-gray-600">
                         {improvement.description}
                       </p>
                     </div>
                   </div>
                 );
               }) : (
-                <p className="text-slate-400 text-center py-8">
+                <p className="text-gray-600 text-center py-8">
                   Great work! No major areas for improvement identified.
                 </p>
               )}
@@ -465,7 +465,7 @@ export default function ExecutiveSummary({ clientData, analysisResults }: Execut
       </div>
 
       {/* Critical Action Items */}
-      <Card className="bg-slate-700/30 backdrop-blur-sm border-slate-600/30">
+      <Card className="bg-white/80 backdrop-blur-sm border-gray-200">
         <CardHeader>
           <CardTitle className="flex items-center gap-3 text-red-400">
             <div className="p-2 bg-gradient-to-r from-red-500/20 to-red-600/20 rounded-lg border border-red-500/30">
@@ -477,28 +477,28 @@ export default function ExecutiveSummary({ clientData, analysisResults }: Execut
         <CardContent>
           <div className="space-y-4">
             {criticalActions.map((action) => (
-              <div key={action.id} className="bg-slate-600/20 border border-slate-600/30 rounded-xl p-5 hover:bg-slate-600/30 transition-all duration-300">
+              <div key={action.id} className="bg-gray-100 border border-gray-200 rounded-xl p-5 hover:bg-gray-50 transition-all duration-300">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-bold rounded-lg">
                         #{action.id}
                       </div>
-                      <h4 className="font-semibold text-white text-lg">
+                      <h4 className="font-semibold text-gray-800 text-lg">
                         {action.title}
                       </h4>
                     </div>
-                    <p className="text-slate-400 mb-4 leading-relaxed">
+                    <p className="text-gray-600 mb-4 leading-relaxed">
                       {action.description}
                     </p>
                     <div className="flex items-center gap-6 text-sm">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full"></div>
-                        <span className="text-slate-400">Timeline: <span className="text-white font-medium">{action.timeline}</span></span>
+                        <span className="text-gray-600">Timeline: <span className="text-gray-800 font-medium">{action.timeline}</span></span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full"></div>
-                        <span className="text-slate-400">Impact: <span className="text-white font-medium">{action.impact}</span></span>
+                        <span className="text-gray-600">Impact: <span className="text-gray-800 font-medium">{action.impact}</span></span>
                       </div>
                     </div>
                   </div>
