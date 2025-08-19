@@ -8,6 +8,7 @@ import OnboardingWizard from '@/components/OnboardingWizard';
 import { Button } from '@/components/ui/button';
 import { FormData } from '@/types/financial';
 import { useFinancialPlan } from '@/hooks/useFinancialPlan';
+import AuthGuard from '@/components/AuthGuard';
 
 function ComprehensiveContent() {
   const router = useRouter();
@@ -61,7 +62,13 @@ function ComprehensiveContent() {
 export default function ComprehensivePage() {
   return (
     <SessionContextProvider supabaseClient={supabase}>
-      <ComprehensiveContent />
+      <AuthGuard 
+        requireAuth={true} 
+        redirectTo="/sign-in"
+        loadingMessage="Loading comprehensive questionnaire..."
+      >
+        <ComprehensiveContent />
+      </AuthGuard>
     </SessionContextProvider>
   );
 }

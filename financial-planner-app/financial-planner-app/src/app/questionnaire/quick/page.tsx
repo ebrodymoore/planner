@@ -8,6 +8,7 @@ import QuickPlanWizard, { QuickPlanData } from '@/components/QuickPlanWizard';
 import { Button } from '@/components/ui/button';
 import { FormData } from '@/types/financial';
 import { useFinancialPlan } from '@/hooks/useFinancialPlan';
+import AuthGuard from '@/components/AuthGuard';
 
 function QuickPlanContent() {
   const router = useRouter();
@@ -132,7 +133,13 @@ function QuickPlanContent() {
 export default function QuickPlanPage() {
   return (
     <SessionContextProvider supabaseClient={supabase}>
-      <QuickPlanContent />
+      <AuthGuard 
+        requireAuth={true} 
+        redirectTo="/sign-in"
+        loadingMessage="Loading quick questionnaire..."
+      >
+        <QuickPlanContent />
+      </AuthGuard>
     </SessionContextProvider>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useUser } from '@supabase/auth-helpers-react';
 import { FinancialDataService, QuestionnaireResponse, FinancialAnalysis } from '@/services/financialDataService';
 // Claude API calls are now handled through the API route
@@ -37,6 +37,10 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
   const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false);
   const [isGeneratingAnalysis, setIsGeneratingAnalysis] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Refs to prevent duplicate loading
+  const hasLoadedDataForUser = useRef<string | null>(null);
+  const isCurrentlyLoading = useRef(false);
 
   // Load questionnaire data from database
   const loadQuestionnaireData = useCallback(async () => {
@@ -173,17 +177,34 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
     setError(null);
   };
 
-  // Load data on mount (temporarily disabled user dependency)
-  // Load data when user becomes available
+  // Load data when user becomes available (optimized to prevent duplicates)
   useEffect(() => {
-    if (user) {
-      console.log('🔍 [DEBUG] User available, loading financial data for:', user.id);
-      loadQuestionnaireData();
-      loadAnalysisResults();
-    } else {
+    const userId = user?.id;
+    
+    if (!userId) {
       console.log('🔍 [DEBUG] No user available yet, waiting...');
+      hasLoadedDataForUser.current = null;
+      return;
     }
-  }, [user, loadQuestionnaireData, loadAnalysisResults]);
+
+    // Skip if we've already loaded data for this user or currently loading
+    if (hasLoadedDataForUser.current === userId || isCurrentlyLoading.current) {
+      return;
+    }
+
+    console.log('🔍 [DEBUG] User available, loading financial data for:', userId);
+    isCurrentlyLoading.current = true;
+    hasLoadedDataForUser.current = userId;
+    
+    // Load data
+    Promise.all([
+      loadQuestionnaireData(),
+      loadAnalysisResults()
+    ]).finally(() => {
+      isCurrentlyLoading.current = false;
+    });
+    
+  }, [user?.id, loadQuestionnaireData, loadAnalysisResults]);
 
   return {
     // Data

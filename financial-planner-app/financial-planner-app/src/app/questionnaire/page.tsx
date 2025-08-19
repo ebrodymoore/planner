@@ -5,6 +5,7 @@ import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { supabase } from '@/lib/supabase';
 import PlanSelector from '@/components/PlanSelector';
 import { useRouter } from 'next/navigation';
+import AuthGuard from '@/components/AuthGuard';
 
 export default function QuestionnairePage() {
   const router = useRouter();
@@ -27,14 +28,20 @@ export default function QuestionnairePage() {
 
   return (
     <SessionContextProvider supabaseClient={supabase}>
-      <div className="min-h-screen">
-        <PlanSelector 
-          onSelectQuickPlan={handleSelectQuickPlan}
-          onSelectComprehensivePlan={handleSelectComprehensivePlan}
-          onSignIn={handleSignIn}
-          onBackToHome={handleBackToHome}
-        />
-      </div>
+      <AuthGuard 
+        requireAuth={true} 
+        redirectTo="/sign-in"
+        loadingMessage="Loading questionnaire options..."
+      >
+        <div className="min-h-screen">
+          <PlanSelector 
+            onSelectQuickPlan={handleSelectQuickPlan}
+            onSelectComprehensivePlan={handleSelectComprehensivePlan}
+            onSignIn={handleSignIn}
+            onBackToHome={handleBackToHome}
+          />
+        </div>
+      </AuthGuard>
     </SessionContextProvider>
   );
 }

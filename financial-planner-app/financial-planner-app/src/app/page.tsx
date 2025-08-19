@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -18,6 +18,7 @@ function HomePage() {
   // Add a small delay to handle auth state transitions
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [previousUserId, setPreviousUserId] = useState<string | null>(null);
+  
   
   useEffect(() => {
     // Small delay to let auth state settle
@@ -76,7 +77,6 @@ function HomePage() {
   const [showSignupPrompt, setShowSignupPrompt] = useState(false);
   
   const {
-    questionnaireData,
     isLoadingQuestionnaire,
     error,
     clearError
@@ -141,36 +141,14 @@ function HomePage() {
     }
   }, []);
 
-  // Handle authentication and user flow
+  // Handle signup prompt redirects only (simplified)
   React.useEffect(() => {
-    console.log('🔄 [DEBUG] Navigation effect triggered:', {
-      user: user?.id,
-      hasQuestionnaireData: !!(questionnaireData && Object.keys(questionnaireData).length > 0),
-      currentView,
-      showSignupPrompt,
-      isAuthReady
-    });
-
-    // Wait for auth to be ready before making navigation decisions
-    if (!isAuthReady) {
-      console.log('🔄 [DEBUG] Auth not ready yet, waiting...');
-      return;
-    }
-
-    if (user && questionnaireData && Object.keys(questionnaireData).length > 0) {
-      // Existing user with data - redirect to dashboard
-      console.log('🔄 [DEBUG] User has data, redirecting to dashboard');
-      if (currentView === 'landing') {
-        router.push('/dashboard');
-        return; // Exit early to prevent further navigation logic
-      }
-    } else if (!user && showSignupPrompt) {
-      // Only redirect to sign-in when showSignupPrompt is true
+    if (isAuthReady && !user && showSignupPrompt) {
       console.log('🔄 [DEBUG] Signup prompt triggered, redirecting to sign-in');
       router.push('/sign-in');
       setShowSignupPrompt(false);
     }
-  }, [user, questionnaireData, currentView, showSignupPrompt, router, isAuthReady]);
+  }, [user, showSignupPrompt, router, isAuthReady]);
 
   // Show loading state
   if (isLoadingQuestionnaire) {

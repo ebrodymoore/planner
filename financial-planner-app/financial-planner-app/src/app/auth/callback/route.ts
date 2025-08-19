@@ -42,8 +42,8 @@ export async function GET(request: NextRequest) {
         )
       }
       
-      // Redirect to success page
-      return NextResponse.redirect(new URL('/', requestUrl.origin))
+      // Redirect to questionnaire page for new users
+      return NextResponse.redirect(new URL('/questionnaire', requestUrl.origin))
     } catch (error: any) {
       console.error('Email verification error:', error)
       
@@ -54,6 +54,6 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // No code provided, redirect to home
-  return NextResponse.redirect(new URL('/', requestUrl.origin))
+  // No code provided, redirect to questionnaire
+  return NextResponse.redirect(new URL('/questionnaire', requestUrl.origin))
 }

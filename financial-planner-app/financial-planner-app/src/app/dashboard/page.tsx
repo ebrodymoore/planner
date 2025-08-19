@@ -9,10 +9,10 @@ import { Button } from '@/components/ui/button';
 import { useFinancialPlan } from '@/hooks/useFinancialPlan';
 import { useUser } from '@supabase/auth-helpers-react';
 import { Loader2 } from 'lucide-react';
+import AuthGuard from '@/components/AuthGuard';
 
 function DashboardContent() {
   const router = useRouter();
-  const user = useUser();
   const {
     questionnaireData,
     analysisResults,
@@ -31,15 +31,6 @@ function DashboardContent() {
     router.push('/questionnaire');
   };
 
-  // Redirect to sign-in if not authenticated
-  if (!user) {
-    router.push('/sign-in');
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
-        <div className="text-gray-600">Redirecting to sign in...</div>
-      </div>
-    );
-  }
 
   // Show loading state while data is being fetched
   if (isLoadingQuestionnaire || isLoadingAnalysis) {
@@ -120,7 +111,13 @@ export default function DashboardPage() {
           <div className="text-gray-600">Loading...</div>
         </div>
       }>
-        <DashboardContent />
+        <AuthGuard 
+          requireAuth={true} 
+          redirectTo="/sign-in"
+          loadingMessage="Loading your financial dashboard..."
+        >
+          <DashboardContent />
+        </AuthGuard>
       </Suspense>
     </SessionContextProvider>
   );
