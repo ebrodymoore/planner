@@ -169,23 +169,16 @@ export default function OnboardingWizard({
     return () => clearTimeout(timeoutId);
   }, [formData]);
 
-  // Load data from localStorage on mount
+  // Initialize form data from props
   useEffect(() => {
-    const savedData = localStorage.getItem('financial-planning-data');
-    if (savedData && !initialData) {
-      try {
-        const parsedData = JSON.parse(savedData);
-        setFormData(parsedData);
-      } catch (error) {
-        console.error('Error loading saved data:', error);
-      }
+    if (initialData && Object.keys(initialData).length > 0) {
+      setFormData(initialData);
     }
   }, [initialData]);
 
   const handleAutoSave = async () => {
     setIsAutoSaving(true);
     try {
-      localStorage.setItem('financial-planning-data', JSON.stringify(formData));
       if (onSave) {
         await onSave(formData);
       }

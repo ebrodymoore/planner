@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
@@ -9,7 +9,6 @@ import { supabase } from '@/lib/supabase';
 import LandingPage from '@/components/LandingPage';
 import { useFinancialPlan } from '@/hooks/useFinancialPlan';
 import { useUser } from '@supabase/auth-helpers-react';
-import { FormData } from '@/types/financial';
 import { AlertTriangle, Loader2 } from 'lucide-react';
 
 function HomePage() {
@@ -79,12 +78,7 @@ function HomePage() {
   
   const {
     questionnaireData,
-    analysisResults,
     isLoadingQuestionnaire,
-    isLoadingAnalysis,
-    isGeneratingAnalysis,
-    generateNewAnalysis,
-    saveQuestionnaireData,
     error,
     clearError
   } = useFinancialPlan();

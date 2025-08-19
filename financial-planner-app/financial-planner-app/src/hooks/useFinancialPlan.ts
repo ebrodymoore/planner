@@ -107,75 +107,43 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
       return;
     }
 
+    if (!user) {
+      setError('User not authenticated');
+      return;
+    }
+
     setIsGeneratingAnalysis(true);
     setError(null);
 
     try {
-      // TEMPORARILY DISABLED FOR TESTING - Generate mock analysis
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      const mockAnalysis: any = {
-        id: 'mock-analysis-1',
-        user_id: 'test-user',
-        analysis_date: new Date().toISOString(),
-        claude_response: {
-          executive_summary: 'Based on your financial profile, you have a solid foundation with $70,000 in total assets and moderate debt levels. Your primary focus should be on building emergency savings and optimizing debt payoff strategies.',
-          key_recommendations: [
-            'Build emergency fund to 6 months of expenses ($15,000)',
-            'Pay off high-interest credit cards using debt avalanche method',
-            'Increase 401k contribution to maximize employer match',
-            'Consider debt consolidation for student loans'
-          ]
+      console.log('🤖 [DEBUG] Starting Claude analysis for user:', user.id);
+      
+      // Call the Claude API through our backend endpoint
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        structured_data: {
-          debt_management: {
-            total_debt: 30000,
-            debt_to_income_ratio: 0.25,
-            recommended_strategy: 'debt_avalanche',
-            payoff_timeline: '24 months with extra payments',
-            interest_savings: 5000,
-            monthly_payment_plan: {
-              'credit_card_1': 500,
-              'credit_card_2': 300,
-              'student_loan': 250
-            }
-          },
-          action_items: {
-            immediate: [
-              'Set up automatic emergency fund transfer of $500/month',
-              'Consolidate credit card debt to lowest rate card'
-            ],
-            short_term: [
-              'Increase 401k contribution by 2%',
-              'Research high-yield savings accounts'
-            ],
-            medium_term: [
-              'Review insurance coverage',
-              'Consider increasing income through side work'
-            ]
-          },
-          cash_flow: {
-            monthly_surplus: 800,
-            projected_savings_rate: 0.15,
-            optimization_opportunities: [
-              'Reduce dining out by $200/month',
-              'Switch to cheaper phone plan'
-            ]
-          }
-        },
-        recommendations: [],
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      };
+        body: JSON.stringify({
+          userId: user.id,
+          questionnaireData: questionnaireData
+        })
+      });
 
-      // Save to localStorage for persistence
-      localStorage.setItem('financial-analysis-results', JSON.stringify(mockAnalysis));
-      setAnalysisResults(mockAnalysis);
+      if (!response.ok) {
+        throw new Error(`Analysis API call failed: ${response.status} ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      console.log('🤖 [DEBUG] Claude analysis completed successfully');
+      
+      // The API should return the saved analysis from the database
+      setAnalysisResults(result);
       
     } catch (err) {
-      console.error('Error generating analysis:', err);
+      console.error('🤖 [DEBUG] Error generating analysis:', err);
       setError(err instanceof Error ? err.message : 'Failed to generate analysis');
+      throw err; // Re-throw to let the calling component handle it
     } finally {
       setIsGeneratingAnalysis(false);
     }
@@ -183,13 +151,20 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
 
   // Save questionnaire data to database
   const saveQuestionnaireData = async (data: FormData) => {
-    // TEMPORARILY DISABLED FOR TESTING - Using localStorage instead
+    if (!user) {
+      setError('User not authenticated');
+      return;
+    }
+
     try {
-      localStorage.setItem('financial-planning-data', JSON.stringify(data));
+      console.log('💾 [DEBUG] Saving questionnaire data to database for user:', user.id);
+      await FinancialDataService.saveQuestionnaireResponse(user.id, data);
       setQuestionnaireData(data);
+      console.log('💾 [DEBUG] Successfully saved questionnaire data');
     } catch (err) {
-      console.error('Error saving questionnaire data:', err);
-      setError('Failed to save questionnaire data');
+      console.error('💾 [DEBUG] Error saving questionnaire data:', err);
+      setError(`Failed to save questionnaire data: ${(err as any)?.message || 'Unknown error'}`);
+      throw err; // Re-throw to let the calling component handle it
     }
   };
 
