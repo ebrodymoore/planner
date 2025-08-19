@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/lib/supabase';
-import { Loader2, ArrowRight, Shield, TrendingUp, CheckCircle } from 'lucide-react';
+import { Loader2, ArrowRight, Shield, TrendingUp, CheckCircle, ArrowLeft } from 'lucide-react';
 
 // Helper function to create user profile after signup
 async function createUserProfile(userId: string, email: string) {
@@ -167,7 +167,7 @@ export default function AuthComponent({ initialError = '', onErrorClear, default
         // Wait a bit longer to ensure auth state is properly updated
         setTimeout(() => {
           console.log('🚀 [DEBUG] Redirecting after successful signup');
-          router.push('/');
+          router.push('/dashboard');
         }, 2000);
       } else {
         console.log('🚀 [DEBUG] Attempting sign in...');
@@ -189,7 +189,7 @@ export default function AuthComponent({ initialError = '', onErrorClear, default
         // Wait a bit longer to ensure auth state is properly updated
         setTimeout(() => {
           console.log('🚀 [DEBUG] Redirecting after successful login');
-          router.push('/');
+          router.push('/dashboard');
         }, 2000);
       }
     } catch (error: any) {
@@ -217,6 +217,15 @@ export default function AuthComponent({ initialError = '', onErrorClear, default
     // SIGNUP SCREEN - More visual, benefit-focused
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-6">
+        {/* Back to Home Link */}
+        <button
+          onClick={() => router.push('/')}
+          className="absolute top-6 left-6 flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span className="text-sm">Back to Home</span>
+        </button>
+        
         <div className="w-full max-w-lg">
           <Card className="bg-white/80 backdrop-blur-xl border-gray-200/50 shadow-2xl">
             <CardHeader className="text-center space-y-4 pb-8">
@@ -357,6 +366,15 @@ export default function AuthComponent({ initialError = '', onErrorClear, default
   // LOGIN SCREEN - Clean, minimal, focused
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-6">
+      {/* Back to Home Link */}
+      <button
+        onClick={() => router.push('/')}
+        className="absolute top-6 left-6 flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        <span className="text-sm">Back to Home</span>
+      </button>
+      
       <div className="w-full max-w-md">
         <Card className="bg-white/80 backdrop-blur-xl border-gray-200/50 shadow-2xl">
           <CardHeader className="text-center space-y-3">

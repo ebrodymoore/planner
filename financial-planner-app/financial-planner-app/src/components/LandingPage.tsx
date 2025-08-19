@@ -25,12 +25,11 @@ import {
 } from 'lucide-react';
 
 interface LandingPageProps {
-  onGetStarted: () => void;
   user?: any;
   onDashboard?: () => void;
 }
 
-export default function LandingPage({ onGetStarted, user, onDashboard }: LandingPageProps) {
+export default function LandingPage({ user, onDashboard }: LandingPageProps) {
   const router = useRouter();
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
 
@@ -197,21 +196,12 @@ export default function LandingPage({ onGetStarted, user, onDashboard }: Landing
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button 
-              onClick={onGetStarted}
+              onClick={() => router.push('/sign-up')}
               className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold px-8 py-4 text-lg rounded-2xl shadow-2xl hover:shadow-emerald-500/25 transition-all duration-300 border-0"
               size="lg"
             >
               Get Smart Advice for My Situation
               <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-            
-            <Button 
-              onClick={() => router.push('/sign-up')}
-              variant="outline"
-              className="bg-white/80 border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-4 text-lg rounded-2xl shadow-xl transition-all duration-300"
-              size="lg"
-            >
-              Create Free Account
             </Button>
           </div>
         </section>
@@ -477,7 +467,7 @@ export default function LandingPage({ onGetStarted, user, onDashboard }: Landing
               </p>
               
               <Button 
-                onClick={onGetStarted}
+                onClick={() => router.push('/sign-up')}
                 className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold px-8 py-4 text-lg rounded-2xl shadow-2xl hover:shadow-emerald-500/25 transition-all duration-300 border-0 mb-6"
                 size="lg"
               >

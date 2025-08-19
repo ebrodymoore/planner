@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, Suspense, useRef } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -84,10 +84,6 @@ function HomePage() {
 
   const handleBackToLanding = () => {
     setCurrentView('landing');
-  };
-
-  const handleGetStarted = () => {
-    router.push('/questionnaire');
   };
 
   const handleDashboard = () => {
@@ -188,7 +184,6 @@ function HomePage() {
     return (
       <div className="min-h-screen">
         <LandingPage 
-          onGetStarted={handleGetStarted}
           user={user}
           onDashboard={handleDashboard}
         />
