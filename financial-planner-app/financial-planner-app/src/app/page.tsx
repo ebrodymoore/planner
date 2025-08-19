@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -8,7 +8,6 @@ import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { supabase } from '@/lib/supabase';
 import OnboardingWizard from '@/components/OnboardingWizard';
 import FinancialPlan from '@/components/FinancialPlan';
-import AuthComponent from '@/components/AuthComponent';
 import LandingPage from '@/components/LandingPage';
 import PlanSelector from '@/components/PlanSelector';
 import QuickPlanWizard, { QuickPlanData } from '@/components/QuickPlanWizard';
@@ -20,6 +19,40 @@ import { AlertTriangle, Loader2, Upload, Download } from 'lucide-react';
 function HomePage() {
   const user = useUser();
   const router = useRouter();
+  
+  // Add a small delay to handle auth state transitions
+  const [isAuthReady, setIsAuthReady] = useState(false);
+  const [previousUserId, setPreviousUserId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    // Small delay to let auth state settle
+    const timer = setTimeout(() => setIsAuthReady(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Track user ID changes to detect auth state transitions
+  useEffect(() => {
+    const currentUserId = user?.id || null;
+    
+    if (currentUserId !== previousUserId) {
+      console.log('🔄 [DEBUG] User state transition:', { 
+        previous: previousUserId, 
+        current: currentUserId,
+        timestamp: new Date().toISOString()
+      });
+      
+      setPreviousUserId(currentUserId);
+      
+      // If user just logged in, add a small delay to ensure data loading works properly
+      if (!previousUserId && currentUserId) {
+        console.log('🔄 [DEBUG] User just logged in, waiting for data hooks to settle');
+        // Force a re-render after auth transition
+        setTimeout(() => {
+          console.log('🔄 [DEBUG] Auth transition complete, data should now load');
+        }, 500);
+      }
+    }
+  }, [user?.id, previousUserId]);
   const [currentView, setCurrentView] = useState<'landing' | 'selector' | 'quick-plan' | 'questionnaire' | 'plan'>('landing');
   const [showSignupPrompt, setShowSignupPrompt] = useState(false);
   const [isUploadingJSON, setIsUploadingJSON] = useState(false);
@@ -308,20 +341,37 @@ function HomePage() {
 
   // Handle authentication and user flow
   React.useEffect(() => {
+    console.log('🔄 [DEBUG] Navigation effect triggered:', {
+      user: user?.id,
+      hasQuestionnaireData: !!(questionnaireData && Object.keys(questionnaireData).length > 0),
+      currentView,
+      showSignupPrompt,
+      isAuthReady
+    });
+
+    // Wait for auth to be ready before making navigation decisions
+    if (!isAuthReady) {
+      console.log('🔄 [DEBUG] Auth not ready yet, waiting...');
+      return;
+    }
+
     if (user && questionnaireData && Object.keys(questionnaireData).length > 0) {
       // Existing user with data - take them to plan
+      console.log('🔄 [DEBUG] User has data, navigating to plan view');
       if (currentView === 'landing' || currentView === 'selector') {
         setCurrentView('plan');
       }
     } else if (!user && currentView === 'plan') {
       // Redirect to sign-in if trying to access plan without login
+      console.log('🔄 [DEBUG] No user but trying to access plan, redirecting to sign-in');
       router.push('/sign-in');
     } else if (!user && showSignupPrompt) {
       // Only redirect to sign-in when showSignupPrompt is true
+      console.log('🔄 [DEBUG] Signup prompt triggered, redirecting to sign-in');
       router.push('/sign-in');
       setShowSignupPrompt(false);
     }
-  }, [user, questionnaireData, currentView, showSignupPrompt, router]);
+  }, [user, questionnaireData, currentView, showSignupPrompt, router, isAuthReady]);
 
   // Show loading state
   if (isLoadingQuestionnaire) {

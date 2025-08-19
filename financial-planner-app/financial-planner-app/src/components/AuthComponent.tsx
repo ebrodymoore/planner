@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/lib/supabase';
-import { Loader2, ArrowRight, Shield, Sparkles, TrendingUp, CheckCircle } from 'lucide-react';
+import { Loader2, ArrowRight, Shield, TrendingUp, CheckCircle } from 'lucide-react';
 
 // Helper function to create user profile after signup
 async function createUserProfile(userId: string, email: string) {
@@ -163,7 +163,12 @@ export default function AuthComponent({ initialError = '', onErrorClear, default
         }
         
         setMessage('Account created successfully! Redirecting to your dashboard...');
-        setTimeout(() => router.push('/'), 1500);
+        
+        // Wait a bit longer to ensure auth state is properly updated
+        setTimeout(() => {
+          console.log('🚀 [DEBUG] Redirecting after successful signup');
+          router.push('/');
+        }, 2000);
       } else {
         console.log('🚀 [DEBUG] Attempting sign in...');
         
@@ -180,7 +185,12 @@ export default function AuthComponent({ initialError = '', onErrorClear, default
         
         if (error) throw error;
         setMessage('Welcome back! Redirecting to your dashboard...');
-        setTimeout(() => router.push('/'), 1500);
+        
+        // Wait a bit longer to ensure auth state is properly updated
+        setTimeout(() => {
+          console.log('🚀 [DEBUG] Redirecting after successful login');
+          router.push('/');
+        }, 2000);
       }
     } catch (error: any) {
       console.error('🚀 [DEBUG] Authentication error:', error);
@@ -403,14 +413,14 @@ export default function AuthComponent({ initialError = '', onErrorClear, default
               </div>
 
               {error && (
-                <Alert variant="destructive" className="bg-red-900/50 border-red-500/50">
-                  <AlertDescription className="text-red-200">{error}</AlertDescription>
+                <Alert variant="destructive" className="bg-red-50 border-red-200">
+                  <AlertDescription className="text-red-800">{error}</AlertDescription>
                 </Alert>
               )}
 
               {message && (
-                <Alert className="bg-green-900/50 border-green-500/50">
-                  <AlertDescription className="text-green-200">{message}</AlertDescription>
+                <Alert className="bg-green-50 border-green-200">
+                  <AlertDescription className="text-green-800">{message}</AlertDescription>
                 </Alert>
               )}
 
@@ -436,7 +446,7 @@ export default function AuthComponent({ initialError = '', onErrorClear, default
                 <button
                   type="button"
                   onClick={switchMode}
-                  className="text-emerald-400 hover:text-emerald-300 font-medium"
+                  className="text-emerald-600 hover:text-emerald-500 font-medium"
                 >
                   Create your account
                 </button>

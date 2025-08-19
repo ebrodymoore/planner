@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useUser } from '@supabase/auth-helpers-react';
 import { FinancialDataService, QuestionnaireResponse, FinancialAnalysis } from '@/services/financialDataService';
 // Claude API calls are now handled through the API route
@@ -39,7 +39,7 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
   const [error, setError] = useState<string | null>(null);
 
   // Load questionnaire data from database
-  const loadQuestionnaireData = async () => {
+  const loadQuestionnaireData = useCallback(async () => {
     console.log('🔍 [DEBUG] loadQuestionnaireData called, user:', user?.id);
     
     if (!user) {
@@ -67,10 +67,10 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
     } finally {
       setIsLoadingQuestionnaire(false);
     }
-  };
+  }, [user]);
 
   // Load existing analysis results
-  const loadAnalysisResults = async () => {
+  const loadAnalysisResults = useCallback(async () => {
     console.log('🔍 [DEBUG] loadAnalysisResults called, user:', user?.id);
     
     if (!user) {
@@ -98,7 +98,7 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
     } finally {
       setIsLoadingAnalysis(false);
     }
-  };
+  }, [user]);
 
   // Generate new financial analysis using Claude AI
   const generateNewAnalysis = async () => {
@@ -199,10 +199,16 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
   };
 
   // Load data on mount (temporarily disabled user dependency)
+  // Load data when user becomes available
   useEffect(() => {
-    loadQuestionnaireData();
-    loadAnalysisResults();
-  }, []);
+    if (user) {
+      console.log('🔍 [DEBUG] User available, loading financial data for:', user.id);
+      loadQuestionnaireData();
+      loadAnalysisResults();
+    } else {
+      console.log('🔍 [DEBUG] No user available yet, waiting...');
+    }
+  }, [user, loadQuestionnaireData, loadAnalysisResults]);
 
   return {
     // Data
