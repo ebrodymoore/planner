@@ -222,6 +222,16 @@ function HomePage() {
     router.push('/questionnaire');
   };
 
+  const handleDashboard = () => {
+    // If user has questionnaire data, go to plan view
+    if (questionnaireData && Object.keys(questionnaireData).length > 0) {
+      setCurrentView('plan');
+    } else {
+      // No data, redirect to questionnaire selection
+      router.push('/questionnaire');
+    }
+  };
+
   const handleViewPlan = async () => {
     // If user is not authenticated, show signup prompt
     if (!user) {
@@ -363,13 +373,6 @@ function HomePage() {
       if (currentView === 'landing') {
         setCurrentView('plan');
       }
-    } else if (user && (!questionnaireData || Object.keys(questionnaireData).length === 0)) {
-      // Authenticated user with no data - redirect to questionnaire selection page
-      console.log('🔄 [DEBUG] Authenticated user with no data, redirecting to /questionnaire');
-      if (currentView === 'landing') {
-        router.push('/questionnaire');
-        return; // Exit early to prevent further navigation logic
-      }
     } else if (!user && currentView === 'plan') {
       // Redirect to sign-in if trying to access plan without login
       console.log('🔄 [DEBUG] No user but trying to access plan, redirecting to sign-in');
@@ -421,6 +424,8 @@ function HomePage() {
       <div className="min-h-screen">
         <LandingPage 
           onGetStarted={handleGetStarted}
+          user={user}
+          onDashboard={handleDashboard}
         />
       </div>
     );

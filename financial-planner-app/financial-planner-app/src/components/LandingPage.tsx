@@ -26,9 +26,11 @@ import {
 
 interface LandingPageProps {
   onGetStarted: () => void;
+  user?: any;
+  onDashboard?: () => void;
 }
 
-export default function LandingPage({ onGetStarted }: LandingPageProps) {
+export default function LandingPage({ onGetStarted, user, onDashboard }: LandingPageProps) {
   const router = useRouter();
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
 
@@ -113,13 +115,22 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
             <a href="#how-it-works" className="text-gray-600 hover:text-gray-800 transition-colors">How It Works</a>
             <a href="#features" className="text-gray-600 hover:text-gray-800 transition-colors">Scenarios</a>
             <a href="#faq" className="text-gray-600 hover:text-gray-800 transition-colors">FAQ</a>
-            <Button 
-              onClick={() => router.push('/sign-in')}
-              variant="ghost" 
-              className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
-            >
-              Sign In
-            </Button>
+            {user ? (
+              <Button 
+                onClick={onDashboard}
+                className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white"
+              >
+                Dashboard
+              </Button>
+            ) : (
+              <Button 
+                onClick={() => router.push('/sign-in')}
+                variant="ghost" 
+                className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+              >
+                Sign In
+              </Button>
+            )}
           </div>
         </div>
       </nav>
