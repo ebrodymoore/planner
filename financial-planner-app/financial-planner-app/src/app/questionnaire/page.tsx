@@ -10,11 +10,11 @@ export default function QuestionnairePage() {
   const router = useRouter();
 
   const handleSelectQuickPlan = () => {
-    router.push('/?view=quick-plan');
+    router.push('/questionnaire/quick');
   };
 
   const handleSelectComprehensivePlan = () => {
-    router.push('/?view=questionnaire');
+    router.push('/questionnaire/comprehensive');
   };
 
   const handleSignIn = () => {
