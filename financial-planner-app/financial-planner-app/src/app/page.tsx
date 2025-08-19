@@ -52,10 +52,23 @@ function HomePage() {
     }
   }, [user?.id, previousUserId]);
   const [currentView, setCurrentView] = useState<'landing' | 'plan'>(() => {
-    // Initialize view state from URL parameter
+    // Initialize view state from URL parameter and handle legacy redirects
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const view = urlParams.get('view');
+      
+      // Handle legacy redirects
+      if (view === 'quick-plan') {
+        // Redirect to the new quick plan route
+        window.location.href = '/questionnaire/quick';
+        return 'landing'; // temporary while redirecting
+      }
+      if (view === 'questionnaire') {
+        // Redirect to the new comprehensive route  
+        window.location.href = '/questionnaire/comprehensive';
+        return 'landing'; // temporary while redirecting
+      }
+      
       if (view === 'plan') {
         return view;
       }
@@ -114,10 +127,6 @@ function HomePage() {
       await generateNewAnalysis();
     }
     setCurrentView('plan');
-  };
-
-  const handleUpdateData = async (data: FormData) => {
-    await saveQuestionnaireData(data);
   };
 
 
