@@ -406,6 +406,7 @@ Provide comprehensive analysis with specific calculations, dollar amounts, and a
     }
 
     const data = await response.json();
+    console.log('🤖 [DEBUG] Claude API response:', JSON.stringify(data, null, 2));
     return data;
   }
 
@@ -414,7 +415,13 @@ Provide comprehensive analysis with specific calculations, dollar amounts, and a
    */
   private static parseClaudeResponse(claudeResponse: any): AnalysisResponse {
     try {
+      console.log('🤖 [DEBUG] Parsing Claude response structure:', typeof claudeResponse, Object.keys(claudeResponse));
+      
       // Extract the JSON from Claude's response
+      if (!claudeResponse.content || !Array.isArray(claudeResponse.content) || claudeResponse.content.length === 0) {
+        throw new Error('Invalid Claude response structure - missing content array');
+      }
+      
       const content = claudeResponse.content[0].text;
       
       // Look for JSON in the response

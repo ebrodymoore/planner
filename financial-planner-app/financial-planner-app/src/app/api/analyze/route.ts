@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ analysis });
+    return NextResponse.json(analysis);
 
   } catch (error) {
     console.error('API Error generating analysis:', error);
