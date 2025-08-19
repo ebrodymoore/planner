@@ -447,7 +447,7 @@ Provide comprehensive analysis with specific calculations, dollar amounts, and a
     console.log(`🔗 [CLAUDE-API-${callId}] API key present, building request...`);
 
     const requestBody = {
-      model: 'claude-3-sonnet-20240229',
+      model: 'claude-3-5-sonnet-20241022',
       max_tokens: 4000,
       temperature: 0.3,
       messages: [
