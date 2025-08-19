@@ -126,7 +126,7 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
         },
         body: JSON.stringify({
           userId: user.id,
-          questionnaireData: questionnaireData
+          formData: questionnaireData
         })
       });
 
