@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
@@ -18,10 +19,10 @@ import { AlertTriangle, Loader2, Upload, Download } from 'lucide-react';
 
 function HomePage() {
   const user = useUser();
-  const [currentView, setCurrentView] = useState<'landing' | 'auth' | 'selector' | 'quick-plan' | 'questionnaire' | 'plan'>('landing');
+  const router = useRouter();
+  const [currentView, setCurrentView] = useState<'landing' | 'selector' | 'quick-plan' | 'questionnaire' | 'plan'>('landing');
   const [showSignupPrompt, setShowSignupPrompt] = useState(false);
   const [isUploadingJSON, setIsUploadingJSON] = useState(false);
-  const [authError, setAuthError] = useState<string>('');
   
   const {
     questionnaireData,
@@ -287,8 +288,12 @@ function HomePage() {
         errorMessage = 'Server error occurred during authentication. Please try again.';
       }
       
-      setAuthError(errorMessage);
-      setCurrentView('auth');
+      // Navigate to sign-in with error info in URL
+      const errorParams = new URLSearchParams({
+        error: 'true',
+        message: encodeURIComponent(errorMessage)
+      });
+      router.push(`/sign-in?${errorParams.toString()}`);
       
       // Clean up URL parameters
       const cleanUrl = new URL(window.location.href);
@@ -304,22 +309,19 @@ function HomePage() {
   // Handle authentication and user flow
   React.useEffect(() => {
     if (user && questionnaireData && Object.keys(questionnaireData).length > 0) {
-      // Existing user with data - take them to plan (but not if they manually went to auth)
+      // Existing user with data - take them to plan
       if (currentView === 'landing' || currentView === 'selector') {
         setCurrentView('plan');
       }
-    } else if (user && currentView === 'auth') {
-      // New user just signed up/in but has no data - take them to plan selector
-      setCurrentView('selector');
     } else if (!user && currentView === 'plan') {
-      // Redirect to auth if trying to access plan without login
-      setCurrentView('auth');
+      // Redirect to sign-in if trying to access plan without login
+      router.push('/sign-in');
     } else if (!user && showSignupPrompt) {
-      // Only redirect to auth when showSignupPrompt is true
-      setCurrentView('auth');
+      // Only redirect to sign-in when showSignupPrompt is true
+      router.push('/sign-in');
       setShowSignupPrompt(false);
     }
-  }, [user, questionnaireData, currentView, showSignupPrompt]);
+  }, [user, questionnaireData, currentView, showSignupPrompt, router]);
 
   // Show loading state
   if (isLoadingQuestionnaire) {
@@ -360,19 +362,16 @@ function HomePage() {
       <div className="min-h-screen">
         <LandingPage 
           onGetStarted={handleGetStarted}
-          onSignIn={() => setCurrentView('auth')}
         />
       </div>
     );
   }
 
-  // Show authentication if not logged in and trying to access plan
-  if (currentView === 'auth' || (!user && showSignupPrompt)) {
-    return (
-      <div className="min-h-screen">
-        <AuthComponent initialError={authError} onErrorClear={() => setAuthError('')} />
-      </div>
-    );
+  // Redirect to sign-in if showing signup prompt
+  if (!user && showSignupPrompt) {
+    router.push('/sign-in');
+    setShowSignupPrompt(false);
+    return null;
   }
 
   // Show plan selector view
@@ -382,7 +381,7 @@ function HomePage() {
         <PlanSelector 
           onSelectQuickPlan={handleSelectQuickPlan}
           onSelectComprehensivePlan={handleSelectComprehensivePlan}
-          onSignIn={() => setCurrentView('auth')}
+          onSignIn={() => router.push('/sign-in')}
           onBackToHome={handleBackToLanding}
         />
       </div>
@@ -408,7 +407,7 @@ function HomePage() {
           </Button>
           {!user && (
             <Button
-              onClick={() => setCurrentView('auth')}
+              onClick={() => router.push('/sign-in')}
               className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-xl px-6 py-3"
             >
               Sign In
@@ -484,7 +483,7 @@ function HomePage() {
         </Button>
         {!user && (
           <Button
-            onClick={() => setCurrentView('auth')}
+            onClick={() => router.push('/sign-in')}
             className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-xl px-6 py-3"
           >
             Sign In to Save Progress

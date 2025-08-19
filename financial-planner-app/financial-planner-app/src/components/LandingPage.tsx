@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
@@ -25,10 +26,10 @@ import {
 
 interface LandingPageProps {
   onGetStarted: () => void;
-  onSignIn: () => void;
 }
 
-export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps) {
+export default function LandingPage({ onGetStarted }: LandingPageProps) {
+  const router = useRouter();
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
 
   const features = [
@@ -113,7 +114,7 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
             <a href="#features" className="text-gray-600 hover:text-gray-800 transition-colors">Scenarios</a>
             <a href="#faq" className="text-gray-600 hover:text-gray-800 transition-colors">FAQ</a>
             <Button 
-              onClick={onSignIn}
+              onClick={() => router.push('/sign-in')}
               variant="ghost" 
               className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
             >
@@ -183,14 +184,25 @@ export default function LandingPage({ onGetStarted, onSignIn }: LandingPageProps
             </div>
           </div>
           
-          <Button 
-            onClick={onGetStarted}
-            className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold px-8 py-4 text-lg rounded-2xl shadow-2xl hover:shadow-emerald-500/25 transition-all duration-300 border-0"
-            size="lg"
-          >
-            Get Smart Advice for My Situation
-            <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button 
+              onClick={onGetStarted}
+              className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold px-8 py-4 text-lg rounded-2xl shadow-2xl hover:shadow-emerald-500/25 transition-all duration-300 border-0"
+              size="lg"
+            >
+              Get Smart Advice for My Situation
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+            
+            <Button 
+              onClick={() => router.push('/sign-up')}
+              variant="outline"
+              className="bg-white/80 border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-4 text-lg rounded-2xl shadow-xl transition-all duration-300"
+              size="lg"
+            >
+              Create Free Account
+            </Button>
+          </div>
         </section>
 
         {/* Problem Section */}

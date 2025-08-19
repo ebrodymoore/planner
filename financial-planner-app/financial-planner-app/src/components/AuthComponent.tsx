@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -71,10 +72,23 @@ async function createUserProfile(userId: string, email: string) {
 interface AuthComponentProps {
   initialError?: string;
   onErrorClear?: () => void;
+  defaultMode?: 'signin' | 'signup';
 }
 
-export default function AuthComponent({ initialError = '', onErrorClear }: AuthComponentProps) {
-  const [isSignUp, setIsSignUp] = useState(false);
+export default function AuthComponent({ initialError = '', onErrorClear, defaultMode }: AuthComponentProps) {
+  const router = useRouter();
+  
+  const [isSignUp, setIsSignUp] = useState(() => {
+    // If defaultMode is provided, use it; otherwise, detect from URL
+    if (defaultMode) {
+      return defaultMode === 'signup';
+    }
+    // Detect from URL if in browser
+    if (typeof window !== 'undefined') {
+      return window.location.pathname === '/sign-up';
+    }
+    return false;
+  });
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -149,6 +163,7 @@ export default function AuthComponent({ initialError = '', onErrorClear }: AuthC
         }
         
         setMessage('Account created successfully! Redirecting to your dashboard...');
+        setTimeout(() => router.push('/'), 1500);
       } else {
         console.log('🚀 [DEBUG] Attempting sign in...');
         
@@ -165,6 +180,7 @@ export default function AuthComponent({ initialError = '', onErrorClear }: AuthC
         
         if (error) throw error;
         setMessage('Welcome back! Redirecting to your dashboard...');
+        setTimeout(() => router.push('/'), 1500);
       }
     } catch (error: any) {
       console.error('🚀 [DEBUG] Authentication error:', error);
@@ -175,14 +191,16 @@ export default function AuthComponent({ initialError = '', onErrorClear }: AuthC
     }
   };
 
-  // Reset form when switching between login/signup
+  // Navigate between login/signup pages
   const switchMode = () => {
-    setIsSignUp(!isSignUp);
-    setEmail('');
-    setPassword('');
-    setConfirmPassword('');
     clearError();
     setMessage('');
+    // Navigate to the opposite page
+    if (isSignUp) {
+      router.push('/sign-in');
+    } else {
+      router.push('/sign-up');
+    }
   };
 
   if (isSignUp) {
