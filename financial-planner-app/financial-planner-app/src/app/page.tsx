@@ -361,6 +361,12 @@ function HomePage() {
       if (currentView === 'landing' || currentView === 'selector') {
         setCurrentView('plan');
       }
+    } else if (user && (!questionnaireData || Object.keys(questionnaireData).length === 0)) {
+      // Authenticated user with no data - take them to selector to choose questionnaire type
+      console.log('🔄 [DEBUG] Authenticated user with no data, navigating to selector');
+      if (currentView === 'landing') {
+        setCurrentView('selector');
+      }
     } else if (!user && currentView === 'plan') {
       // Redirect to sign-in if trying to access plan without login
       console.log('🔄 [DEBUG] No user but trying to access plan, redirecting to sign-in');
