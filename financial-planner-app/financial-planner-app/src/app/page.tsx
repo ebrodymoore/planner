@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
@@ -9,7 +9,6 @@ import { supabase } from '@/lib/supabase';
 import OnboardingWizard from '@/components/OnboardingWizard';
 import FinancialPlan from '@/components/FinancialPlan';
 import LandingPage from '@/components/LandingPage';
-import PlanSelector from '@/components/PlanSelector';
 import QuickPlanWizard, { QuickPlanData } from '@/components/QuickPlanWizard';
 import { useFinancialPlan } from '@/hooks/useFinancialPlan';
 import { useUser } from '@supabase/auth-helpers-react';
@@ -19,6 +18,7 @@ import { AlertTriangle, Loader2, Upload, Download } from 'lucide-react';
 function HomePage() {
   const user = useUser();
   const router = useRouter();
+  const searchParams = useSearchParams();
   
   // Add a small delay to handle auth state transitions
   const [isAuthReady, setIsAuthReady] = useState(false);
@@ -53,7 +53,17 @@ function HomePage() {
       }
     }
   }, [user?.id, previousUserId]);
-  const [currentView, setCurrentView] = useState<'landing' | 'selector' | 'quick-plan' | 'questionnaire' | 'plan'>('landing');
+  const [currentView, setCurrentView] = useState<'landing' | 'quick-plan' | 'questionnaire' | 'plan'>(() => {
+    // Initialize view state from URL parameter
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const view = urlParams.get('view');
+      if (view === 'quick-plan' || view === 'questionnaire' || view === 'plan') {
+        return view;
+      }
+    }
+    return 'landing';
+  });
   const [showSignupPrompt, setShowSignupPrompt] = useState(false);
   const [isUploadingJSON, setIsUploadingJSON] = useState(false);
   
@@ -96,14 +106,6 @@ function HomePage() {
     }
   };
 
-  // Handle plan selection
-  const handleSelectQuickPlan = () => {
-    setCurrentView('quick-plan');
-  };
-
-  const handleSelectComprehensivePlan = () => {
-    setCurrentView('questionnaire');
-  };
 
   // Handle Quick Plan completion
   const handleQuickPlanComplete = async (data: QuickPlanData) => {
@@ -209,7 +211,7 @@ function HomePage() {
   };
 
   const handleBackToSelector = () => {
-    setCurrentView('selector');
+    router.push('/questionnaire');
   };
 
   const handleBackToLanding = () => {
@@ -217,7 +219,7 @@ function HomePage() {
   };
 
   const handleGetStarted = () => {
-    setCurrentView('selector');
+    router.push('/questionnaire');
   };
 
   const handleViewPlan = async () => {
@@ -358,14 +360,15 @@ function HomePage() {
     if (user && questionnaireData && Object.keys(questionnaireData).length > 0) {
       // Existing user with data - take them to plan
       console.log('🔄 [DEBUG] User has data, navigating to plan view');
-      if (currentView === 'landing' || currentView === 'selector') {
+      if (currentView === 'landing') {
         setCurrentView('plan');
       }
     } else if (user && (!questionnaireData || Object.keys(questionnaireData).length === 0)) {
-      // Authenticated user with no data - take them to selector to choose questionnaire type
-      console.log('🔄 [DEBUG] Authenticated user with no data, navigating to selector');
+      // Authenticated user with no data - redirect to questionnaire selection page
+      console.log('🔄 [DEBUG] Authenticated user with no data, redirecting to /questionnaire');
       if (currentView === 'landing') {
-        setCurrentView('selector');
+        router.push('/questionnaire');
+        return; // Exit early to prevent further navigation logic
       }
     } else if (!user && currentView === 'plan') {
       // Redirect to sign-in if trying to access plan without login
@@ -430,19 +433,6 @@ function HomePage() {
     return null;
   }
 
-  // Show plan selector view
-  if (currentView === 'selector') {
-    return (
-      <div className="min-h-screen">
-        <PlanSelector 
-          onSelectQuickPlan={handleSelectQuickPlan}
-          onSelectComprehensivePlan={handleSelectComprehensivePlan}
-          onSignIn={() => router.push('/sign-in')}
-          onBackToHome={handleBackToLanding}
-        />
-      </div>
-    );
-  }
 
   // Show Quick Plan wizard view
   if (currentView === 'quick-plan') {
@@ -642,10 +632,20 @@ function HomePage() {
   );
 }
 
+function HomeContent() {
+  return <HomePage />;
+}
+
 export default function Home() {
   return (
     <SessionContextProvider supabaseClient={supabase}>
-      <HomePage />
+      <Suspense fallback={
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+          <div className="text-gray-600">Loading...</div>
+        </div>
+      }>
+        <HomeContent />
+      </Suspense>
     </SessionContextProvider>
   );
 }
