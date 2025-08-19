@@ -14,7 +14,6 @@ import { AlertTriangle, Loader2 } from 'lucide-react';
 function HomePage() {
   const user = useUser();
   const router = useRouter();
-  const searchParams = useSearchParams();
   
   // Add a small delay to handle auth state transitions
   const [isAuthReady, setIsAuthReady] = useState(false);
