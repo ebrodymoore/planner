@@ -106,21 +106,46 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
 
   // Generate new financial analysis using Claude AI
   const generateNewAnalysis = async () => {
+    const requestId = Date.now().toString();
+    console.log(`📡 [HOOK-${requestId}] Starting analysis generation process`);
+    
     if (!questionnaireData) {
+      console.log(`📡 [HOOK-${requestId}] ERROR: Missing questionnaire data`);
       setError('Missing questionnaire data');
       return;
     }
 
     if (!user) {
+      console.log(`📡 [HOOK-${requestId}] ERROR: User not authenticated`);
       setError('User not authenticated');
       return;
     }
+
+    console.log(`📡 [HOOK-${requestId}] Pre-flight checks passed:`, {
+      userId: user.id,
+      hasQuestionnaireData: !!questionnaireData,
+      questionnaireDataKeys: Object.keys(questionnaireData),
+      questionnaireDataSize: JSON.stringify(questionnaireData).length
+    });
 
     setIsGeneratingAnalysis(true);
     setError(null);
 
     try {
-      console.log('🤖 [DEBUG] Starting Claude analysis for user:', user.id);
+      console.log(`📡 [HOOK-${requestId}] Preparing request payload...`);
+      
+      const requestPayload = {
+        userId: user.id,
+        formData: questionnaireData
+      };
+      
+      console.log(`📡 [HOOK-${requestId}] Request payload prepared:`, {
+        userId: requestPayload.userId,
+        formDataKeys: Object.keys(requestPayload.formData),
+        payloadSize: JSON.stringify(requestPayload).length
+      });
+      
+      console.log(`📡 [HOOK-${requestId}] Making fetch request to /api/analyze...`);
       
       // Call the Claude API through our backend endpoint
       const response = await fetch('/api/analyze', {
@@ -128,27 +153,60 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          userId: user.id,
-          formData: questionnaireData
-        })
+        body: JSON.stringify(requestPayload)
+      });
+
+      console.log(`📡 [HOOK-${requestId}] Fetch response received:`, {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        headers: Object.fromEntries(response.headers.entries())
       });
 
       if (!response.ok) {
-        throw new Error(`Analysis API call failed: ${response.status} ${response.statusText}`);
+        console.log(`📡 [HOOK-${requestId}] Response not OK, attempting to read error details...`);
+        
+        let errorDetails;
+        try {
+          errorDetails = await response.text();
+          console.log(`📡 [HOOK-${requestId}] Error response body:`, errorDetails);
+        } catch (readError) {
+          console.log(`📡 [HOOK-${requestId}] Failed to read error response:`, readError);
+          errorDetails = 'Unable to read error details';
+        }
+        
+        const errorMessage = `Analysis API call failed: ${response.status} ${response.statusText}`;
+        console.log(`📡 [HOOK-${requestId}] Throwing error:`, errorMessage);
+        throw new Error(errorMessage);
       }
 
+      console.log(`📡 [HOOK-${requestId}] Reading successful response...`);
+      
       const result = await response.json();
-      console.log('🤖 [DEBUG] Claude analysis completed successfully');
+      
+      console.log(`📡 [HOOK-${requestId}] Response parsed successfully:`, {
+        resultType: typeof result,
+        resultKeys: result ? Object.keys(result) : 'null',
+        hasAnalysis: !!result
+      });
       
       // The API should return the saved analysis from the database
       setAnalysisResults(result);
       
+      console.log(`📡 [HOOK-${requestId}] Analysis generation completed successfully`);
+      
     } catch (err) {
-      console.error('🤖 [DEBUG] Error generating analysis:', err);
+      console.error(`📡 [HOOK-${requestId}] CRITICAL ERROR during analysis generation:`, {
+        message: err instanceof Error ? err.message : 'Unknown error',
+        stack: err instanceof Error ? err.stack : 'No stack trace',
+        type: typeof err,
+        errorObject: err
+      });
+      
       setError(err instanceof Error ? err.message : 'Failed to generate analysis');
       throw err; // Re-throw to let the calling component handle it
     } finally {
+      console.log(`📡 [HOOK-${requestId}] Setting isGeneratingAnalysis to false`);
       setIsGeneratingAnalysis(false);
     }
   };

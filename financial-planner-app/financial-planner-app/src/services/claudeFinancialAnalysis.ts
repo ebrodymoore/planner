@@ -68,10 +68,21 @@ export class ClaudeFinancialAnalysis {
     request?: AnalysisRequest
   ): Promise<AnalysisResponse | null> {
     const startTime = Date.now();
+    const sessionId = `${userId}-${startTime}`;
+    
+    console.log(`🤖 [CLAUDE-${sessionId}] Starting comprehensive analysis generation`);
     
     try {
+      console.log(`🤖 [CLAUDE-${sessionId}] Step 1: Preparing data for Claude API...`);
+      
       // Prepare data for Claude API
       const claudeRequestData = FinancialDataService.prepareForClaudeAPI(formData);
+      console.log(`🤖 [CLAUDE-${sessionId}] Data prepared:`, {
+        hasClientProfile: !!claudeRequestData.client_profile,
+        clientProfileKeys: claudeRequestData.client_profile ? Object.keys(claudeRequestData.client_profile) : 'none'
+      });
+      
+      console.log(`🤖 [CLAUDE-${sessionId}] Step 2: Adding analysis context...`);
       
       // Add analysis context
       claudeRequestData.analysis_request = {
@@ -80,23 +91,54 @@ export class ClaudeFinancialAnalysis {
         focus_areas: request?.focus_areas || this.getDefaultFocusAreas(formData),
         specific_questions: request?.specific_questions || []
       };
+      
+      console.log(`🤖 [CLAUDE-${sessionId}] Analysis context added:`, claudeRequestData.analysis_request);
 
+      console.log(`🤖 [CLAUDE-${sessionId}] Step 3: Building Claude API prompt...`);
+      
       // Generate the Claude API prompt
       const prompt = this.buildFinancialAnalysisPrompt(claudeRequestData);
+      console.log(`🤖 [CLAUDE-${sessionId}] Prompt built, length: ${prompt.length} characters`);
+      
+      console.log(`🤖 [CLAUDE-${sessionId}] Step 4: Calling Claude API...`);
       
       // Call Claude API
       const claudeResponse = await this.callClaudeAPI(prompt);
       
+      console.log(`🤖 [CLAUDE-${sessionId}] Claude API response received:`, {
+        hasResponse: !!claudeResponse,
+        responseType: typeof claudeResponse,
+        responseKeys: claudeResponse ? Object.keys(claudeResponse) : 'none'
+      });
+      
       if (!claudeResponse) {
+        console.log(`🤖 [CLAUDE-${sessionId}] ERROR: No response from Claude API`);
         throw new Error('Failed to get response from Claude API');
       }
 
+      console.log(`🤖 [CLAUDE-${sessionId}] Step 5: Parsing Claude response...`);
+      
       // Parse and structure the response
       const structuredResponse = this.parseClaudeResponse(claudeResponse);
       
+      console.log(`🤖 [CLAUDE-${sessionId}] Response parsed successfully:`, {
+        hasStructuredResponse: !!structuredResponse,
+        responseType: typeof structuredResponse,
+        responseKeys: structuredResponse ? Object.keys(structuredResponse) : 'none'
+      });
+      
+      console.log(`🤖 [CLAUDE-${sessionId}] Step 6: Loading questionnaire response for saving...`);
+      
       // Save the analysis results
       const questionnaireResponse = await FinancialDataService.loadQuestionnaireResponse(userId);
+      console.log(`🤖 [CLAUDE-${sessionId}] Questionnaire response loaded:`, {
+        hasQuestionnaireResponse: !!questionnaireResponse,
+        questionnaireId: questionnaireResponse?.id || 'none'
+      });
+      
       if (questionnaireResponse) {
+        console.log(`🤖 [CLAUDE-${sessionId}] Step 7: Saving analysis results...`);
+        
         await FinancialDataService.saveAnalysisResults(
           userId,
           questionnaireResponse.id,
@@ -104,33 +146,51 @@ export class ClaudeFinancialAnalysis {
           claudeResponse,
           request?.type || 'comprehensive'
         );
+        
+        console.log(`🤖 [CLAUDE-${sessionId}] Analysis results saved successfully`);
+      } else {
+        console.log(`🤖 [CLAUDE-${sessionId}] WARNING: No questionnaire response found, skipping save`);
       }
 
+      console.log(`🤖 [CLAUDE-${sessionId}] Step 8: Logging API usage...`);
+      
       // Log API usage
       const responseTime = Date.now() - startTime;
       await FinancialDataService.logAPIUsage(
         userId,
         'comprehensive_analysis',
-        this.estimateTokenUsage(prompt, claudeResponse.content),
+        this.estimateTokenUsage(prompt, claudeResponse.content || claudeResponse.text || ''),
         responseTime,
         true
       );
+      
+      console.log(`🤖 [CLAUDE-${sessionId}] Analysis generation completed successfully in ${responseTime}ms`);
 
       return structuredResponse;
       
     } catch (error) {
-      console.error('Error generating financial analysis:', error);
+      console.error(`🤖 [CLAUDE-${sessionId}] CRITICAL ERROR during analysis generation:`, {
+        step: 'unknown',
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : 'No stack trace',
+        type: typeof error,
+        errorObject: error
+      });
       
       // Log the error
       const responseTime = Date.now() - startTime;
-      await FinancialDataService.logAPIUsage(
-        userId,
-        'comprehensive_analysis',
-        0,
-        responseTime,
-        false,
-        error instanceof Error ? error.message : 'Unknown error'
-      );
+      try {
+        await FinancialDataService.logAPIUsage(
+          userId,
+          'comprehensive_analysis',
+          0,
+          responseTime,
+          false,
+          error instanceof Error ? error.message : 'Unknown error'
+        );
+      } catch (logError) {
+        console.error(`🤖 [CLAUDE-${sessionId}] Failed to log error:`, logError);
+      }
       
       return null;
     }
@@ -375,39 +435,94 @@ Provide comprehensive analysis with specific calculations, dollar amounts, and a
   private static async callClaudeAPI(prompt: string): Promise<any> {
     const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
     const API_KEY = process.env.CLAUDE_API_KEY;
+    const callId = Date.now().toString();
+
+    console.log(`🔗 [CLAUDE-API-${callId}] Starting Claude API call`);
 
     if (!API_KEY) {
+      console.log(`🔗 [CLAUDE-API-${callId}] ERROR: Claude API key not configured`);
       throw new Error('Claude API key not configured');
     }
 
-    const response = await fetch(CLAUDE_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-3-sonnet-20240229',
-        max_tokens: 4000,
-        temperature: 0.3, // Lower temperature for more consistent financial advice
-        messages: [
-          {
-            role: 'user',
-            content: prompt
-          }
-        ]
-      })
+    console.log(`🔗 [CLAUDE-API-${callId}] API key present, building request...`);
+
+    const requestBody = {
+      model: 'claude-3-sonnet-20240229',
+      max_tokens: 4000,
+      temperature: 0.3,
+      messages: [
+        {
+          role: 'user',
+          content: prompt
+        }
+      ]
+    };
+
+    console.log(`🔗 [CLAUDE-API-${callId}] Request details:`, {
+      url: CLAUDE_API_URL,
+      model: requestBody.model,
+      maxTokens: requestBody.max_tokens,
+      promptLength: prompt.length,
+      promptPreview: prompt.substring(0, 200) + '...'
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`Claude API error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
-    }
+    try {
+      console.log(`🔗 [CLAUDE-API-${callId}] Making fetch request...`);
+      
+      const response = await fetch(CLAUDE_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': API_KEY,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify(requestBody)
+      });
 
-    const data = await response.json();
-    console.log('🤖 [DEBUG] Claude API response:', JSON.stringify(data, null, 2));
-    return data;
+      console.log(`🔗 [CLAUDE-API-${callId}] Fetch completed:`, {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        headers: Object.fromEntries(response.headers.entries())
+      });
+
+      if (!response.ok) {
+        console.log(`🔗 [CLAUDE-API-${callId}] Response not OK, reading error data...`);
+        
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch (parseError) {
+          console.log(`🔗 [CLAUDE-API-${callId}] Failed to parse error response:`, parseError);
+          errorData = { error: { message: 'Failed to parse error response' } };
+        }
+        
+        console.log(`🔗 [CLAUDE-API-${callId}] Error response:`, errorData);
+        throw new Error(`Claude API error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
+      }
+
+      console.log(`🔗 [CLAUDE-API-${callId}] Reading successful response...`);
+      
+      const data = await response.json();
+      
+      console.log(`🔗 [CLAUDE-API-${callId}] Response parsed successfully:`, {
+        dataType: typeof data,
+        dataKeys: Object.keys(data),
+        hasContent: !!data.content,
+        contentLength: data.content ? data.content.length : 0,
+        usage: data.usage || 'no usage info'
+      });
+      
+      return data;
+
+    } catch (error) {
+      console.error(`🔗 [CLAUDE-API-${callId}] Fetch error:`, {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : 'No stack trace',
+        type: typeof error
+      });
+      throw error;
+    }
   }
 
   /**
