@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { supabase } from '@/lib/supabase';
-import FinancialPlan from '@/components/FinancialPlan';
 import LandingPage from '@/components/LandingPage';
 import { useFinancialPlan } from '@/hooks/useFinancialPlan';
 import { useUser } from '@supabase/auth-helpers-react';
@@ -51,7 +50,7 @@ function HomePage() {
       }
     }
   }, [user?.id, previousUserId]);
-  const [currentView, setCurrentView] = useState<'landing' | 'plan'>(() => {
+  const [currentView, setCurrentView] = useState<'landing'>(() => {
     // Initialize view state from URL parameter and handle legacy redirects
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
@@ -68,9 +67,10 @@ function HomePage() {
         window.location.href = '/questionnaire/comprehensive';
         return 'landing'; // temporary while redirecting
       }
-      
       if (view === 'plan') {
-        return view;
+        // Redirect to the new dashboard route
+        window.location.href = '/dashboard';
+        return 'landing'; // temporary while redirecting
       }
     }
     return 'landing';
@@ -89,15 +89,6 @@ function HomePage() {
     clearError
   } = useFinancialPlan();
 
-  // Handle plan updates from the plan view
-  const handleUpdateData = async (data: FormData) => {
-    await saveQuestionnaireData(data);
-  };
-
-  const handleBackToSelector = () => {
-    router.push('/questionnaire');
-  };
-
   const handleBackToLanding = () => {
     setCurrentView('landing');
   };
@@ -107,26 +98,8 @@ function HomePage() {
   };
 
   const handleDashboard = () => {
-    // If user has questionnaire data, go to plan view
-    if (questionnaireData && Object.keys(questionnaireData).length > 0) {
-      setCurrentView('plan');
-    } else {
-      // No data, redirect to questionnaire selection
-      router.push('/questionnaire');
-    }
-  };
-
-  const handleViewPlan = async () => {
-    // If user is not authenticated, show signup prompt
-    if (!user) {
-      setShowSignupPrompt(true);
-      return;
-    }
-    
-    if (!analysisResults && questionnaireData) {
-      await generateNewAnalysis();
-    }
-    setCurrentView('plan');
+    // Always redirect to dashboard - it will handle redirecting to questionnaire if no data
+    router.push('/dashboard');
   };
 
 
@@ -192,15 +165,12 @@ function HomePage() {
     }
 
     if (user && questionnaireData && Object.keys(questionnaireData).length > 0) {
-      // Existing user with data - take them to plan
-      console.log('🔄 [DEBUG] User has data, navigating to plan view');
+      // Existing user with data - redirect to dashboard
+      console.log('🔄 [DEBUG] User has data, redirecting to dashboard');
       if (currentView === 'landing') {
-        setCurrentView('plan');
+        router.push('/dashboard');
+        return; // Exit early to prevent further navigation logic
       }
-    } else if (!user && currentView === 'plan') {
-      // Redirect to sign-in if trying to access plan without login
-      console.log('🔄 [DEBUG] No user but trying to access plan, redirecting to sign-in');
-      router.push('/sign-in');
     } else if (!user && showSignupPrompt) {
       // Only redirect to sign-in when showSignupPrompt is true
       console.log('🔄 [DEBUG] Signup prompt triggered, redirecting to sign-in');
@@ -264,50 +234,6 @@ function HomePage() {
 
 
 
-  // Show financial plan view
-  if (currentView === 'plan') {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-        <FinancialPlan 
-          clientData={questionnaireData || {}}
-          analysisResults={analysisResults}
-          onUpdateData={handleUpdateData}
-        />
-        <div className="fixed bottom-6 right-6 space-y-3">
-          <Button
-            onClick={handleBackToSelector}
-            variant="outline"
-            className="bg-white/80 backdrop-blur-xl border-gray-200/50 text-gray-700 hover:bg-gray-50/80 hover:text-gray-900 shadow-xl block w-full px-6 py-3"
-          >
-            Back to Plan Selection
-          </Button>
-          <Button
-            onClick={() => router.push('/questionnaire')}
-            variant="outline"
-            className="bg-white/80 backdrop-blur-xl border-gray-200/50 text-gray-700 hover:bg-gray-50/80 hover:text-gray-900 shadow-xl block w-full px-6 py-3"
-          >
-            Back to Questionnaire
-          </Button>
-          {questionnaireData && !analysisResults && (
-            <Button
-              onClick={generateNewAnalysis}
-              disabled={isGeneratingAnalysis}
-              className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 shadow-xl block w-full px-6 py-3 disabled:opacity-50"
-            >
-              {isGeneratingAnalysis ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  Generating Analysis...
-                </>
-              ) : (
-                'Generate New Analysis'
-              )}
-            </Button>
-          )}
-        </div>
-      </div>
-    );
-  }
 
   // Fallback - redirect to landing if no valid view
   return (

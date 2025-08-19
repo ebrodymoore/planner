@@ -94,8 +94,8 @@ function QuickPlanContent() {
       await saveQuestionnaireData(formData as FormData);
       await generateNewAnalysis();
       
-      // Redirect to plan view
-      router.push('/?view=plan');
+      // Redirect to dashboard
+      router.push('/dashboard');
     } catch (err) {
       console.error('Error completing Quick Plan:', err);
     }

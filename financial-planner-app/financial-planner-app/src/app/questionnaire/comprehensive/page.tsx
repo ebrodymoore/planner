@@ -18,8 +18,8 @@ function ComprehensiveContent() {
       await saveQuestionnaireData(data);
       await generateNewAnalysis();
       
-      // Redirect to plan view
-      router.push('/?view=plan');
+      // Redirect to dashboard
+      router.push('/dashboard');
     } catch (err) {
       console.error('Error completing questionnaire:', err);
     }
