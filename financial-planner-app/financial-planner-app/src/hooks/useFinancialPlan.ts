@@ -211,7 +211,7 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
     }
   };
 
-  // Save questionnaire data to database
+  // Save questionnaire data to database and generate fresh analysis
   const saveQuestionnaireData = async (data: FormData) => {
     if (!user) {
       setError('User not authenticated');
@@ -223,8 +223,13 @@ export function useFinancialPlan(): UseFinancialPlanReturn {
       await FinancialDataService.saveQuestionnaireResponse(user.id, data);
       setQuestionnaireData(data);
       console.log('💾 [DEBUG] Successfully saved questionnaire data');
+      
+      // Auto-generate fresh analysis with updated data
+      console.log('💾 [DEBUG] Auto-generating fresh analysis with updated data...');
+      await generateNewAnalysis();
+      console.log('💾 [DEBUG] Fresh analysis generated successfully');
     } catch (err) {
-      console.error('💾 [DEBUG] Error saving questionnaire data:', err);
+      console.error('💾 [DEBUG] Error saving questionnaire data or generating analysis:', err);
       setError(`Failed to save questionnaire data: ${(err as any)?.message || 'Unknown error'}`);
       throw err; // Re-throw to let the calling component handle it
     }

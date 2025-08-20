@@ -137,34 +137,6 @@ function DashboardContent() {
         />
       )}
       
-      {/* Show action buttons only when user has data */}
-      {!hasNoData && (
-        <div className="fixed bottom-6 right-6 space-y-3">
-          <Button
-            onClick={handleBackToQuestionnaire}
-            variant="outline"
-            className="bg-white/80 backdrop-blur-xl border-gray-200/50 text-gray-700 hover:bg-gray-50/80 hover:text-gray-900 shadow-xl block w-full px-6 py-3"
-          >
-            Back to Questionnaire
-          </Button>
-          {questionnaireData && !analysisResults && (
-            <Button
-              onClick={generateNewAnalysis}
-              disabled={isGeneratingAnalysis}
-              className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 shadow-xl block w-full px-6 py-3 disabled:opacity-50"
-            >
-              {isGeneratingAnalysis ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  Generating Analysis...
-                </>
-              ) : (
-                'Generate New Analysis'
-              )}
-            </Button>
-          )}
-        </div>
-      )}
       
       {/* Status indicator */}
       {isGeneratingAnalysis && (

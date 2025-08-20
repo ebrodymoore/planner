@@ -326,14 +326,6 @@ export default function FinancialPlan({
                 </div>
               </div>
               
-              {/* Net Worth */}
-              <div className="text-right bg-gray-100/30 backdrop-blur-sm rounded-xl px-4 py-3 border border-gray-200/30">
-                <p className="text-sm text-slate-400 font-medium">Net Worth</p>
-                <p className="text-2xl font-bold text-white">
-                  {formatCurrency(calculateNetWorth())}
-                </p>
-              </div>
-              
               {/* Settings Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
