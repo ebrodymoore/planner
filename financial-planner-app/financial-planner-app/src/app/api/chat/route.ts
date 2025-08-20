@@ -129,7 +129,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Get chat session information
-    const sessionInfo = await ChatService.getSessionInfo(userId, sessionId);
+    const sessionInfo = await ChatService.getSessionInfo(userId, sessionId ?? undefined);
 
     return NextResponse.json(sessionInfo);
 
