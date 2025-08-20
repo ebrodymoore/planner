@@ -260,8 +260,7 @@ export class ChatService {
         const { error } = await supabase
           .from('chat_sessions')
           .update({
-            last_activity_at: new Date().toISOString(),
-            total_messages: supabase.raw('total_messages + 1')
+            last_activity_at: new Date().toISOString()
           })
           .eq('id', sessionId)
           .eq('user_id', userId);
@@ -303,7 +302,8 @@ export class ChatService {
   private static async getFinancialContext(userId: string): Promise<any> {
     try {
       // Get user's financial data
-      const formData = await FinancialDataService.loadQuestionnaireData(userId);
+      const questionnaireResponse = await FinancialDataService.loadQuestionnaireResponse(userId);
+      const formData = questionnaireResponse?.questionnaire_data;
       const analysis = await FinancialDataService.getCurrentAnalysis(userId);
 
       return {
@@ -503,17 +503,28 @@ Please provide a helpful, personalized response based on their financial context
     responseTime: number
   ): Promise<void> {
     try {
-      await supabase
+      // Get current session data
+      const { data: currentSession } = await supabase
         .from('chat_sessions')
-        .update({
-          total_tokens_used: supabase.raw(`total_tokens_used + ${tokensUsed}`),
-          avg_response_time_ms: supabase.raw(`CASE 
-            WHEN avg_response_time_ms IS NULL THEN ${responseTime}
-            ELSE (avg_response_time_ms + ${responseTime}) / 2
-          END`),
-          last_activity_at: new Date().toISOString()
-        })
-        .eq('id', sessionId);
+        .select('total_tokens_used, avg_response_time_ms')
+        .eq('id', sessionId)
+        .single();
+
+      if (currentSession) {
+        const newTotalTokens = (currentSession.total_tokens_used || 0) + tokensUsed;
+        const newAvgResponseTime = currentSession.avg_response_time_ms 
+          ? Math.round((currentSession.avg_response_time_ms + responseTime) / 2)
+          : responseTime;
+
+        await supabase
+          .from('chat_sessions')
+          .update({
+            total_tokens_used: newTotalTokens,
+            avg_response_time_ms: newAvgResponseTime,
+            last_activity_at: new Date().toISOString()
+          })
+          .eq('id', sessionId);
+      }
     } catch (error) {
       console.error('Failed to update session metrics:', error);
     }
