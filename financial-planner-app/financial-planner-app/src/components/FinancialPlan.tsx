@@ -35,7 +35,9 @@ import {
   Sparkles,
   Crown,
   Zap,
-  Activity
+  Activity,
+  Lock,
+  MessageCircle
 } from 'lucide-react';
 import { FormData } from '@/types/financial';
 
@@ -52,6 +54,9 @@ import InsuranceCoverage from './plan-sections/InsuranceCoverage';
 import TaxStrategy from './plan-sections/TaxStrategy';
 
 import { FinancialAnalysis } from '@/services/financialDataService';
+import { usePlanType, canAccessSection } from '@/hooks/usePlanType';
+import PlanUpgradeOverlay from './PlanUpgradeOverlay';
+import ChatBot from './ChatBot';
 
 interface FinancialPlanProps {
   clientData: FormData;
@@ -65,8 +70,17 @@ export default function FinancialPlan({
   onUpdateData 
 }: FinancialPlanProps) {
   const [activeTab, setActiveTab] = useState('executive');
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const router = useRouter();
   const user = useUser();
+
+  // Determine user's plan type and access
+  const { planType, canAccessSection: canAccessSectionCheck } = usePlanType(clientData);
+  
+  // Function to check if user can access a specific section
+  const canAccessSection = (sectionId: string) => {
+    return canAccessSectionCheck(sectionId);
+  };
 
   // Calculate key metrics for navigation
   const calculateNetWorth = () => {
@@ -330,6 +344,18 @@ export default function FinancialPlan({
                 </div>
               </div>
               
+              {/* Chat Button - Only for comprehensive plan users */}
+              {planType === 'comprehensive' && (
+                <Button
+                  onClick={() => setIsChatOpen(true)}
+                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg"
+                  size="sm"
+                >
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  AI Assistant
+                </Button>
+              )}
+
               {/* Settings Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -377,10 +403,16 @@ export default function FinancialPlan({
                   </DropdownMenuItem>
                   
                   {planType === 'quick' && (
-                    <DropdownMenuItem onClick={handleUpgradePlan}>
-                      <Crown className="w-4 h-4 mr-2" />
-                      Upgrade to Comprehensive Plan
-                    </DropdownMenuItem>
+                    <>
+                      <DropdownMenuItem onClick={handleUpgradePlan}>
+                        <Crown className="w-4 h-4 mr-2" />
+                        Upgrade to Comprehensive Plan
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleUpgradePlan} className="text-emerald-600 focus:text-emerald-600">
+                        <MessageCircle className="w-4 h-4 mr-2" />
+                        Unlock AI Financial Assistant
+                      </DropdownMenuItem>
+                    </>
                   )}
                   
                   <DropdownMenuSeparator />
@@ -493,6 +525,13 @@ export default function FinancialPlan({
           })}
         </Tabs>
       </div>
+
+      {/* ChatBot Component */}
+      <ChatBot 
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        planType={planType}
+      />
     </div>
   );
 }
