@@ -1,11 +1,22 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useUser } from '@supabase/auth-helpers-react';
+import { supabase } from '@/lib/supabase';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -17,9 +28,10 @@ import {
   Shield,
   Calendar,
   FileText,
-  Download,
-  Moon,
-  Sun,
+  Settings,
+  User,
+  Edit3,
+  LogOut,
   Sparkles,
   Crown,
   Zap,
@@ -53,8 +65,8 @@ export default function FinancialPlan({
   onUpdateData 
 }: FinancialPlanProps) {
   const [activeTab, setActiveTab] = useState('executive');
-  const [darkMode, setDarkMode] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const router = useRouter();
+  const user = useUser();
 
   // Calculate key metrics for navigation
   const calculateNetWorth = () => {
@@ -222,22 +234,21 @@ export default function FinancialPlan({
     }
   ];
 
-  const generatePDFReport = async () => {
-    setIsGenerating(true);
-    // Implementation would generate PDF report
-    setTimeout(() => {
-      setIsGenerating(false);
-      // Trigger download
-    }, 2000);
+  const handleEditFinancialInfo = () => {
+    router.push('/questionnaire');
   };
 
-  const exportToExcel = async () => {
-    setIsGenerating(true);
-    // Implementation would export to Excel
-    setTimeout(() => {
-      setIsGenerating(false);
-      // Trigger download
-    }, 1500);
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push('/');
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   };
 
   return (
@@ -323,29 +334,60 @@ export default function FinancialPlan({
                 </p>
               </div>
               
-              {/* Controls */}
-              <div className="flex items-center space-x-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={exportToExcel}
-                  disabled={isGenerating}
-                  className="bg-gray-100/50 border-gray-300/50 text-gray-700 hover:bg-gray-200/50 hover:text-gray-900"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Excel
-                </Button>
-                
-                <Button
-                  size="sm"
-                  onClick={generatePDFReport}
-                  disabled={isGenerating}
-                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold shadow-lg hover:shadow-emerald-500/25 transition-all duration-300"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  {isGenerating ? 'Generating...' : 'PDF Report'}
-                </Button>
-              </div>
+              {/* Settings Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="bg-gray-100/50 border-gray-300/50 text-gray-700 hover:bg-gray-200/50 hover:text-gray-900"
+                  >
+                    <Settings className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-64">
+                  <DropdownMenuLabel className="flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    Profile Information
+                  </DropdownMenuLabel>
+                  <DropdownMenuItem disabled>
+                    <div className="flex flex-col space-y-1">
+                      <span className="text-sm font-medium">{user?.email}</span>
+                      <span className="text-xs text-gray-500">
+                        Member since {user?.created_at ? formatDate(user.created_at) : 'N/A'}
+                      </span>
+                    </div>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuSeparator />
+                  
+                  <DropdownMenuLabel>Plan Information</DropdownMenuLabel>
+                  <DropdownMenuItem disabled>
+                    <div className="flex flex-col space-y-1">
+                      <span className="text-sm">
+                        Confidence Score: {analysisResults?.confidence_score ? Math.round(analysisResults.confidence_score * 100) : 'N/A'}%
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        Last updated: {analysisResults?.created_at ? formatDate(analysisResults.created_at) : 'N/A'}
+                      </span>
+                    </div>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuSeparator />
+                  
+                  <DropdownMenuItem onClick={handleEditFinancialInfo}>
+                    <Edit3 className="w-4 h-4 mr-2" />
+                    Edit Financial Information
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuSeparator />
+                  
+                  <DropdownMenuItem onClick={handleSignOut} className="text-red-600 focus:text-red-600">
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>
@@ -355,58 +397,56 @@ export default function FinancialPlan({
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
           {/* Navigation Tabs */}
-          <div className="bg-slate-800/60 backdrop-blur-xl rounded-2xl shadow-xl border border-slate-700/50 p-3">
-            <div className="overflow-x-auto">
-              <TabsList className="flex gap-2 bg-transparent min-w-max p-1">
-                {planSections.map((section) => {
-                  const IconComponent = section.icon;
-                  const isActive = activeTab === section.id;
-                  return (
-                    <TabsTrigger
-                      key={section.id}
-                      value={section.id}
-                      className={`flex flex-col items-center gap-2 px-4 py-3 rounded-xl text-xs transition-all duration-300 min-w-[90px] whitespace-nowrap border ${
-                        isActive 
-                          ? 'bg-gradient-to-r from-emerald-500/20 to-blue-500/20 border-emerald-500/30 text-white shadow-lg' 
-                          : 'bg-slate-700/30 border-slate-600/30 text-slate-400 hover:bg-slate-600/40 hover:text-slate-300'
-                      }`}
-                    >
-                      <div className="relative">
-                        <IconComponent className={`w-5 h-5 ${isActive ? 'text-emerald-400' : 'text-slate-400'}`} />
-                        {section.status === 'needs-attention' && (
-                          <div className="absolute -top-1 -right-1">
-                            <div className="w-3 h-3 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center">
-                              <AlertTriangle className="w-1.5 h-1.5 text-white" />
-                            </div>
+          <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-200/50 p-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-10 gap-3">
+              {planSections.map((section) => {
+                const IconComponent = section.icon;
+                const isActive = activeTab === section.id;
+                return (
+                  <button
+                    key={section.id}
+                    onClick={() => setActiveTab(section.id)}
+                    className={`flex flex-col items-center gap-3 px-4 py-4 rounded-xl text-sm transition-all duration-300 min-h-[100px] border ${
+                      isActive 
+                        ? 'bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border-emerald-500/30 text-gray-800 shadow-lg' 
+                        : 'bg-gray-50/50 border-gray-200/30 text-gray-600 hover:bg-gray-100/70 hover:text-gray-800 hover:border-gray-300/50'
+                    }`}
+                  >
+                    <div className="relative">
+                      <IconComponent className={`w-6 h-6 ${isActive ? 'text-emerald-500' : 'text-gray-500'}`} />
+                      {section.status === 'needs-attention' && (
+                        <div className="absolute -top-1 -right-1">
+                          <div className="w-3 h-3 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center">
+                            <AlertTriangle className="w-1.5 h-1.5 text-white" />
                           </div>
-                        )}
-                        {section.status === 'complete' && (
-                          <div className="absolute -top-1 -right-1">
-                            <div className="w-3 h-3 bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full flex items-center justify-center">
-                              <CheckCircle className="w-1.5 h-1.5 text-white" />
-                            </div>
+                        </div>
+                      )}
+                      {section.status === 'complete' && (
+                        <div className="absolute -top-1 -right-1">
+                          <div className="w-3 h-3 bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full flex items-center justify-center">
+                            <CheckCircle className="w-1.5 h-1.5 text-white" />
                           </div>
-                        )}
-                        {section.status === 'in-progress' && (
-                          <div className="absolute -top-1 -right-1">
-                            <div className="w-3 h-3 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full animate-pulse"></div>
-                          </div>
-                        )}
-                        {section.status === 'needs-review' && (
-                          <div className="absolute -top-1 -right-1">
-                            <div className="w-3 h-3 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full"></div>
-                          </div>
-                        )}
-                      </div>
-                      <span className={`text-center leading-tight text-[11px] font-medium ${
-                        isActive ? 'text-white' : 'text-slate-300'
-                      }`}>
-                        {section.label}
-                      </span>
-                    </TabsTrigger>
-                  );
-                })}
-              </TabsList>
+                        </div>
+                      )}
+                      {section.status === 'in-progress' && (
+                        <div className="absolute -top-1 -right-1">
+                          <div className="w-3 h-3 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full animate-pulse"></div>
+                        </div>
+                      )}
+                      {section.status === 'needs-review' && (
+                        <div className="absolute -top-1 -right-1">
+                          <div className="w-3 h-3 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full"></div>
+                        </div>
+                      )}
+                    </div>
+                    <span className={`text-center leading-tight text-sm font-medium ${
+                      isActive ? 'text-gray-800' : 'text-gray-600'
+                    }`}>
+                      {section.label}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
