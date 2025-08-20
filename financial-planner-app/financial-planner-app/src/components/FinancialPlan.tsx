@@ -238,6 +238,10 @@ export default function FinancialPlan({
     router.push('/questionnaire');
   };
 
+  const handleUpgradePlan = () => {
+    router.push('/questionnaire/comprehensive');
+  };
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     router.push('/');
@@ -372,6 +376,13 @@ export default function FinancialPlan({
                     Edit Financial Information
                   </DropdownMenuItem>
                   
+                  {planType === 'quick' && (
+                    <DropdownMenuItem onClick={handleUpgradePlan}>
+                      <Crown className="w-4 h-4 mr-2" />
+                      Upgrade to Comprehensive Plan
+                    </DropdownMenuItem>
+                  )}
+                  
                   <DropdownMenuSeparator />
                   
                   <DropdownMenuItem onClick={handleSignOut} className="text-red-600 focus:text-red-600">
@@ -394,6 +405,7 @@ export default function FinancialPlan({
               {planSections.map((section) => {
                 const IconComponent = section.icon;
                 const isActive = activeTab === section.id;
+                const isAccessible = canAccessSection(section.id);
                 return (
                   <button
                     key={section.id}
@@ -401,38 +413,53 @@ export default function FinancialPlan({
                     className={`flex flex-col items-center gap-3 px-4 py-4 rounded-xl text-sm transition-all duration-300 min-h-[100px] border ${
                       isActive 
                         ? 'bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border-emerald-500/30 text-gray-800 shadow-lg' 
-                        : 'bg-gray-50/50 border-gray-200/30 text-gray-600 hover:bg-gray-100/70 hover:text-gray-800 hover:border-gray-300/50'
+                        : isAccessible
+                          ? 'bg-gray-50/50 border-gray-200/30 text-gray-600 hover:bg-gray-100/70 hover:text-gray-800 hover:border-gray-300/50'
+                          : 'bg-gray-50/30 border-gray-200/20 text-gray-400 cursor-pointer'
                     }`}
                   >
                     <div className="relative">
-                      <IconComponent className={`w-6 h-6 ${isActive ? 'text-emerald-500' : 'text-gray-500'}`} />
-                      {section.status === 'needs-attention' && (
+                      <IconComponent className={`w-6 h-6 ${
+                        isActive ? 'text-emerald-500' : isAccessible ? 'text-gray-500' : 'text-gray-400'
+                      }`} />
+                      
+                      {/* Lock icon for gated content */}
+                      {!isAccessible && (
+                        <div className="absolute -top-1 -right-1">
+                          <div className="w-3 h-3 bg-gradient-to-r from-gray-400 to-gray-500 rounded-full flex items-center justify-center">
+                            <Lock className="w-1.5 h-1.5 text-white" />
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Status indicators for accessible sections */}
+                      {isAccessible && section.status === 'needs-attention' && (
                         <div className="absolute -top-1 -right-1">
                           <div className="w-3 h-3 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center">
                             <AlertTriangle className="w-1.5 h-1.5 text-white" />
                           </div>
                         </div>
                       )}
-                      {section.status === 'complete' && (
+                      {isAccessible && section.status === 'complete' && (
                         <div className="absolute -top-1 -right-1">
                           <div className="w-3 h-3 bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full flex items-center justify-center">
                             <CheckCircle className="w-1.5 h-1.5 text-white" />
                           </div>
                         </div>
                       )}
-                      {section.status === 'in-progress' && (
+                      {isAccessible && section.status === 'in-progress' && (
                         <div className="absolute -top-1 -right-1">
                           <div className="w-3 h-3 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full animate-pulse"></div>
                         </div>
                       )}
-                      {section.status === 'needs-review' && (
+                      {isAccessible && section.status === 'needs-review' && (
                         <div className="absolute -top-1 -right-1">
                           <div className="w-3 h-3 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full"></div>
                         </div>
                       )}
                     </div>
                     <span className={`text-center leading-tight text-sm font-medium ${
-                      isActive ? 'text-gray-800' : 'text-gray-600'
+                      isActive ? 'text-gray-800' : isAccessible ? 'text-gray-600' : 'text-gray-400'
                     }`}>
                       {section.label}
                     </span>
@@ -445,14 +472,21 @@ export default function FinancialPlan({
           {/* Tab Content */}
           {planSections.map((section) => {
             const SectionComponent = section.component;
+            const isAccessible = canAccessSection(section.id);
             return (
               <TabsContent key={section.id} value={section.id} className="space-y-6">
                 <div className="bg-slate-800/40 backdrop-blur-xl rounded-2xl border border-slate-700/50 shadow-xl p-6">
-                  <SectionComponent 
-                    clientData={clientData}
-                    analysisResults={analysisResults}
-                    onUpdateData={onUpdateData}
-                  />
+                  <PlanUpgradeOverlay
+                    sectionId={section.id}
+                    planType={planType}
+                    isAccessible={isAccessible}
+                  >
+                    <SectionComponent 
+                      clientData={clientData}
+                      analysisResults={analysisResults}
+                      onUpdateData={onUpdateData}
+                    />
+                  </PlanUpgradeOverlay>
                 </div>
               </TabsContent>
             );
