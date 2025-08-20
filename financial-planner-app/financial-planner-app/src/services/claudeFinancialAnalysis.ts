@@ -127,19 +127,24 @@ export class ClaudeFinancialAnalysis {
         responseKeys: structuredResponse ? Object.keys(structuredResponse) : 'none'
       });
       
-      console.log(`🤖 [CLAUDE-${sessionId}] Step 6: Loading questionnaire response for saving...`);
+      console.log(`🤖 [CLAUDE-${sessionId}] Step 6: Starting database transaction for analysis save...`);
       
-      // Save the analysis results
-      const questionnaireResponse = await FinancialDataService.loadQuestionnaireResponse(userId);
-      console.log(`🤖 [CLAUDE-${sessionId}] Questionnaire response loaded:`, {
-        hasQuestionnaireResponse: !!questionnaireResponse,
-        questionnaireId: questionnaireResponse?.id || 'none'
-      });
-      
-      if (questionnaireResponse) {
+      // Save the analysis results with transaction safety
+      try {
+        const questionnaireResponse = await FinancialDataService.loadQuestionnaireResponse(userId);
+        console.log(`🤖 [CLAUDE-${sessionId}] Questionnaire response loaded:`, {
+          hasQuestionnaireResponse: !!questionnaireResponse,
+          questionnaireId: questionnaireResponse?.id || 'none'
+        });
+        
+        if (!questionnaireResponse) {
+          console.log(`🤖 [CLAUDE-${sessionId}] ERROR: No questionnaire response found - cannot save analysis`);
+          throw new Error('No questionnaire response found for user - analysis cannot be saved');
+        }
+
         console.log(`🤖 [CLAUDE-${sessionId}] Step 7: Saving analysis results...`);
         
-        await FinancialDataService.saveAnalysisResults(
+        const savedAnalysis = await FinancialDataService.saveAnalysisResults(
           userId,
           questionnaireResponse.id,
           claudeRequestData,
@@ -147,9 +152,33 @@ export class ClaudeFinancialAnalysis {
           request?.type || 'comprehensive'
         );
         
-        console.log(`🤖 [CLAUDE-${sessionId}] Analysis results saved successfully`);
-      } else {
-        console.log(`🤖 [CLAUDE-${sessionId}] WARNING: No questionnaire response found, skipping save`);
+        if (!savedAnalysis) {
+          throw new Error('Failed to save analysis results to database');
+        }
+        
+        console.log(`🤖 [CLAUDE-${sessionId}] Analysis results saved successfully with ID:`, savedAnalysis.id);
+
+        console.log(`🤖 [CLAUDE-${sessionId}] Step 7.5: Marking questionnaire as completed...`);
+        
+        try {
+          await FinancialDataService.markQuestionnaireCompleted(userId);
+          console.log(`🤖 [CLAUDE-${sessionId}] Questionnaire marked as completed successfully`);
+        } catch (markError) {
+          console.error(`🤖 [CLAUDE-${sessionId}] Warning: Failed to mark questionnaire as completed:`, markError);
+          // Don't fail the whole process if this step fails - analysis is already saved
+        }
+
+      } catch (dbError) {
+        console.error(`🤖 [CLAUDE-${sessionId}] CRITICAL DATABASE ERROR during analysis save:`, {
+          message: dbError instanceof Error ? dbError.message : 'Unknown database error',
+          stack: dbError instanceof Error ? dbError.stack : 'No stack trace',
+          userId,
+          sessionId,
+          step: 'database_operations'
+        });
+        
+        // Re-throw the error so the analysis generation fails properly
+        throw new Error(`Database operation failed: ${dbError instanceof Error ? dbError.message : 'Unknown error'}`);
       }
 
       console.log(`🤖 [CLAUDE-${sessionId}] Step 8: Logging API usage...`);

@@ -152,6 +152,45 @@ export class FinancialDataService {
   }
 
   /**
+   * Mark questionnaire as completed
+   */
+  static async markQuestionnaireCompleted(userId: string): Promise<void> {
+    const markId = Date.now().toString();
+    console.log(`✅ [MARK-${markId}] Marking questionnaire as completed for user:`, userId);
+
+    try {
+      const { error } = await supabase
+        .from('questionnaire_responses')
+        .update({ 
+          completion_status: 'completed',
+          overall_progress: 100,
+          updated_at: new Date().toISOString()
+        })
+        .eq('user_id', userId)
+        .eq('completion_status', 'in_progress');
+
+      if (error) {
+        console.error(`✅ [MARK-${markId}] Error marking questionnaire as completed:`, {
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint
+        });
+        throw error;
+      }
+
+      console.log(`✅ [MARK-${markId}] Successfully marked questionnaire as completed`);
+    } catch (markError) {
+      console.error(`✅ [MARK-${markId}] Unexpected error marking questionnaire as completed:`, {
+        message: markError instanceof Error ? markError.message : 'Unknown error',
+        stack: markError instanceof Error ? markError.stack : 'No stack trace',
+        errorObject: markError
+      });
+      throw markError;
+    }
+  }
+
+  /**
    * Save Claude API analysis results
    */
   static async saveAnalysisResults(
@@ -182,59 +221,149 @@ export class FinancialDataService {
       is_current: true
     };
 
-    // Mark previous analyses as not current
-    await supabase
-      .from('financial_analysis')
-      .update({ is_current: false })
-      .eq('user_id', userId);
+    const saveId = Date.now().toString();
+    console.log(`💾 [SAVE-${saveId}] Starting analysis save process:`, {
+      userId,
+      questionnaireId,
+      analysisType,
+      dataKeys: Object.keys(analysisData),
+      dataSize: JSON.stringify(analysisData).length
+    });
 
-    const { data, error } = await supabase
-      .from('financial_analysis')
-      .insert(analysisData)
-      .select()
-      .single();
+    try {
+      // Mark previous analyses as not current
+      console.log(`💾 [SAVE-${saveId}] Step 1: Marking previous analyses as not current...`);
+      const { error: updateError } = await supabase
+        .from('financial_analysis')
+        .update({ is_current: false })
+        .eq('user_id', userId);
 
-    if (error) {
-      console.error('Error saving analysis results:', error);
+      if (updateError) {
+        console.error(`💾 [SAVE-${saveId}] Warning: Error updating previous analyses:`, {
+          message: updateError.message,
+          code: updateError.code,
+          details: updateError.details,
+          hint: updateError.hint
+        });
+        // Continue with insert even if update fails
+      } else {
+        console.log(`💾 [SAVE-${saveId}] Successfully marked previous analyses as not current`);
+      }
+
+      console.log(`💾 [SAVE-${saveId}] Step 2: Inserting new analysis...`);
+      const { data, error } = await supabase
+        .from('financial_analysis')
+        .insert(analysisData)
+        .select()
+        .single();
+
+      if (error) {
+        console.error(`💾 [SAVE-${saveId}] CRITICAL ERROR saving analysis:`, {
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+          errorObject: error,
+          analysisDataPreview: {
+            userId: analysisData.user_id,
+            questionnaireId: analysisData.questionnaire_id,
+            analysisType: analysisData.analysis_type,
+            hasSummary: !!analysisData.analysis_summary,
+            hasRecommendations: !!analysisData.recommendations,
+            confidenceScore: analysisData.confidence_score
+          }
+        });
+        return null;
+      }
+
+      console.log(`💾 [SAVE-${saveId}] Analysis saved successfully:`, {
+        analysisId: data?.id,
+        userId: data?.user_id,
+        createdAt: data?.created_at,
+        dataKeys: data ? Object.keys(data) : 'none'
+      });
+
+      return data;
+
+    } catch (saveError) {
+      console.error(`💾 [SAVE-${saveId}] Unexpected error during save process:`, {
+        message: saveError instanceof Error ? saveError.message : 'Unknown error',
+        stack: saveError instanceof Error ? saveError.stack : 'No stack trace',
+        type: typeof saveError,
+        errorObject: saveError
+      });
       return null;
     }
-
-    return data;
   }
 
   /**
    * Get current financial analysis
    */
   static async getCurrentAnalysis(userId: string): Promise<FinancialAnalysis | null> {
-    console.log('📊 [DEBUG] getCurrentAnalysis called for userId:', userId);
+    const queryId = Date.now().toString();
+    console.log(`📊 [QUERY-${queryId}] getCurrentAnalysis called for userId:`, userId);
 
-    const { data, error } = await supabase
-      .from('financial_analysis')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('is_current', true)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single();
+    try {
+      // First try to get multiple rows to see if there are any
+      console.log(`📊 [QUERY-${queryId}] Step 1: Checking for any analyses...`);
+      const { data: allData, error: countError } = await supabase
+        .from('financial_analysis')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('is_current', true)
+        .order('created_at', { ascending: false });
 
-    console.log('📊 [DEBUG] getCurrentAnalysis result:', {
-      data,
-      error: error?.message,
-      errorCode: error?.code,
-      errorDetails: error?.details,
-      errorHint: error?.hint
-    });
+      console.log(`📊 [QUERY-${queryId}] All analyses query result:`, {
+        foundRows: allData ? allData.length : 0,
+        hasError: !!countError,
+        errorCode: countError?.code,
+        errorMessage: countError?.message
+      });
 
-    if (error && error.code !== 'PGRST116') {
-      console.error('📊 [DEBUG] Financial analysis error (not no-rows-found):', error);
+      if (countError) {
+        console.error(`📊 [QUERY-${queryId}] Error querying analyses:`, {
+          message: countError.message,
+          code: countError.code,
+          details: countError.details,
+          hint: countError.hint,
+          errorObject: countError
+        });
+        return null;
+      }
+
+      if (!allData || allData.length === 0) {
+        console.log(`📊 [QUERY-${queryId}] No current analyses found for user - this is normal for new users`);
+        return null;
+      }
+
+      // If we found multiple, log that as it might indicate an issue
+      if (allData.length > 1) {
+        console.warn(`📊 [QUERY-${queryId}] Warning: Found ${allData.length} current analyses - should only be 1:`, 
+          allData.map(a => ({ id: a.id, created_at: a.created_at }))
+        );
+      }
+
+      // Return the most recent one
+      const latestAnalysis = allData[0];
+      console.log(`📊 [QUERY-${queryId}] Returning latest analysis:`, {
+        analysisId: latestAnalysis.id,
+        createdAt: latestAnalysis.created_at,
+        analysisType: latestAnalysis.analysis_type,
+        hasRecommendations: !!latestAnalysis.recommendations,
+        hasSummary: !!latestAnalysis.analysis_summary
+      });
+
+      return latestAnalysis;
+
+    } catch (queryError) {
+      console.error(`📊 [QUERY-${queryId}] Unexpected error during analysis query:`, {
+        message: queryError instanceof Error ? queryError.message : 'Unknown error',
+        stack: queryError instanceof Error ? queryError.stack : 'No stack trace',
+        type: typeof queryError,
+        errorObject: queryError
+      });
       return null;
     }
-
-    if (error?.code === 'PGRST116') {
-      console.log('📊 [DEBUG] No financial analysis found for user - this is normal for new users');
-    }
-
-    return data;
   }
 
   /**
