@@ -28,9 +28,7 @@ function QuickPlanContent() {
           country: '',
           employmentStatus: data.employmentStatus,
           industry: '',
-          profession: '',
-          communicationMethod: '',
-          meetingFrequency: ''
+          profession: ''
         },
         income: {
           annualIncome: data.annualHouseholdIncome,
