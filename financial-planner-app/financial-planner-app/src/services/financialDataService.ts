@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { supabaseServer } from '@/lib/supabase-server';
 import { FormData } from '@/types/financial';
 
 export interface QuestionnaireResponse {
@@ -233,7 +234,7 @@ export class FinancialDataService {
     try {
       // Mark previous analyses as not current
       console.log(`💾 [SAVE-${saveId}] Step 1: Marking previous analyses as not current...`);
-      const { error: updateError } = await supabase
+      const { error: updateError } = await supabaseServer
         .from('financial_analysis')
         .update({ is_current: false })
         .eq('user_id', userId);
@@ -251,7 +252,7 @@ export class FinancialDataService {
       }
 
       console.log(`💾 [SAVE-${saveId}] Step 2: Inserting new analysis...`);
-      const { data, error } = await supabase
+      const { data, error } = await supabaseServer
         .from('financial_analysis')
         .insert(analysisData)
         .select()
@@ -379,7 +380,7 @@ export class FinancialDataService {
   ): Promise<void> {
     const costEstimate = this.estimateAPIcost(tokensUsed);
 
-    await supabase
+    await supabaseServer
       .from('claude_api_log')
       .insert({
         user_id: userId,
@@ -415,7 +416,7 @@ export class FinancialDataService {
       }
     };
 
-    await supabase
+    await supabaseServer
       .from('financial_snapshots')
       .insert(snapshot);
   }
