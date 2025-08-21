@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
       'content-type': request.headers.get('content-type'),
       'user-agent': request.headers.get('user-agent'),
       'cookie': request.headers.get('cookie') ? 'Present (length: ' + request.headers.get('cookie')!.length + ')' : 'Missing',
+      'authorization': request.headers.get('authorization') ? 'Present (Bearer token)' : 'Missing',
       'origin': request.headers.get('origin'),
       'referer': request.headers.get('referer'),
       'x-forwarded-for': request.headers.get('x-forwarded-for')
@@ -53,16 +54,57 @@ export async function POST(request: NextRequest) {
       refreshTokenLength: session?.refresh_token?.length
     });
     
+    let userId: string;
+    let authMethod = 'cookie';
+
+    // If cookie-based auth failed, try Authorization header
     if (authError || !session?.user) {
-      console.log(`💬 [CHAT-API-${requestId}] Authentication failed:`, authError?.message || 'No session');
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+      console.log(`💬 [CHAT-API-${requestId}] Cookie auth failed, trying Authorization header...`);
+      
+      const authHeader = request.headers.get('authorization');
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        const token = authHeader.substring(7);
+        console.log(`💬 [CHAT-API-${requestId}] Found Bearer token, verifying...`);
+        
+        try {
+          // Verify the token using supabase-server client
+          const { supabaseServer } = await import('@/lib/supabase-server');
+          if (supabaseServer) {
+            const { data: { user }, error: tokenError } = await supabaseServer.auth.getUser(token);
+            
+            if (user && !tokenError) {
+              console.log(`💬 [CHAT-API-${requestId}] Authorization header auth successful:`, user.id);
+              userId = user.id;
+              authMethod = 'bearer';
+            } else {
+              console.log(`💬 [CHAT-API-${requestId}] Bearer token validation failed:`, tokenError?.message);
+              return NextResponse.json(
+                { error: 'Authentication required' },
+                { status: 401 }
+              );
+            }
+          } else {
+            throw new Error('Supabase server client not available');
+          }
+        } catch (tokenValidationError) {
+          console.error(`💬 [CHAT-API-${requestId}] Token validation error:`, tokenValidationError);
+          return NextResponse.json(
+            { error: 'Authentication required' },
+            { status: 401 }
+          );
+        }
+      } else {
+        console.log(`💬 [CHAT-API-${requestId}] No valid authentication method found`);
+        return NextResponse.json(
+          { error: 'Authentication required' },
+          { status: 401 }
+        );
+      }
+    } else {
+      userId = session.user.id;
     }
 
-    const userId = session.user.id;
-    console.log(`💬 [CHAT-API-${requestId}] User authenticated:`, userId);
+    console.log(`💬 [CHAT-API-${requestId}] User authenticated via ${authMethod}:`, userId);
 
     console.log(`💬 [CHAT-API-${requestId}] Parsing request body...`);
     const requestBody = await request.json();

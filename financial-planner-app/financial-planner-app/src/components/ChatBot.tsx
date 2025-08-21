@@ -86,23 +86,28 @@ export default function ChatBot({ isOpen, onClose, planType }: ChatBotProps) {
           supabaseCookieNames: supabaseCookies.map(c => c.split('=')[0])
         });
 
-        // Session is ready if we have a user, session, AND cookies
+        // Session is ready if we have a user and session
+        // We'll use Authorization header if cookies aren't available
         const hasUser = !!user && !!session;
         const hasCookies = supabaseCookies.length > 0;
-        const ready = hasUser && hasCookies;
+        const hasAccessToken = !!session?.access_token;
+        const ready = hasUser && (hasCookies || hasAccessToken);
         
         console.log('🤖 [CHATBOT-SESSION] Session readiness check:', {
           hasUser,
           hasCookies,
+          hasAccessToken,
           ready,
-          currentReadyState: isSessionReady
+          currentReadyState: isSessionReady,
+          authMethod: hasCookies ? 'cookies' : hasAccessToken ? 'bearer-token' : 'none'
         });
 
         setIsSessionReady(ready);
 
         // If not ready but we have a user, wait a bit and check again
-        if (hasUser && !hasCookies) {
-          console.log('🤖 [CHATBOT-SESSION] User exists but no cookies yet, rechecking in 1 second...');
+        // Only retry if we don't have either cookies OR access token
+        if (hasUser && !hasCookies && !hasAccessToken) {
+          console.log('🤖 [CHATBOT-SESSION] User exists but no auth method available yet, rechecking in 1 second...');
           setTimeout(checkSessionReadiness, 1000);
         }
       };
@@ -204,19 +209,29 @@ export default function ChatBot({ isOpen, onClose, planType }: ChatBotProps) {
         }
       };
 
+      // Get the access token to send in Authorization header as fallback
+      const accessToken = session?.access_token;
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      
+      // Add Authorization header if we have an access token
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+
       console.log('🤖 [CHATBOT-CLIENT] Sending request:', {
         url: '/api/chat',
         method: 'POST',
         hasCredentials: true,
+        hasAuthHeader: !!accessToken,
         payloadSize: JSON.stringify(requestPayload).length,
         messageLength: userMessage.content.length
       });
 
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: headers,
         credentials: 'include',
         body: JSON.stringify(requestPayload),
       });

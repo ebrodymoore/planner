@@ -28,6 +28,39 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   }
 })
 
+// Migrate existing localStorage sessions to cookies
+const migrateSessionToCookies = async () => {
+  if (typeof window === 'undefined') return;
+  
+  // Check if we have a localStorage session but no cookies
+  const localStorageSession = localStorage.getItem('supabase.auth.token');
+  const hasCookieSession = document.cookie.includes('supabase-auth-token');
+  
+  if (localStorageSession && !hasCookieSession) {
+    console.log('🔐 [DEBUG] Migrating localStorage session to cookies...');
+    
+    try {
+      // Get current session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session) {
+        // Force a session refresh which will now use cookie storage
+        const { data: { session: refreshedSession }, error } = await supabase.auth.refreshSession();
+        
+        if (refreshedSession && !error) {
+          console.log('🔐 [DEBUG] Session successfully migrated to cookies');
+          // Clear localStorage to prevent conflicts
+          localStorage.removeItem('supabase.auth.token');
+        } else {
+          console.error('🔐 [DEBUG] Failed to migrate session:', error);
+        }
+      }
+    } catch (error) {
+      console.error('🔐 [DEBUG] Session migration error:', error);
+    }
+  }
+};
+
 // Add auth state debugging
 supabase.auth.onAuthStateChange((event, session) => {
   console.log('🔐 [DEBUG] Auth state change:', {
@@ -35,7 +68,17 @@ supabase.auth.onAuthStateChange((event, session) => {
     user: session?.user?.id,
     session: session ? 'present' : 'null'
   });
+  
+  // Trigger migration on SIGNED_IN events
+  if (event === 'SIGNED_IN') {
+    setTimeout(migrateSessionToCookies, 1000);
+  }
 });
+
+// Run migration check on load
+if (typeof window !== 'undefined') {
+  setTimeout(migrateSessionToCookies, 2000);
+}
 
 export type Database = {
   public: {
