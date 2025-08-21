@@ -74,33 +74,93 @@ export default function PersonalInfoForm({ data, onUpdate, onFieldUpdate }: Pers
 
         {/* State */}
         <div className="space-y-2">
-          <Label htmlFor="state">State of Residence</Label>
-          <Input
-            id="state"
-            type="text"
-            placeholder="e.g., California, NY"
+          <Label htmlFor="state">State of Residence *</Label>
+          <Select
             value={personalData.state || ''}
-            onChange={(e) => handleFieldChange('state', e.target.value)}
-            className="w-full"
-          />
+            onValueChange={(value) => handleFieldChange('state', value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select your state" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="AL">Alabama</SelectItem>
+              <SelectItem value="AK">Alaska</SelectItem>
+              <SelectItem value="AZ">Arizona</SelectItem>
+              <SelectItem value="AR">Arkansas</SelectItem>
+              <SelectItem value="CA">California</SelectItem>
+              <SelectItem value="CO">Colorado</SelectItem>
+              <SelectItem value="CT">Connecticut</SelectItem>
+              <SelectItem value="DE">Delaware</SelectItem>
+              <SelectItem value="DC">District of Columbia</SelectItem>
+              <SelectItem value="FL">Florida</SelectItem>
+              <SelectItem value="GA">Georgia</SelectItem>
+              <SelectItem value="HI">Hawaii</SelectItem>
+              <SelectItem value="ID">Idaho</SelectItem>
+              <SelectItem value="IL">Illinois</SelectItem>
+              <SelectItem value="IN">Indiana</SelectItem>
+              <SelectItem value="IA">Iowa</SelectItem>
+              <SelectItem value="KS">Kansas</SelectItem>
+              <SelectItem value="KY">Kentucky</SelectItem>
+              <SelectItem value="LA">Louisiana</SelectItem>
+              <SelectItem value="ME">Maine</SelectItem>
+              <SelectItem value="MD">Maryland</SelectItem>
+              <SelectItem value="MA">Massachusetts</SelectItem>
+              <SelectItem value="MI">Michigan</SelectItem>
+              <SelectItem value="MN">Minnesota</SelectItem>
+              <SelectItem value="MS">Mississippi</SelectItem>
+              <SelectItem value="MO">Missouri</SelectItem>
+              <SelectItem value="MT">Montana</SelectItem>
+              <SelectItem value="NE">Nebraska</SelectItem>
+              <SelectItem value="NV">Nevada</SelectItem>
+              <SelectItem value="NH">New Hampshire</SelectItem>
+              <SelectItem value="NJ">New Jersey</SelectItem>
+              <SelectItem value="NM">New Mexico</SelectItem>
+              <SelectItem value="NY">New York</SelectItem>
+              <SelectItem value="NC">North Carolina</SelectItem>
+              <SelectItem value="ND">North Dakota</SelectItem>
+              <SelectItem value="OH">Ohio</SelectItem>
+              <SelectItem value="OK">Oklahoma</SelectItem>
+              <SelectItem value="OR">Oregon</SelectItem>
+              <SelectItem value="PA">Pennsylvania</SelectItem>
+              <SelectItem value="RI">Rhode Island</SelectItem>
+              <SelectItem value="SC">South Carolina</SelectItem>
+              <SelectItem value="SD">South Dakota</SelectItem>
+              <SelectItem value="TN">Tennessee</SelectItem>
+              <SelectItem value="TX">Texas</SelectItem>
+              <SelectItem value="UT">Utah</SelectItem>
+              <SelectItem value="VT">Vermont</SelectItem>
+              <SelectItem value="VA">Virginia</SelectItem>
+              <SelectItem value="WA">Washington</SelectItem>
+              <SelectItem value="WV">West Virginia</SelectItem>
+              <SelectItem value="WI">Wisconsin</SelectItem>
+              <SelectItem value="WY">Wyoming</SelectItem>
+              <SelectItem value="PR">Puerto Rico</SelectItem>
+              <SelectItem value="VI">US Virgin Islands</SelectItem>
+              <SelectItem value="GU">Guam</SelectItem>
+              <SelectItem value="MP">Northern Mariana Islands</SelectItem>
+              <SelectItem value="AS">American Samoa</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Country */}
         <div className="space-y-2">
           <Label htmlFor="country">Country</Label>
           <Select
-            value={personalData.country || ''}
+            value={personalData.country || 'United States'}
             onValueChange={(value) => handleFieldChange('country', value)}
+            disabled
           >
-            <SelectTrigger>
-              <SelectValue placeholder="Select country" />
+            <SelectTrigger className="bg-gray-50">
+              <SelectValue placeholder="United States" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="United States">United States</SelectItem>
-              <SelectItem value="Canada">Canada</SelectItem>
-              <SelectItem value="Other">Other</SelectItem>
             </SelectContent>
           </Select>
+          <p className="text-xs text-gray-500">
+            Currently only available for US residents
+          </p>
         </div>
 
         {/* Employment Status */}
@@ -194,63 +254,17 @@ export default function PersonalInfoForm({ data, onUpdate, onFieldUpdate }: Pers
         </CardContent>
       </Card>
 
-      {/* Contact Preferences */}
-      <Card>
-        <CardContent className="pt-6 space-y-4">
-          <h3 className="text-lg font-semibold">Contact Preferences</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Communication Method */}
-            <div className="space-y-2">
-              <Label htmlFor="communicationMethod">Preferred Communication Method</Label>
-              <Select
-                value={personalData.communicationMethod || ''}
-                onValueChange={(value) => handleFieldChange('communicationMethod', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="How would you like to be contacted?" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="email">Email</SelectItem>
-                  <SelectItem value="phone">Phone</SelectItem>
-                  <SelectItem value="text">Text</SelectItem>
-                  <SelectItem value="video_call">Video Call</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
 
-            {/* Meeting Frequency */}
-            <div className="space-y-2">
-              <Label htmlFor="meetingFrequency">Meeting Frequency Preference</Label>
-              <Select
-                value={personalData.meetingFrequency || ''}
-                onValueChange={(value) => handleFieldChange('meetingFrequency', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="How often would you like to meet?" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="monthly">Monthly</SelectItem>
-                  <SelectItem value="quarterly">Quarterly</SelectItem>
-                  <SelectItem value="semi_annually">Semi-annually</SelectItem>
-                  <SelectItem value="annually">Annually</SelectItem>
-                  <SelectItem value="as_needed">As needed</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Tips Section */}
+      {/* Why We Ask For This Section */}
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="pt-6">
-          <h4 className="font-semibold text-blue-900 mb-2">💡 Why We Ask This</h4>
+          <h4 className="font-semibold text-blue-900 mb-2">💡 Why We Ask For This</h4>
           <ul className="text-sm text-blue-800 space-y-1">
             <li>• <strong>Age & dependents:</strong> Help determine insurance needs and retirement timeline</li>
             <li>• <strong>Marital status:</strong> Affects tax strategies and estate planning</li>
             <li>• <strong>Employment:</strong> Influences income stability and benefit planning</li>
-            <li>• <strong>Location:</strong> Important for state tax considerations and cost of living</li>
+            <li>• <strong>State of residence:</strong> Important for state tax considerations and cost of living adjustments</li>
+            <li>• <strong>Industry & profession:</strong> Helps assess income stability and career-specific benefits</li>
           </ul>
         </CardContent>
       </Card>

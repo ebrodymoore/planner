@@ -420,12 +420,13 @@ export default function RiskAssessmentForm({ data, onUpdate, onFieldUpdate }: Ri
       {/* Tips Section */}
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="pt-6">
-          <h4 className="font-semibold text-blue-900 mb-2">💡 Risk Management Tips</h4>
+          <h4 className="font-semibold text-blue-900 mb-2">💡 Why We Ask For This</h4>
           <ul className="text-sm text-blue-800 space-y-1">
-            <li>• <strong>Know yourself:</strong> Understanding your risk tolerance prevents emotional decisions</li>
-            <li>• <strong>Diversification:</strong> Don't put all your eggs in one basket</li>
-            <li>• <strong>Time horizon matters:</strong> Longer timelines allow for higher risk tolerance</li>
-            <li>• <strong>Regular review:</strong> Risk tolerance can change with life circumstances</li>
+            <li>• <strong>Investment allocation:</strong> Your risk tolerance determines the mix of stocks, bonds, and other investments</li>
+            <li>• <strong>Timeline planning:</strong> Longer investment horizons allow for more aggressive strategies</li>
+            <li>• <strong>Stress prevention:</strong> Matching investments to your comfort level prevents emotional selling</li>
+            <li>• <strong>Goal alignment:</strong> Risk tolerance affects which financial goals are realistic and achievable</li>
+            <li>• <strong>Portfolio design:</strong> Used to create an investment strategy you can stick with long-term</li>
           </ul>
         </CardContent>
       </Card>

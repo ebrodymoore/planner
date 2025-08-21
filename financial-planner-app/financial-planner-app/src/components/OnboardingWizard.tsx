@@ -53,7 +53,7 @@ export default function OnboardingWizard({
       title: 'Income Assessment',
       key: 'income',
       icon: '💰',
-      description: 'All income sources and expectations',
+      description: 'All income sources and expectations (before taxes and deductions)',
       completed: !!formData.income?.annualIncome
     },
     {
@@ -324,23 +324,6 @@ export default function OnboardingWizard({
         </CardContent>
       </Card>
 
-      {/* Action Buttons */}
-      <div className="flex justify-center space-x-2">
-        <Button
-          variant="outline"
-          onClick={() => setShowPreview(!showPreview)}
-        >
-          <Eye className="w-4 h-4 mr-2" />
-          {showPreview ? 'Hide' : 'Preview'} Data
-        </Button>
-        <Button
-          variant="outline"
-          onClick={exportData}
-        >
-          <Download className="w-4 h-4 mr-2" />
-          Export Data
-        </Button>
-      </div>
 
       {/* Section Navigation */}
       <Card>
@@ -427,6 +410,24 @@ export default function OnboardingWizard({
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         )}
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex justify-center space-x-2">
+        <Button
+          variant="outline"
+          onClick={() => setShowPreview(!showPreview)}
+        >
+          <Eye className="w-4 h-4 mr-2" />
+          {showPreview ? 'Hide' : 'Preview'} Data
+        </Button>
+        <Button
+          variant="outline"
+          onClick={exportData}
+        >
+          <Download className="w-4 h-4 mr-2" />
+          Export Data
+        </Button>
       </div>
 
       {/* Data Preview */}

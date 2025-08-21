@@ -9,8 +9,6 @@ export interface PersonalInfo {
   employmentStatus: string;
   industry: string;
   profession: string;
-  communicationMethod: string;
-  meetingFrequency: string;
 }
 
 export interface Income {
@@ -81,6 +79,15 @@ export interface StudentLoan {
   type: string;
 }
 
+export interface OtherLoan {
+  balance: number;
+  rate: number;
+  term: string;
+  lender: string;
+  type: string;
+  description: string;
+}
+
 export interface Liabilities {
   mortgageBalance: number;
   mortgageRate: number;
@@ -88,6 +95,7 @@ export interface Liabilities {
   autoLoans: AutoLoan[];
   creditCards: CreditCard[];
   studentLoans: StudentLoan[];
+  otherLoans?: OtherLoan[];
 }
 
 export interface Goals {

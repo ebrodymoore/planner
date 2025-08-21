@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Trash2, Plus } from 'lucide-react';
-import { Liabilities, AutoLoan, CreditCard, StudentLoan } from '@/types/financial';
+import { Liabilities, AutoLoan, CreditCard, StudentLoan, OtherLoan } from '@/types/financial';
 
 interface LiabilitiesFormProps {
   data?: Liabilities;
@@ -96,12 +96,33 @@ export default function LiabilitiesForm({ data, onUpdate, onFieldUpdate }: Liabi
     handleFieldChange('studentLoans', updatedLoans);
   };
 
+  // Other Loan functions
+  const addOtherLoan = () => {
+    const currentLoans = liabilitiesData.otherLoans || [];
+    const newLoan: OtherLoan = { balance: 0, rate: 0, term: '', lender: '', type: '', description: '' };
+    handleFieldChange('otherLoans', [...currentLoans, newLoan]);
+  };
+
+  const updateOtherLoan = (index: number, field: keyof OtherLoan, value: any) => {
+    const currentLoans = liabilitiesData.otherLoans || [];
+    const updatedLoans = [...currentLoans];
+    updatedLoans[index] = { ...updatedLoans[index], [field]: value };
+    handleFieldChange('otherLoans', updatedLoans);
+  };
+
+  const removeOtherLoan = (index: number) => {
+    const currentLoans = liabilitiesData.otherLoans || [];
+    const updatedLoans = currentLoans.filter((_, i) => i !== index);
+    handleFieldChange('otherLoans', updatedLoans);
+  };
+
   const getTotalDebt = () => {
     const mortgage = liabilitiesData.mortgageBalance || 0;
     const autoTotal = (liabilitiesData.autoLoans || []).reduce((sum, loan) => sum + (loan.balance || 0), 0);
     const creditTotal = (liabilitiesData.creditCards || []).reduce((sum, card) => sum + (card.balance || 0), 0);
     const studentTotal = (liabilitiesData.studentLoans || []).reduce((sum, loan) => sum + (loan.balance || 0), 0);
-    return mortgage + autoTotal + creditTotal + studentTotal;
+    const otherTotal = (liabilitiesData.otherLoans || []).reduce((sum, loan) => sum + (loan.balance || 0), 0);
+    return mortgage + autoTotal + creditTotal + studentTotal + otherTotal;
   };
 
   return (
@@ -439,15 +460,169 @@ export default function LiabilitiesForm({ data, onUpdate, onFieldUpdate }: Liabi
         </CardContent>
       </Card>
 
+      {/* Other Loans */}
+      <Card>
+        <CardContent className="pt-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">🏦 Other Loans</h3>
+            <Button onClick={addOtherLoan} size="sm" className="flex items-center gap-2">
+              <Plus className="w-4 h-4" />
+              Add Other Loan
+            </Button>
+          </div>
+          {(liabilitiesData.otherLoans || []).map((loan, index) => (
+            <div key={index} className="bg-gray-50 p-4 rounded-lg space-y-3">
+              <div className="flex justify-between items-center">
+                <Badge variant="outline">Other Loan {index + 1}</Badge>
+                <Button
+                  onClick={() => removeOtherLoan(index)}
+                  size="sm"
+                  variant="destructive"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="space-y-2">
+                  <Label className="text-sm">Balance</Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                    <Input
+                      type="number"
+                      placeholder="0"
+                      value={loan.balance || ''}
+                      onChange={(e) => updateOtherLoan(index, 'balance', parseFloat(e.target.value) || 0)}
+                      className="pl-8 text-sm"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm">Interest Rate (%)</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    placeholder="0.00"
+                    value={loan.rate || ''}
+                    onChange={(e) => updateOtherLoan(index, 'rate', parseFloat(e.target.value) || 0)}
+                    className="text-sm"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm">Loan Term</Label>
+                  <Input
+                    type="text"
+                    placeholder="e.g., 5 years"
+                    value={loan.term || ''}
+                    onChange={(e) => updateOtherLoan(index, 'term', e.target.value)}
+                    className="text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="space-y-2">
+                  <Label className="text-sm">Lender</Label>
+                  <Input
+                    type="text"
+                    placeholder="Bank/Lender name"
+                    value={loan.lender || ''}
+                    onChange={(e) => updateOtherLoan(index, 'lender', e.target.value)}
+                    className="text-sm"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm">Loan Type</Label>
+                  <Select
+                    value={loan.type || ''}
+                    onValueChange={(value) => updateOtherLoan(index, 'type', value)}
+                  >
+                    <SelectTrigger className="text-sm">
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="personal">Personal Loan</SelectItem>
+                      <SelectItem value="business">Business Loan</SelectItem>
+                      <SelectItem value="home_equity">Home Equity</SelectItem>
+                      <SelectItem value="heloc">HELOC</SelectItem>
+                      <SelectItem value="family">Family Loan</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm">Description</Label>
+                  <Input
+                    type="text"
+                    placeholder="Brief description"
+                    value={loan.description || ''}
+                    onChange={(e) => updateOtherLoan(index, 'description', e.target.value)}
+                    className="text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {(!liabilitiesData.otherLoans || liabilitiesData.otherLoans.length === 0) && (
+            <p className="text-gray-500 text-center py-4">No other loans added. Click "Add Other Loan" to get started.</p>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Debt Summary */}
+      <Card className="bg-red-50 border-red-200">
+        <CardContent className="pt-6">
+          <h4 className="font-semibold text-red-900 mb-3">📊 Total Debt Summary</h4>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm mb-4">
+            <div>
+              <p className="text-red-700 font-medium">Mortgage</p>
+              <p className="text-red-900 font-bold">{formatCurrency(liabilitiesData.mortgageBalance || 0)}</p>
+            </div>
+            <div>
+              <p className="text-red-700 font-medium">Auto Loans</p>
+              <p className="text-red-900 font-bold">
+                {formatCurrency((liabilitiesData.autoLoans || []).reduce((sum, loan) => sum + (loan.balance || 0), 0))}
+              </p>
+            </div>
+            <div>
+              <p className="text-red-700 font-medium">Credit Cards</p>
+              <p className="text-red-900 font-bold">
+                {formatCurrency((liabilitiesData.creditCards || []).reduce((sum, card) => sum + (card.balance || 0), 0))}
+              </p>
+            </div>
+            <div>
+              <p className="text-red-700 font-medium">Student Loans</p>
+              <p className="text-red-900 font-bold">
+                {formatCurrency((liabilitiesData.studentLoans || []).reduce((sum, loan) => sum + (loan.balance || 0), 0))}
+              </p>
+            </div>
+            <div>
+              <p className="text-red-700 font-medium">Other Loans</p>
+              <p className="text-red-900 font-bold">
+                {formatCurrency((liabilitiesData.otherLoans || []).reduce((sum, loan) => sum + (loan.balance || 0), 0))}
+              </p>
+            </div>
+          </div>
+          <div className="border-t pt-3">
+            <div className="flex justify-between items-center">
+              <span className="text-red-700 font-medium">Total Debt</span>
+              <span className="text-red-900 font-bold text-xl">{formatCurrency(getTotalDebt())}</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Tips Section */}
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="pt-6">
-          <h4 className="font-semibold text-blue-900 mb-2">💡 Debt Management Tips</h4>
+          <h4 className="font-semibold text-blue-900 mb-2">💡 Why We Ask For This</h4>
           <ul className="text-sm text-blue-800 space-y-1">
-            <li>• <strong>High-interest first:</strong> Pay off credit cards before other debt</li>
-            <li>• <strong>Credit utilization:</strong> Keep credit card balances under 30% of limits</li>
-            <li>• <strong>Student loans:</strong> Consider income-driven repayment plans</li>
-            <li>• <strong>Mortgage:</strong> Extra principal payments can save thousands in interest</li>
+            <li>• <strong>Debt overview:</strong> Understanding all debts helps prioritize payment strategies</li>
+            <li>• <strong>Interest rates:</strong> Used to calculate optimal debt payoff order and savings potential</li>
+            <li>• <strong>Cash flow planning:</strong> Monthly payments affect available income for savings and goals</li>
+            <li>• <strong>Net worth calculation:</strong> Liabilities are subtracted from assets for accurate financial position</li>
+            <li>• <strong>Credit assessment:</strong> Debt levels help determine borrowing capacity for future goals</li>
           </ul>
         </CardContent>
       </Card>

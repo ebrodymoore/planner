@@ -1,11 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Plus, Trash2 } from 'lucide-react';
 import { Income } from '@/types/financial';
 
 interface IncomeFormProps {
@@ -16,6 +18,7 @@ interface IncomeFormProps {
 
 export default function IncomeForm({ data, onUpdate, onFieldUpdate }: IncomeFormProps) {
   const incomeData = data || {} as Income;
+  const [additionalIncomes, setAdditionalIncomes] = useState<Array<{amount: number, description: string}>>([]);
 
   const handleFieldChange = (field: keyof Income, value: string | number) => {
     const updatedData = {
@@ -53,7 +56,7 @@ export default function IncomeForm({ data, onUpdate, onFieldUpdate }: IncomeForm
                 <Input
                   id="annualIncome"
                   type="number"
-                  placeholder="85000"
+                  placeholder="0"
                   value={incomeData.annualIncome || ''}
                   onChange={(e) => handleFieldChange('annualIncome', e.target.value)}
                   className="pl-8"
@@ -220,6 +223,77 @@ export default function IncomeForm({ data, onUpdate, onFieldUpdate }: IncomeForm
 
           </div>
 
+          {/* Additional Other Income Sources */}
+          {additionalIncomes.length > 0 && (
+            <div className="space-y-4">
+              <h4 className="font-medium text-gray-900">Additional Other Income Sources</h4>
+              {additionalIncomes.map((income, index) => (
+                <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 border rounded-lg">
+                  <div className="space-y-2">
+                    <Label>Amount</Label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                      <Input
+                        type="number"
+                        placeholder="0"
+                        value={income.amount || ''}
+                        onChange={(e) => {
+                          const newIncomes = [...additionalIncomes];
+                          newIncomes[index].amount = parseFloat(e.target.value) || 0;
+                          setAdditionalIncomes(newIncomes);
+                        }}
+                        className="pl-8"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Description</Label>
+                    <Input
+                      type="text"
+                      placeholder="Describe this income source"
+                      value={income.description}
+                      onChange={(e) => {
+                        const newIncomes = [...additionalIncomes];
+                        newIncomes[index].description = e.target.value;
+                        setAdditionalIncomes(newIncomes);
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-end">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const newIncomes = additionalIncomes.filter((_, i) => i !== index);
+                        setAdditionalIncomes(newIncomes);
+                      }}
+                      className="text-red-600 hover:text-red-700"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Add Additional Income Button */}
+          <div className="flex justify-start">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setAdditionalIncomes([...additionalIncomes, { amount: 0, description: '' }]);
+              }}
+              className="text-blue-600 hover:text-blue-700"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Another Income Source
+            </Button>
+
+          </div>
+
           {/* Major Income Changes */}
           <div className="space-y-2">
             <Label htmlFor="majorIncomeChanges">Major Income Changes Expected</Label>
@@ -251,7 +325,13 @@ export default function IncomeForm({ data, onUpdate, onFieldUpdate }: IncomeForm
             <div>
               <p className="text-green-700 font-medium">Other Income</p>
               <p className="text-green-900 font-bold">
-                {formatCurrency((incomeData.rentalIncome || 0) + (incomeData.businessIncome || 0) + (incomeData.investmentIncome || 0) + (incomeData.otherIncome || 0))}
+                {formatCurrency(
+                  (incomeData.rentalIncome || 0) + 
+                  (incomeData.businessIncome || 0) + 
+                  (incomeData.investmentIncome || 0) + 
+                  (incomeData.otherIncome || 0) +
+                  additionalIncomes.reduce((sum, income) => sum + (income.amount || 0), 0)
+                )}
               </p>
             </div>
             <div>
@@ -263,7 +343,8 @@ export default function IncomeForm({ data, onUpdate, onFieldUpdate }: IncomeForm
                   (incomeData.rentalIncome || 0) + 
                   (incomeData.businessIncome || 0) + 
                   (incomeData.investmentIncome || 0) + 
-                  (incomeData.otherIncome || 0)
+                  (incomeData.otherIncome || 0) +
+                  additionalIncomes.reduce((sum, income) => sum + (income.amount || 0), 0)
                 )}
               </p>
             </div>
@@ -271,15 +352,16 @@ export default function IncomeForm({ data, onUpdate, onFieldUpdate }: IncomeForm
         </CardContent>
       </Card>
 
-      {/* Tips Section */}
+      {/* Why We Ask For This Section */}
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="pt-6">
-          <h4 className="font-semibold text-blue-900 mb-2">💡 Income Planning Tips</h4>
+          <h4 className="font-semibold text-blue-900 mb-2">💡 Why We Ask For This</h4>
           <ul className="text-sm text-blue-800 space-y-1">
-            <li>• <strong>Gross income:</strong> Include salary before taxes and deductions</li>
-            <li>• <strong>Variable income:</strong> Use conservative estimates for commission/bonus</li>
-            <li>• <strong>Multiple income streams:</strong> Diversification reduces financial risk</li>
-            <li>• <strong>Growth planning:</strong> Consider career advancement and salary increases</li>
+            <li>• <strong>Income sources:</strong> Understanding all income helps create accurate financial projections</li>
+            <li>• <strong>Income stability:</strong> Affects emergency fund recommendations and investment risk tolerance</li>
+            <li>• <strong>Growth expectations:</strong> Used to model future financial capacity and retirement planning</li>
+            <li>• <strong>Household income:</strong> Determines tax brackets and eligibility for financial strategies</li>
+            <li>• <strong>Before taxes:</strong> Allows accurate calculation of tax liabilities and net income</li>
           </ul>
         </CardContent>
       </Card>
