@@ -2,6 +2,12 @@ import { supabase } from '@/lib/supabase';
 import { supabaseServer } from '@/lib/supabase-server';
 import { FormData } from '@/types/financial';
 
+// Helper to get the appropriate client
+const getSupabaseClient = () => {
+  // Use server client if available (server-side), otherwise fall back to regular client
+  return supabaseServer || supabase;
+};
+
 export interface QuestionnaireResponse {
   id: string;
   user_id: string;
@@ -234,7 +240,7 @@ export class FinancialDataService {
     try {
       // Mark previous analyses as not current
       console.log(`💾 [SAVE-${saveId}] Step 1: Marking previous analyses as not current...`);
-      const { error: updateError } = await supabaseServer
+      const { error: updateError } = await getSupabaseClient()
         .from('financial_analysis')
         .update({ is_current: false })
         .eq('user_id', userId);
@@ -252,7 +258,7 @@ export class FinancialDataService {
       }
 
       console.log(`💾 [SAVE-${saveId}] Step 2: Inserting new analysis...`);
-      const { data, error } = await supabaseServer
+      const { data, error } = await getSupabaseClient()
         .from('financial_analysis')
         .insert(analysisData)
         .select()
@@ -380,7 +386,7 @@ export class FinancialDataService {
   ): Promise<void> {
     const costEstimate = this.estimateAPIcost(tokensUsed);
 
-    await supabaseServer
+    await getSupabaseClient()
       .from('claude_api_log')
       .insert({
         user_id: userId,
@@ -416,7 +422,7 @@ export class FinancialDataService {
       }
     };
 
-    await supabaseServer
+    await getSupabaseClient()
       .from('financial_snapshots')
       .insert(snapshot);
   }
