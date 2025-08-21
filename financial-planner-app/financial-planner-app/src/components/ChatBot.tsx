@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useUser } from '@supabase/auth-helpers-react';
+import { useUser, useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -45,6 +45,8 @@ export default function ChatBot({ isOpen, onClose, planType }: ChatBotProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const user = useUser();
+  const session = useSession();
+  const supabase = useSupabaseClient();
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -57,6 +59,42 @@ export default function ChatBot({ isOpen, onClose, planType }: ChatBotProps) {
       setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [isOpen, isMinimized]);
+
+  // Session debugging when chatbot opens
+  useEffect(() => {
+    if (isOpen) {
+      console.log('🤖 [CHATBOT-SESSION] Chatbot opened - Authentication state:', {
+        userExists: !!user,
+        userId: user?.id,
+        userEmail: user?.email,
+        sessionExists: !!session,
+        sessionExpiry: session?.expires_at,
+        sessionUser: session?.user?.id,
+        accessTokenExists: !!session?.access_token,
+        refreshTokenExists: !!session?.refresh_token,
+        timestamp: new Date().toISOString()
+      });
+
+      // Check browser cookies for Supabase session
+      const cookies = document.cookie.split(';').map(c => c.trim());
+      const supabaseCookies = cookies.filter(c => c.includes('supabase'));
+      console.log('🤖 [CHATBOT-SESSION] Browser cookies:', {
+        totalCookies: cookies.length,
+        supabaseCookies: supabaseCookies.length,
+        supabaseCookieNames: supabaseCookies.map(c => c.split('=')[0])
+      });
+
+      // Try to get session directly from Supabase client
+      supabase.auth.getSession().then(({ data: { session: directSession }, error }) => {
+        console.log('🤖 [CHATBOT-SESSION] Direct Supabase session check:', {
+          hasDirectSession: !!directSession,
+          directSessionUser: directSession?.user?.id,
+          error: error?.message,
+          timestamp: new Date().toISOString()
+        });
+      });
+    }
+  }, [isOpen, user, session, supabase]);
 
   // Initialize chat with welcome message
   useEffect(() => {
@@ -76,8 +114,23 @@ export default function ChatBot({ isOpen, onClose, planType }: ChatBotProps) {
     // Check authentication state before proceeding
     if (!user) {
       console.error('🤖 [CHATBOT-CLIENT] No authenticated user found');
-      setError('Please sign in to use the chat feature');
-      return;
+      
+      // Try to refresh the session
+      console.log('🤖 [CHATBOT-CLIENT] Attempting to refresh session...');
+      try {
+        const { data: { session: refreshedSession }, error } = await supabase.auth.getSession();
+        if (error || !refreshedSession) {
+          console.error('🤖 [CHATBOT-CLIENT] Session refresh failed:', error?.message);
+          setError('Please sign in to use the chat feature');
+          return;
+        }
+        console.log('🤖 [CHATBOT-CLIENT] Session refreshed successfully');
+        // Continue with the request - the session should now be available
+      } catch (refreshError) {
+        console.error('🤖 [CHATBOT-CLIENT] Session refresh error:', refreshError);
+        setError('Please sign in to use the chat feature');
+        return;
+      }
     }
 
     const userMessage: ChatMessage = {
