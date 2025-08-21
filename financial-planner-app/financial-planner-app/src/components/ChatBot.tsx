@@ -41,6 +41,7 @@ export default function ChatBot({ isOpen, onClose, planType }: ChatBotProps) {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [isMinimized, setIsMinimized] = useState(false);
   const [rateLimitInfo, setRateLimitInfo] = useState<any>(null);
+  const [isSessionReady, setIsSessionReady] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -60,29 +61,53 @@ export default function ChatBot({ isOpen, onClose, planType }: ChatBotProps) {
     }
   }, [isOpen, isMinimized]);
 
-  // Session debugging when chatbot opens
+  // Session debugging and readiness check
   useEffect(() => {
     if (isOpen) {
-      console.log('🤖 [CHATBOT-SESSION] Chatbot opened - Authentication state:', {
-        userExists: !!user,
-        userId: user?.id,
-        userEmail: user?.email,
-        sessionExists: !!session,
-        sessionExpiry: session?.expires_at,
-        sessionUser: session?.user?.id,
-        accessTokenExists: !!session?.access_token,
-        refreshTokenExists: !!session?.refresh_token,
-        timestamp: new Date().toISOString()
-      });
+      const checkSessionReadiness = () => {
+        console.log('🤖 [CHATBOT-SESSION] Chatbot opened - Authentication state:', {
+          userExists: !!user,
+          userId: user?.id,
+          userEmail: user?.email,
+          sessionExists: !!session,
+          sessionExpiry: session?.expires_at,
+          sessionUser: session?.user?.id,
+          accessTokenExists: !!session?.access_token,
+          refreshTokenExists: !!session?.refresh_token,
+          timestamp: new Date().toISOString()
+        });
 
-      // Check browser cookies for Supabase session
-      const cookies = document.cookie.split(';').map(c => c.trim());
-      const supabaseCookies = cookies.filter(c => c.includes('supabase'));
-      console.log('🤖 [CHATBOT-SESSION] Browser cookies:', {
-        totalCookies: cookies.length,
-        supabaseCookies: supabaseCookies.length,
-        supabaseCookieNames: supabaseCookies.map(c => c.split('=')[0])
-      });
+        // Check browser cookies for Supabase session
+        const cookies = document.cookie.split(';').map(c => c.trim());
+        const supabaseCookies = cookies.filter(c => c.includes('supabase'));
+        console.log('🤖 [CHATBOT-SESSION] Browser cookies:', {
+          totalCookies: cookies.length,
+          supabaseCookies: supabaseCookies.length,
+          supabaseCookieNames: supabaseCookies.map(c => c.split('=')[0])
+        });
+
+        // Session is ready if we have a user, session, AND cookies
+        const hasUser = !!user && !!session;
+        const hasCookies = supabaseCookies.length > 0;
+        const ready = hasUser && hasCookies;
+        
+        console.log('🤖 [CHATBOT-SESSION] Session readiness check:', {
+          hasUser,
+          hasCookies,
+          ready,
+          currentReadyState: isSessionReady
+        });
+
+        setIsSessionReady(ready);
+
+        // If not ready but we have a user, wait a bit and check again
+        if (hasUser && !hasCookies) {
+          console.log('🤖 [CHATBOT-SESSION] User exists but no cookies yet, rechecking in 1 second...');
+          setTimeout(checkSessionReadiness, 1000);
+        }
+      };
+
+      checkSessionReadiness();
 
       // Try to get session directly from Supabase client
       supabase.auth.getSession().then(({ data: { session: directSession }, error }) => {
@@ -94,7 +119,7 @@ export default function ChatBot({ isOpen, onClose, planType }: ChatBotProps) {
         });
       });
     }
-  }, [isOpen, user, session, supabase]);
+  }, [isOpen, user, session, supabase, isSessionReady]);
 
   // Initialize chat with welcome message
   useEffect(() => {
@@ -111,25 +136,33 @@ export default function ChatBot({ isOpen, onClose, planType }: ChatBotProps) {
   const sendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
 
-    // Check authentication state before proceeding
-    if (!user) {
-      console.error('🤖 [CHATBOT-CLIENT] No authenticated user found');
+    // Check if session is ready (user exists and cookies are set)
+    if (!isSessionReady) {
+      console.log('🤖 [CHATBOT-CLIENT] Session not ready yet, checking current state...');
       
-      // Try to refresh the session
-      console.log('🤖 [CHATBOT-CLIENT] Attempting to refresh session...');
-      try {
-        const { data: { session: refreshedSession }, error } = await supabase.auth.getSession();
-        if (error || !refreshedSession) {
-          console.error('🤖 [CHATBOT-CLIENT] Session refresh failed:', error?.message);
-          setError('Please sign in to use the chat feature');
-          return;
-        }
-        console.log('🤖 [CHATBOT-CLIENT] Session refreshed successfully');
-        // Continue with the request - the session should now be available
-      } catch (refreshError) {
-        console.error('🤖 [CHATBOT-CLIENT] Session refresh error:', refreshError);
+      const cookies = document.cookie.split(';').map(c => c.trim());
+      const supabaseCookies = cookies.filter(c => c.includes('supabase'));
+      
+      console.log('🤖 [CHATBOT-CLIENT] Current session state:', {
+        hasUser: !!user,
+        hasSession: !!session,
+        hasCookies: supabaseCookies.length > 0,
+        isSessionReady
+      });
+
+      if (!user) {
         setError('Please sign in to use the chat feature');
         return;
+      }
+
+      if (supabaseCookies.length === 0) {
+        setError('Session is still initializing. Please wait a moment and try again.');
+        return;
+      }
+
+      // If we have user and cookies but isSessionReady is false, update it
+      if (user && supabaseCookies.length > 0) {
+        setIsSessionReady(true);
       }
     }
 
@@ -401,20 +434,30 @@ export default function ChatBot({ isOpen, onClose, planType }: ChatBotProps) {
                   <p className="text-sm text-yellow-700">Please sign in to use the chat feature</p>
                 </div>
               )}
+              {user && !isSessionReady && (
+                <div className="mb-3 p-2 bg-blue-50 border border-blue-200 rounded-lg flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 text-blue-600 animate-spin flex-shrink-0" />
+                  <p className="text-sm text-blue-700">Initializing chat session...</p>
+                </div>
+              )}
               <div className="flex gap-2">
                 <Input
                   ref={inputRef}
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder={user ? "Ask about your financial plan..." : "Sign in to chat..."}
+                  placeholder={
+                    !user ? "Sign in to chat..." : 
+                    !isSessionReady ? "Initializing..." : 
+                    "Ask about your financial plan..."
+                  }
                   className="flex-1 border-gray-300/50 focus:border-emerald-500/50 focus:ring-emerald-500/20 bg-white/80"
-                  disabled={isLoading || !user}
+                  disabled={isLoading || !user || !isSessionReady}
                   maxLength={500}
                 />
                 <Button
                   onClick={sendMessage}
-                  disabled={!inputMessage.trim() || isLoading || !user}
+                  disabled={!inputMessage.trim() || isLoading || !user || !isSessionReady}
                   className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 border-0"
                   size="sm"
                 >
