@@ -8,11 +8,46 @@ export async function POST(request: NextRequest) {
   console.log(`💬 [CHAT-API-${requestId}] Chat request started`);
   
   try {
+    // Enhanced request debugging
+    console.log(`💬 [CHAT-API-${requestId}] Request headers:`, {
+      'content-type': request.headers.get('content-type'),
+      'user-agent': request.headers.get('user-agent'),
+      'cookie': request.headers.get('cookie') ? 'Present (length: ' + request.headers.get('cookie')!.length + ')' : 'Missing',
+      'origin': request.headers.get('origin'),
+      'referer': request.headers.get('referer'),
+      'x-forwarded-for': request.headers.get('x-forwarded-for')
+    });
+
     console.log(`💬 [CHAT-API-${requestId}] Creating Supabase client...`);
+    const cookieStore = cookies();
+    
+    // Log available cookies
+    const allCookies = cookieStore.getAll();
+    console.log(`💬 [CHAT-API-${requestId}] Available cookies:`, {
+      count: allCookies.length,
+      names: allCookies.map(c => c.name),
+      supabaseCookies: allCookies.filter(c => c.name.includes('supabase')).map(c => ({
+        name: c.name,
+        valueLength: c.value.length,
+        valuePreview: c.value.substring(0, 50) + '...'
+      }))
+    });
+    
     const supabase = createRouteHandlerClient({ cookies });
     
     console.log(`💬 [CHAT-API-${requestId}] Getting user session...`);
     const { data: { session }, error: authError } = await supabase.auth.getSession();
+    
+    console.log(`💬 [CHAT-API-${requestId}] Session retrieval result:`, {
+      hasSession: !!session,
+      hasUser: !!session?.user,
+      userId: session?.user?.id,
+      userEmail: session?.user?.email,
+      sessionExpiry: session?.expires_at,
+      authError: authError?.message,
+      accessTokenLength: session?.access_token?.length,
+      refreshTokenLength: session?.refresh_token?.length
+    });
     
     if (authError || !session?.user) {
       console.log(`💬 [CHAT-API-${requestId}] Authentication failed:`, authError?.message || 'No session');

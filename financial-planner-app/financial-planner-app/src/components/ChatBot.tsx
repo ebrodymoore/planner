@@ -73,6 +73,13 @@ export default function ChatBot({ isOpen, onClose, planType }: ChatBotProps) {
   const sendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
 
+    // Check authentication state before proceeding
+    if (!user) {
+      console.error('🤖 [CHATBOT-CLIENT] No authenticated user found');
+      setError('Please sign in to use the chat feature');
+      return;
+    }
+
     const userMessage: ChatMessage = {
       role: 'user',
       content: inputMessage.trim(),
@@ -85,25 +92,64 @@ export default function ChatBot({ isOpen, onClose, planType }: ChatBotProps) {
     setError(null);
 
     try {
+      // Enhanced client-side debugging
+      console.log('🤖 [CHATBOT-CLIENT] Pre-request authentication check:', {
+        userExists: !!user,
+        userId: user?.id,
+        userEmail: user?.email,
+        sessionId: sessionId,
+        timestamp: new Date().toISOString()
+      });
+
+      // Check if we have cookies available
+      console.log('🤖 [CHATBOT-CLIENT] Document cookies:', {
+        hasCookies: !!document.cookie,
+        cookieCount: document.cookie.split(';').length,
+        cookiePreview: document.cookie.substring(0, 100) + '...'
+      });
+
+      const requestPayload = {
+        message: userMessage.content,
+        sessionId,
+        conversationHistory: messages.slice(-8), // Send last 8 messages for context
+        context: {
+          planType,
+          timestamp: new Date().toISOString()
+        }
+      };
+
+      console.log('🤖 [CHATBOT-CLIENT] Sending request:', {
+        url: '/api/chat',
+        method: 'POST',
+        hasCredentials: true,
+        payloadSize: JSON.stringify(requestPayload).length,
+        messageLength: userMessage.content.length
+      });
+
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({
-          message: userMessage.content,
-          sessionId,
-          conversationHistory: messages.slice(-8), // Send last 8 messages for context
-          context: {
-            planType,
-            timestamp: new Date().toISOString()
-          }
-        }),
+        body: JSON.stringify(requestPayload),
+      });
+
+      console.log('🤖 [CHATBOT-CLIENT] Response received:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        headers: Object.fromEntries(response.headers.entries())
       });
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('🤖 [CHATBOT-CLIENT] Request failed:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData: errorData,
+          requestId: errorData.requestId
+        });
         throw new Error(errorData.details || 'Failed to send message');
       }
 
@@ -296,20 +342,26 @@ export default function ChatBot({ isOpen, onClose, planType }: ChatBotProps) {
 
             {/* Input */}
             <div className="p-4 border-t border-gray-200/30 bg-gray-50/50">
+              {!user && (
+                <div className="mb-3 p-2 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-yellow-600 flex-shrink-0" />
+                  <p className="text-sm text-yellow-700">Please sign in to use the chat feature</p>
+                </div>
+              )}
               <div className="flex gap-2">
                 <Input
                   ref={inputRef}
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Ask about your financial plan..."
+                  placeholder={user ? "Ask about your financial plan..." : "Sign in to chat..."}
                   className="flex-1 border-gray-300/50 focus:border-emerald-500/50 focus:ring-emerald-500/20 bg-white/80"
-                  disabled={isLoading}
+                  disabled={isLoading || !user}
                   maxLength={500}
                 />
                 <Button
                   onClick={sendMessage}
-                  disabled={!inputMessage.trim() || isLoading}
+                  disabled={!inputMessage.trim() || isLoading || !user}
                   className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 border-0"
                   size="sm"
                 >
