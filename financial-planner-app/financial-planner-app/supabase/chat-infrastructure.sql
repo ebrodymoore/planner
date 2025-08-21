@@ -222,12 +222,12 @@ BEGIN
     -- Determine plan type based on questionnaire data
     SELECT 
       CASE 
-        WHEN qr.questionnaire_data->>'personal'->>'name' = 'Quick Plan User' THEN 'quick'
+        WHEN qr.questionnaire_data->'personal'->>'name' = 'Quick Plan User' THEN 'quick'
         WHEN (
           SELECT COUNT(*) 
-          FROM jsonb_object_keys(qr.questionnaire_data) 
-          WHERE jsonb_typeof(qr.questionnaire_data->jsonb_object_keys.value) = 'object'
-            AND qr.questionnaire_data->jsonb_object_keys.value != '{}'::jsonb
+          FROM jsonb_object_keys(qr.questionnaire_data) as keys(key)
+          WHERE jsonb_typeof(qr.questionnaire_data->keys.key) = 'object'
+            AND qr.questionnaire_data->keys.key != '{}'::jsonb
         ) < 7 THEN 'quick'
         ELSE 'comprehensive'
       END INTO user_plan_type
