@@ -270,7 +270,7 @@ export default function FinancialPlan({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-100 to-indigo-100 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-0 -left-4 w-96 h-96 bg-emerald-500/5 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>

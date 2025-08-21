@@ -36,7 +36,7 @@ function DashboardContent() {
   // Show loading state while data is being fetched
   if (isLoadingQuestionnaire || isLoadingAnalysis) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-100 to-indigo-100 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-500" />
           <p className="text-gray-600">Loading your financial dashboard...</p>
@@ -50,7 +50,7 @@ function DashboardContent() {
   const hasNoData = !questionnaireData || Object.keys(questionnaireData).length === 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-100 to-indigo-100">
       {/* Show questionnaire selection alert if no data */}
       {hasNoData && (
         <div className="p-6">
@@ -157,7 +157,7 @@ export default function DashboardPage() {
   return (
     <SessionContextProvider supabaseClient={supabase}>
       <Suspense fallback={
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+        <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-100 to-indigo-100 flex items-center justify-center">
           <div className="text-gray-600">Loading...</div>
         </div>
       }>
