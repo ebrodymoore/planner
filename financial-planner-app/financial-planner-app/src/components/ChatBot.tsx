@@ -90,6 +90,7 @@ export default function ChatBot({ isOpen, onClose, planType }: ChatBotProps) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           message: userMessage.content,
           sessionId,
