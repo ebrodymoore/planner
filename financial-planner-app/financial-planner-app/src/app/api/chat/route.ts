@@ -21,16 +21,20 @@ export async function POST(request: NextRequest) {
     console.log(`💬 [CHAT-API-${requestId}] Creating Supabase client...`);
     const cookieStore = cookies();
     
-    // Log available cookies
-    const allCookies = cookieStore.getAll();
+    // Log available cookies (using proper Next.js cookies API)
+    const cookieHeader = request.headers.get('cookie');
+    const cookieEntries = cookieHeader ? cookieHeader.split(';').map(c => c.trim().split('=')) : [];
     console.log(`💬 [CHAT-API-${requestId}] Available cookies:`, {
-      count: allCookies.length,
-      names: allCookies.map(c => c.name),
-      supabaseCookies: allCookies.filter(c => c.name.includes('supabase')).map(c => ({
-        name: c.name,
-        valueLength: c.value.length,
-        valuePreview: c.value.substring(0, 50) + '...'
-      }))
+      count: cookieEntries.length,
+      hasCookieHeader: !!cookieHeader,
+      cookieHeaderLength: cookieHeader?.length || 0,
+      supabaseCookies: cookieEntries
+        .filter(([name]) => name.includes('supabase'))
+        .map(([name, value]) => ({
+          name: name,
+          valueLength: value?.length || 0,
+          valuePreview: value ? value.substring(0, 50) + '...' : 'empty'
+        }))
     });
     
     const supabase = createRouteHandlerClient({ cookies });
